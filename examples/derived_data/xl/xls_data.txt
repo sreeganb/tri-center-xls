@@ -1,0 +1,2 @@
+protein1, res1, protein2, res2
+
