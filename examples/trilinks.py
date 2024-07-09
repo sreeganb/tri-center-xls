@@ -38,27 +38,49 @@ xl_data = './derived_data/xl/xls_data.txt'
 # Read in the protein structure information
 # 1) Store the fasta sequences as a dictionary
 #----------------------------------------------------------------------
-sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome_4_6A_8.fasta.txt')
+#sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome_4_6A_8.fasta.txt')
+sequences = IMP.pmi.topology.Sequences(fasta_dir + 'rcsb_pdb_7QY7.fasta')
+seq1 = IMP.pmi.topology.Sequences(fasta_dir + '26s_protease_subunit10B.fasta.txt')
+#subunit1 = st1.create_molecule("B", sequences["subunit4"])
+#subunit2 = st1.create_molecule("F", sequences["subunit6A"])
+#subunit3 = st1.create_molecule("d", sequences["subunit8"])
 
-subunit1 = st1.create_molecule("B", sequences["subunit4"])
-subunit2 = st1.create_molecule("F", sequences["subunit6A"])
-subunit3 = st1.create_molecule("d", sequences["subunit8"])
+subunit1 = st1.create_molecule("E", seq1["subunit10B"])
+subunit2 = st1.create_molecule("L", sequences["alphatype1"])
+subunit3 = st1.create_molecule("J", sequences["alphatype7"])
 
-su1 = subunit1.add_structure(pdb_dir + "26s_protease_subunit4.pdb", 
-                             chain_id = "B",
+#su1 = subunit1.add_structure(pdb_dir + "26s_protease_subunit4.pdb", 
+#                             chain_id = "B",
+                             #res_range = (39, 417), 
+                             #offset = -38
+#                             )
+#su2 = subunit2.add_structure(pdb_dir + '26s_protease_subunit6A.pdb', 
+#                             chain_id = 'F',
+                             #res_range = (81, 433),
+                             #offset = -80
+#                            )
+#su3 = subunit3.add_structure(pdb_dir + '26s_protease_subunit8.pdb',
+#                            chain_id = 'd',
+                            #res_range = (15, 389),
+#                            offset = 92
+#                            )
+
+su1 = subunit1.add_structure(pdb_dir + "26s_protease_subunit10B.pdb", 
+                             chain_id = 'E'
                              #res_range = (39, 417), 
                              #offset = -38
                              )
-su2 = subunit2.add_structure(pdb_dir + '26s_protease_subunit6A.pdb', 
-                             chain_id = 'F',
+su2 = subunit2.add_structure(pdb_dir + 'alpha1.pdb', 
+                             chain_id = 'L'
                              #res_range = (81, 433),
                              #offset = -80
                             )
-su3 = subunit3.add_structure(pdb_dir + '26s_protease_subunit8.pdb',
-                            chain_id = 'd',
+su3 = subunit3.add_structure(pdb_dir + 'alpha7.pdb',
+                            chain_id = 'J'
                             #res_range = (15, 389),
-                            offset = 92
+                            #offset = 92
                             )
+
 #----------------------------------------------------------------------
 subunit1.add_representation(su1, resolutions=[1 ,10])
 subunit1.add_representation(
