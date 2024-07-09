@@ -90,3 +90,10 @@ subunit3.add_representation(
     setup_particles_as_densities=True)
 
 r1_hier = sys.build()
+
+#-------------------------------------------------------------------
+# Define the degrees of freedom 
+#-------------------------------------------------------------------
+dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
+# rigid body for parts of the protein 
+
