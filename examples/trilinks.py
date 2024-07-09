@@ -38,56 +38,49 @@ xl_data = './derived_data/xl/xls_data.txt'
 # Read in the protein structure information
 # 1) Store the fasta sequences as a dictionary
 #----------------------------------------------------------------------
-#sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome_6B_7_10B.fasta.txt')
-seq1 = IMP.pmi.topology.Sequences(fasta_dir + '26s_protease_subunit6B.fasta.txt')
-seq2 = IMP.pmi.topology.Sequences(fasta_dir + '26s_protease_subunit7.fasta.txt')
-seq3 = IMP.pmi.topology.Sequences(fasta_dir + '26s_protease_subunit10B.fasta.txt')
+sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome_4_6A_8.fasta.txt')
 
-subunit1 = st1.create_molecule("D", seq1["subunit6B"])
-subunit2 = st1.create_molecule("A", seq2["subunit7"])
-subunit3 = st1.create_molecule("E", seq3["subunit10B"])
+subunit1 = st1.create_molecule("B", sequences["subunit4"])
+subunit2 = st1.create_molecule("F", sequences["subunit6A"])
+subunit3 = st1.create_molecule("d", sequences["subunit8"])
 
-su1 = subunit1.add_structure(pdb_dir + "26s_protease_subunit6B.pdb", 
-                             chain_id = "D",
+su1 = subunit1.add_structure(pdb_dir + "26s_protease_subunit4.pdb", 
+                             chain_id = "B",
                              #res_range = (39, 417), 
                              #offset = -38
                              )
-su2 = subunit2.add_structure(pdb_dir + '26s_protease_subunit7.pdb', 
-                             chain_id = 'A',
+su2 = subunit2.add_structure(pdb_dir + '26s_protease_subunit6A.pdb', 
+                             chain_id = 'F',
                              #res_range = (81, 433),
                              #offset = -80
                             )
-su3 = subunit3.add_structure(pdb_dir + '26s_protease_subunit10B.pdb',
-                            chain_id = 'E',
+su3 = subunit3.add_structure(pdb_dir + '26s_protease_subunit8.pdb',
+                            chain_id = 'd',
                             #res_range = (15, 389),
-                            #offset = -14
+                            offset = 92
                             )
 #----------------------------------------------------------------------
-subunit1.add_representation(su1, resolutions=[1 ,10],
-                            density_residues_per_component=10
-                            )
+subunit1.add_representation(su1, resolutions=[1 ,10])
 subunit1.add_representation(
     subunit1[:]-su1,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
-    setup_particles_as_densities=True)
-subunit2.add_representation(su2, resolutions=[1, 10],
-                            density_residues_per_component=10)
+    setup_particles_as_densities=False)
+subunit2.add_representation(su2, resolutions=[1, 10])
 subunit2.add_representation(
     subunit2[:]-su2,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
-    setup_particles_as_densities=True)
-subunit3.add_representation(su3, resolutions=[1, 10],
-                            density_residues_per_component=10)
+    setup_particles_as_densities=False)
+subunit3.add_representation(su3, resolutions=[1, 10])
 subunit3.add_representation(
     subunit3[:]-su3,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
-    setup_particles_as_densities=True)
+    setup_particles_as_densities=False)
 
 r1_hier = sys.build()
 
@@ -95,5 +88,6 @@ r1_hier = sys.build()
 # Define the degrees of freedom 
 #-------------------------------------------------------------------
 dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
-# rigid body for parts of the protein 
+# rigid body for parts of the protein
+
 
