@@ -1,2 +1,4 @@
-protein1, res1, protein2, res2
-
+Protein1,Residue1,Protein2,Residue2
+alp3,55,prot1,1
+alp6,174,prot1,1
+su10B,379,prot1,1
