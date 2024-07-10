@@ -18,16 +18,14 @@ import os
 # and associated degrees of freedom
 #----------------------------------------------------------------------
 mdl = IMP.Model()
-seq = 'K'*1
+sys = IMP.pmi.topology.System(mdl, name ='Modeling of triple crosslinking')
 output = IMP.pmi.output.Output()
-s1 = IMP.pmi.topology.System(mdl)
-st1 = s1.create_state()
+
+st1 = sys.create_state()
+
+seq = 'K'*1
 m1 = st1.create_molecule("prot1", seq, chain_id = "B")
 m1.add_representation(m1, resolutions=[1])
-r1_hier = s1.build()
-sys = IMP.pmi.topology.System(mdl, name ='Modeling of triple crosslinking')
-dof_s1 = IMP.pmi.dof.DegreesOfFreedom(mdl)
-dof_s1.create_flexible_beads(m1)
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
@@ -84,11 +82,24 @@ subunit3.add_representation(
     setup_particles_as_densities=False)
 
 r1_hier = sys.build()
-
 #-------------------------------------------------------------------
 # Define the degrees of freedom 
 #-------------------------------------------------------------------
 dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
-# rigid body for parts of the protein
+#----------------------------------------------------------------------
+# add the lysine bead
+#----------------------------------------------------------------------
+dof.create_flexible_beads(m1)
+
+print("non rigid parts: ", subunit1.get_non_atomic_residues())
+
+rb1_alpha3 = dof.create_rigid_body(
+    subunit1,
+    max_trans=1.0,
+    max_rot=0.5,
+    nonrigid_parts=subunit1.get_non_atomic_residues())
+
+#fb_alpha3 = dof.create_flexible_beads(subunit1.get_non_atomic_residues(), 
+#                                      max_trans=1.0)
 
 
