@@ -31,7 +31,8 @@ m1.add_representation(m1, resolutions=[1])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
-pdb_dir = './data/pdb/'
+#pdb_dir = './data/pdb/'
+pdb_dir = './data/pdb/5gjr_structure/'
 fasta_dir = './data/fasta/'
 xl_data = './derived_data/xl/xls_data.txt'
 #----------------------------------------------------------------------
@@ -45,17 +46,17 @@ subunit2 = st1.create_molecule("alp6", sequences["subunitalpha6"])
 subunit3 = st1.create_molecule("su10B", sequences["subunit10B"])
 
 su1 = subunit1.add_structure(pdb_dir + 'alpha3.pdb', 
-                             chain_id = 'M',
+                             chain_id = 'n',
                              #res_range = (81, 433),
                              offset = 1
                             )
 su2 = subunit2.add_structure(pdb_dir + 'alpha6.pdb',
-                            chain_id = 'G'
+                            chain_id = 'h'
                             #res_range = (15, 389),
                             #offset = 92
                             )
-su3 = subunit3.add_structure(pdb_dir + "26s_protease_subunit10B.pdb", 
-                             chain_id = 'E'
+su3 = subunit3.add_structure(pdb_dir + "sub10B.pdb", 
+                             chain_id = 'L'
                              #res_range = (39, 417), 
                              #offset = -38
                              )
@@ -112,7 +113,9 @@ rb3_subunit10B = dof.create_rigid_body(
     max_trans=1.0,
     max_rot=0.5,
     nonrigid_parts=subunit3.get_non_atomic_residues())
-
+#----------------------------------------------------------------------
+# Connectivity restraint
+#----------------------------------------------------------------------
 cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit1)
 cr.add_to_model()           # add restraint to the model
 output_objects.append(cr)   # add restraint to the output
@@ -171,36 +174,24 @@ output_objects.append(xlr)
 # First shuffle all particles to randomize the starting point of the
 # system. For larger systems, you may want to increase max_translation
 IMP.pmi.tools.shuffle_configuration(r1_hier,
-                                    max_translation=50)
-
-# Shuffling randomizes the bead positions. It's good to
-# allow these to optimize first to relax large connectivity
-# restraint scores.  100-500 steps is generally sufficient.
-dof.optimize_flexible_beads(500)
+                                    max_translation=60,
+                                    bounding_box=((-100,-100,-100),(100,100,150)))
+dof.optimize_flexible_beads(200)
 
 evr.add_to_model()
 
-# Run replica exchange Monte Carlo sampling
-rex = IMP.pmi.macros.ReplicaExchange(
-    mdl,
-    # pass the root hierarchy
-    root_hier=r1_hier,
-    # pass all objects to be moved ( almost always dof.get_movers() )
-    monte_carlo_sample_objects=dof.get_movers(),
-    # The output directory for this sampling run.
-    global_output_directory='run_manual1/output/',
-    # Items in output_objects write information to the stat file.
-    output_objects=output_objects,
-    # Number of MC steps between writing frames
-    monte_carlo_steps=10,
-    # set >0 to store best PDB files (but this is slow)
-    number_of_best_scoring_models=0,
-    # Total number of frames to run / write to the RMF file.
-    number_of_frames=10000)
+rex=IMP.pmi.macros.ReplicaExchange(mdl,
+                                   root_hier=r1_hier,           
+                                   monte_carlo_sample_objects=dof.get_movers(),
+                                   replica_exchange_maximum_temperature=4.0,
+                                   global_output_directory="output/",
+                                   output_objects=output_objects,
+                                   nframes_write_coordinates=1,
+                                   monte_carlo_steps=10,
+                                   number_of_frames=1000,
+                                   number_of_best_scoring_models=0)
 
-# Ok, now we finally do the sampling!
 rex.execute_macro()
-
 
 # ihm is for depositing structures into the CIF file
 # add dsso as linker for placeholder 
