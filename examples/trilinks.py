@@ -24,10 +24,12 @@ sys = IMP.pmi.topology.System(mdl, name ='Modeling of triple crosslinking')
 output = IMP.pmi.output.Output()
 
 st1 = sys.create_state()
-
+colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta']
 seq = 'K'*1
 m1 = st1.create_molecule("prot1", seq, chain_id = "B")
-m1.add_representation(m1, resolutions=[1])
+m1.add_representation(m1, resolutions=[1], color=colors[0])
+m2 = st1.create_molecule("prot2", seq, chain_id = "C")
+m2.add_representation(m2, resolutions=[1], color=colors[1])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
@@ -44,46 +46,62 @@ sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome.fasta.txt')
 subunit1 = st1.create_molecule("alp3", sequences["subunitalpha3"])
 subunit2 = st1.create_molecule("alp6", sequences["subunitalpha6"])
 subunit3 = st1.create_molecule("su10B", sequences["subunit10B"])
+subunit4 = st1.create_molecule("su6A", sequences["subunit6A"])
+subunit5 = st1.create_molecule("su8", sequences["subunit8"])
 
 su1 = subunit1.add_structure(pdb_dir + 'alpha3.pdb', 
                              chain_id = 'n',
-                             #res_range = (81, 433),
                              offset = 1
                             )
 su2 = subunit2.add_structure(pdb_dir + 'alpha6.pdb',
                             chain_id = 'h'
-                            #res_range = (15, 389),
-                            #offset = 92
                             )
 su3 = subunit3.add_structure(pdb_dir + "sub10B.pdb", 
                              chain_id = 'L'
-                             #res_range = (39, 417), 
-                             #offset = -38
                              )
-
+su4 = subunit4.add_structure(pdb_dir + "subunit6A.pdb",
+                                chain_id = 'M'
+                                )
+su5 = subunit5.add_structure(pdb_dir + "subunit8.pdb",
+                                chain_id = 'J'
+                                )
 #----------------------------------------------------------------------
-subunit1.add_representation(su1, resolutions=[1 ,10])
+subunit1.add_representation(su1, resolutions=[1 ,10], color=colors[2])
 subunit1.add_representation(
     subunit1[:]-su1,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit2.add_representation(su2, resolutions=[1, 10])
+subunit2.add_representation(su2, resolutions=[1, 10], color=colors[3])
 subunit2.add_representation(
     subunit2[:]-su2,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit3.add_representation(su3, resolutions=[1, 10])
+subunit3.add_representation(su3, resolutions=[1, 10], color=colors[4])
 subunit3.add_representation(
     subunit3[:]-su3,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-
+subunit4.add_representation(su4, resolutions=[1, 10], color=colors[5])
+subunit4.add_representation(
+    subunit4[:]-su4,
+    # areas without structure can only be represented at one resolution
+    resolutions=[1],
+    # Set up spherical gaussian densities for these particles
+    setup_particles_as_densities=False)
+subunit5.add_representation(su5, resolutions=[1, 10])
+subunit5.add_representation(
+    subunit5[:]-su5,
+    # areas without structure can only be represented at one resolution
+    resolutions=[1],
+    # Set up spherical gaussian densities for these particles
+    setup_particles_as_densities=False)
+#----------------------------------------------------------------------
 r1_hier = sys.build()
 output_objects = []
 #-------------------------------------------------------------------
@@ -94,6 +112,7 @@ dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
 # add the lysine bead
 #----------------------------------------------------------------------
 dof.create_flexible_beads(m1)
+dof.create_flexible_beads(m2)
 
 print("non rigid parts: ", subunit1.get_non_atomic_residues())
 
@@ -108,11 +127,24 @@ rb2_alpha6 = dof.create_rigid_body(
     max_trans=1.0,
     max_rot=0.5,
     nonrigid_parts=subunit2.get_non_atomic_residues())
+
 rb3_subunit10B = dof.create_rigid_body(
     subunit3,
     max_trans=1.0,
     max_rot=0.5,
     nonrigid_parts=subunit3.get_non_atomic_residues())
+
+rb4_subunit6A = dof.create_rigid_body(
+    subunit4,
+    max_trans = 1.0,
+    max_rot = 0.5,
+    nonrigid_parts = subunit4.get_non_atomic_residues())
+
+rb5_subunit8 = dof.create_rigid_body(
+    subunit5,
+    max_trans = 1.0,
+    max_rot = 0.5,
+    nonrigid_parts = subunit5.get_non_atomic_residues())
 #----------------------------------------------------------------------
 # Connectivity restraint
 #----------------------------------------------------------------------
@@ -128,6 +160,13 @@ cr3 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit3)
 cr3.add_to_model()           # add restraint to the model
 output_objects.append(cr3)   # add restraint to the output
 
+cr4 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit4)
+cr4.add_to_model()           # add restraint to the model
+output_objects.append(cr4)   # add restraint to the output
+
+cr5 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit5)
+cr5.add_to_model()           # add restraint to the model
+output_objects.append(cr5)   # add restraint to the output
 # -----------------------------
 # %%%%% EXCLUDED VOLUME RESTRAINT
 #
@@ -139,7 +178,7 @@ output_objects.append(cr3)   # add restraint to the output
 # resolution=1000 applies this expensive restraint to the lowest
 # resolution for each particle.
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
-                                            included_objects=[subunit1, subunit2, subunit3],
+                                            included_objects=[subunit1, subunit2, subunit3, subunit4, subunit5, m1, m2],
                                             resolution=1000)
 output_objects.append(evr)
 
@@ -174,8 +213,8 @@ output_objects.append(xlr)
 # First shuffle all particles to randomize the starting point of the
 # system. For larger systems, you may want to increase max_translation
 IMP.pmi.tools.shuffle_configuration(r1_hier,
-                                    max_translation=60,
-                                    bounding_box=((-100,-100,-100),(100,100,150)))
+                                    max_translation=150,
+                                    bounding_box=((-150,-150,-150),(100,100,150)))
 dof.optimize_flexible_beads(200)
 
 evr.add_to_model()
@@ -188,13 +227,16 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
                                    monte_carlo_steps=10,
-                                   number_of_frames=1000,
+                                   number_of_frames=500,
                                    number_of_best_scoring_models=0)
 
 rex.execute_macro()
 
 # ihm is for depositing structures into the CIF file
 # add dsso as linker for placeholder 
+# Create a new database file format for crosslinks that will have an additional
+# column for the dummy bead ID and this will be used by the program later to identify the dummy bead
+ 
 
 #fb_alpha3 = dof.create_flexible_beads(subunit1.get_non_atomic_residues(), 
 #                                      max_trans=1.0)
