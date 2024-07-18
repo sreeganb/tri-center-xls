@@ -181,27 +181,52 @@ evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
                                             included_objects=[subunit1, subunit2, subunit3, subunit4, subunit5, m1, m2],
                                             resolution=1000)
 output_objects.append(evr)
+#----------------------------------------------------------------------
+# Crosslinking restraint
+#----------------------------------------------------------------------
+#xldbkc = IMP.pmi.io.crosslink.CrossLinkDataBaseKeywordsConverter()
+#xldbkc.set_standard_keys()
+#xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
+#xldb.create_set_from_file(file_name=xl_data,
+#                          converter=xldbkc)
+#xl_weight = 5.0 
 
+#xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
+#    root_hier=r1_hier,    # Must pass the root hierarchy to the system
+#    database=xldb,          # The crosslink database.
+#    length=10.0,              # The crosslinker plus side chain length
+#    resolution=1,           # The resolution at which to evaluate the crosslink
+#    slope=0.001,         # This adds a linear term to the scoring function
+#                            #   to bias crosslinks towards each other
+#    weight=xl_weight,       # Scaling factor for the restraint score.
+#    linker=ihm.cross_linkers.dss)  # The linker chemistry
+
+#xlr.add_to_model()
+#output_objects.append(xlr)
+
+#----------------------------------------------------------------------
+# Crosslinking based on the decomposition of the three center crosslink
+# into a set of three regular crosslinks.
+# Testing if this is going to provide us with better structures or not
+#----------------------------------------------------------------------
+xl_data = './derived_data/xl/2_xls_data.txt'
 xldbkc = IMP.pmi.io.crosslink.CrossLinkDataBaseKeywordsConverter()
 xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
-                          converter=xldbkc)
-xl_weight = 1.0 
+                            converter=xldbkc)
+xl_weight = 1.0
 
-xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
+xlr1 = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
     database=xldb,          # The crosslink database.
-    length=25,              # The crosslinker plus side chain length
+    length=21.0,              # The crosslinker plus side chain length
     resolution=1,           # The resolution at which to evaluate the crosslink
-    slope=0.000001,         # This adds a linear term to the scoring function
-                            #   to bias crosslinks towards each other
+    slope=0.00001,         # This adds a linear term to the scoring function to bias crosslinks towards each other
     weight=xl_weight,       # Scaling factor for the restraint score.
     linker=ihm.cross_linkers.dss)  # The linker chemistry
-
-xlr.add_to_model()
-output_objects.append(xlr)
-
+xlr1.add_to_model()
+output_objects.append(xlr1) 
 # add a column with the ID of the dummy bead 
 
 #####################################################
@@ -214,8 +239,8 @@ output_objects.append(xlr)
 # system. For larger systems, you may want to increase max_translation
 IMP.pmi.tools.shuffle_configuration(r1_hier,
                                     max_translation=150,
-                                    bounding_box=((-150,-150,-150),(100,100,150)))
-dof.optimize_flexible_beads(200)
+                                    bounding_box=((-150,-150,-150),(100,100,100)))
+dof.optimize_flexible_beads(50)
 
 evr.add_to_model()
 
@@ -223,12 +248,12 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    root_hier=r1_hier,           
                                    monte_carlo_sample_objects=dof.get_movers(),
                                    replica_exchange_maximum_temperature=4.0,
-                                   global_output_directory="output/",
+                                   global_output_directory="output_2/",
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
                                    monte_carlo_steps=10,
-                                   number_of_frames=500,
-                                   number_of_best_scoring_models=0)
+                                   number_of_frames=200,
+                                   number_of_best_scoring_models=2)
 
 rex.execute_macro()
 
