@@ -28,8 +28,8 @@ colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta
 seq = 'K'*1
 m1 = st1.create_molecule("prot1", seq, chain_id = "B")
 m1.add_representation(m1, resolutions=[1], color=colors[0])
-#m2 = st1.create_molecule("prot2", seq, chain_id = "C")
-#m2.add_representation(m2, resolutions=[1], color=colors[1])
+m2 = st1.create_molecule("prot2", seq, chain_id = "C")
+m2.add_representation(m2, resolutions=[1], color=colors[1])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
@@ -112,26 +112,26 @@ dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
 # add the lysine bead
 #----------------------------------------------------------------------
 dof.create_flexible_beads(m1)
-#dof.create_flexible_beads(m2)
+dof.create_flexible_beads(m2)
 
 print("non rigid parts: ", subunit1.get_non_atomic_residues())
 
 rb1_alpha3 = dof.create_rigid_body(
     subunit1,
-    max_trans=1.0,
-    max_rot=0.5,
+    #max_trans=1.0,
+    #max_rot=0.5,
     nonrigid_parts=subunit1.get_non_atomic_residues())
 
 rb2_alpha6 = dof.create_rigid_body(
     subunit2,
-    max_trans=1.0,
-    max_rot=0.5,
+    #max_trans=1.0,
+    #max_rot=0.5,
     nonrigid_parts=subunit2.get_non_atomic_residues())
 
 rb3_subunit10B = dof.create_rigid_body(
     subunit3,
-    max_trans=1.0,
-    max_rot=0.5,
+    #max_trans=1.0,
+    #max_rot=0.5,
     nonrigid_parts=subunit3.get_non_atomic_residues())
 
 #rb4_subunit6A = dof.create_rigid_body(
@@ -178,7 +178,9 @@ output_objects.append(cr3)   # add restraint to the output
 # resolution=1000 applies this expensive restraint to the lowest
 # resolution for each particle.
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
-                                            included_objects=[subunit1, subunit2, subunit3, m1 ], #subunit4, subunit5, m1, m2],
+                                            included_objects=[subunit1, 
+                                                              subunit2, subunit3, 
+                                                              m1, m2 ], #, #subunit4, subunit5, m1, m2],
                                             resolution=1000)
 evr.add_to_model()
 output_objects.append(evr)
@@ -190,14 +192,14 @@ xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
                           converter=xldbkc)
-xl_weight = 2.0 
+xl_weight = 4.0 
 
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
     database=xldb,        # The crosslink database.
-    length=15.0,          # The crosslinker plus side chain length
+    length=11.0,          # The crosslinker plus side chain length
     resolution=1.0,       # The resolution at which to evaluate the crosslink
-    slope=0.001,          # This adds a linear term to the scoring function
+    slope=0.01,          # This adds a linear term to the scoring function
                           #   to bias crosslinks towards each other
     weight=xl_weight,     # Scaling factor for the restraint score.
     linker=ihm.cross_linkers.dss)  # The linker chemistry
@@ -246,9 +248,9 @@ output_objects.append(xlr)
 sel = IMP.atom.Selection(r1_hier).get_selected_particles()
 IMP.pmi.tools.shuffle_configuration(sel,
                                     max_translation=200,
-                                    bounding_box=((-90,-90,-90),(100,100,100)),
+                                    bounding_box=((-120,-120,-120),(120, 120, 120)),
                                     avoidcollision_rb=False)
-dof.optimize_flexible_beads(50)
+dof.optimize_flexible_beads(100)
 
 rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    root_hier=r1_hier,           
@@ -257,7 +259,7 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    global_output_directory="output/",
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
-                                   monte_carlo_steps=35,
+                                   monte_carlo_steps=20,
                                    number_of_frames=500,
                                    number_of_best_scoring_models=1)
 
