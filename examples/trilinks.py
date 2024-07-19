@@ -43,57 +43,66 @@ xl_data = './derived_data/xl/xls_data.txt'
 #----------------------------------------------------------------------
 sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome.fasta.txt')
 
-subunit1 = st1.create_molecule("alp3", sequences["subunitalpha3"])
-subunit2 = st1.create_molecule("alp6", sequences["subunitalpha6"])
-subunit3 = st1.create_molecule("su10B", sequences["subunit10B"])
+#subunit1 = st1.create_molecule("alp3", sequences["subunitalpha3"])
+#subunit2 = st1.create_molecule("alp6", sequences["subunitalpha6"])
+subunit10B = st1.create_molecule("su10B", sequences["subunit10B"])
 #subunit4 = st1.create_molecule("su6A", sequences["subunit6A"])
 #subunit5 = st1.create_molecule("su8", sequences["subunit8"])
+subunit6B = st1.create_molecule("su6B", sequences["subunit6B"])
+subunit4 = st1.create_molecule("su4", sequences["subunit4"])
+subunit8 = st1.create_molecule("su8", sequences["subunit8"])
 
-su1 = subunit1.add_structure(pdb_dir + 'alpha3.pdb', 
-                             chain_id = 'n',
-                             offset = 1
-                            )
-su2 = subunit2.add_structure(pdb_dir + 'alpha6.pdb',
-                            chain_id = 'h'
-                            )
-su3 = subunit3.add_structure(pdb_dir + "sub10B.pdb", 
+#su1 = subunit1.add_structure(pdb_dir + 'alpha3.pdb', 
+#                             chain_id = 'n',
+#                             offset = 1
+#                            )
+#su2 = subunit2.add_structure(pdb_dir + 'alpha6.pdb',
+#                            chain_id = 'h'
+#                            )
+su10B = subunit10B.add_structure(pdb_dir + "sub10B.pdb", 
                              chain_id = 'L'
                              )
 #su4 = subunit4.add_structure(pdb_dir + "subunit6A.pdb",
 #                                chain_id = 'M'
 #                                )
-#su5 = subunit5.add_structure(pdb_dir + "subunit8.pdb",
-#                                chain_id = 'J'
-#                                )
+su8 = subunit8.add_structure(pdb_dir + "subunit8.pdb",
+                                chain_id = 'J'
+                                )
+su6B = subunit6B.add_structure(pdb_dir + "subunit6B.pdb",
+                                chain_id = 'K'
+                                )
+su4 = subunit4.add_structure(pdb_dir + "subunit4.pdb",
+                                chain_id = 'I'
+                                )
 #----------------------------------------------------------------------
-subunit1.add_representation(su1, resolutions=[1 ,10], color=colors[2])
-subunit1.add_representation(
-    subunit1[:]-su1,
+subunit10B.add_representation(su10B, resolutions=[1 ,10], color=colors[2])
+subunit10B.add_representation(
+    subunit10B[:]-su10B,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit2.add_representation(su2, resolutions=[1, 10], color=colors[3])
-subunit2.add_representation(
-    subunit2[:]-su2,
+subunit8.add_representation(su8, resolutions=[1, 10], color=colors[3])
+subunit8.add_representation(
+    subunit8[:]-su8,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit3.add_representation(su3, resolutions=[1, 10], color=colors[4])
-subunit3.add_representation(
-    subunit3[:]-su3,
+subunit6B.add_representation(su6B, resolutions=[1, 10], color=colors[4])
+subunit6B.add_representation(
+    subunit6B[:]-su6B,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-#subunit4.add_representation(su4, resolutions=[1, 10], color=colors[5])
-#subunit4.add_representation(
-#    subunit4[:]-su4,
-#    # areas without structure can only be represented at one resolution
-#    resolutions=[1],
-#    # Set up spherical gaussian densities for these particles
-#    setup_particles_as_densities=False)
+subunit4.add_representation(su4, resolutions=[1, 10], color=colors[5])
+subunit4.add_representation(
+    subunit4[:]-su4,
+    # areas without structure can only be represented at one resolution
+    resolutions=[1],
+    # Set up spherical gaussian densities for these particles
+    setup_particles_as_densities=False)
 #subunit5.add_representation(su5, resolutions=[1, 10])
 #subunit5.add_representation(
 #    subunit5[:]-su5,
@@ -114,31 +123,31 @@ dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
 dof.create_flexible_beads(m1)
 dof.create_flexible_beads(m2)
 
-print("non rigid parts: ", subunit1.get_non_atomic_residues())
+print("non rigid parts: ", subunit10B.get_non_atomic_residues())
 
-rb1_alpha3 = dof.create_rigid_body(
-    subunit1,
+rb1_su10B = dof.create_rigid_body(
+    subunit10B,
     #max_trans=1.0,
     #max_rot=0.5,
-    nonrigid_parts=subunit1.get_non_atomic_residues())
+    nonrigid_parts=subunit10B.get_non_atomic_residues())
 
-rb2_alpha6 = dof.create_rigid_body(
-    subunit2,
+rb2_su6B = dof.create_rigid_body(
+    subunit6B,
     #max_trans=1.0,
     #max_rot=0.5,
-    nonrigid_parts=subunit2.get_non_atomic_residues())
+    nonrigid_parts=subunit6B.get_non_atomic_residues())
 
-rb3_subunit10B = dof.create_rigid_body(
-    subunit3,
+rb3_su8 = dof.create_rigid_body(
+    subunit8,
     #max_trans=1.0,
     #max_rot=0.5,
-    nonrigid_parts=subunit3.get_non_atomic_residues())
+    nonrigid_parts=subunit8.get_non_atomic_residues())
 
-#rb4_subunit6A = dof.create_rigid_body(
-#    subunit4,
-#    max_trans = 5.0,
-#    max_rot = 0.5,
-#    nonrigid_parts = subunit4.get_non_atomic_residues())
+rb4_su4 = dof.create_rigid_body(
+    subunit4,
+    #max_trans = 1.0,
+    #max_rot = 0.5,
+    nonrigid_parts = subunit4.get_non_atomic_residues())
 
 #rb5_subunit8 = dof.create_rigid_body(
 #    subunit5,
@@ -148,21 +157,21 @@ rb3_subunit10B = dof.create_rigid_body(
 #----------------------------------------------------------------------
 # Connectivity restraint
 #----------------------------------------------------------------------
-cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit1)
+cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit10B)
 cr.add_to_model()           # add restraint to the model
 output_objects.append(cr)   # add restraint to the output
 
-cr2 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit2)
+cr2 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit6B)
 cr2.add_to_model()           # add restraint to the model
 output_objects.append(cr2)   # add restraint to the output
 
-cr3 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit3)
+cr3 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit8)
 cr3.add_to_model()           # add restraint to the model
 output_objects.append(cr3)   # add restraint to the output
 
-#cr4 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit4)
-#cr4.add_to_model()           # add restraint to the model
-#output_objects.append(cr4)   # add restraint to the output
+cr4 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit4)
+cr4.add_to_model()           # add restraint to the model
+output_objects.append(cr4)   # add restraint to the output
 
 #cr5 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit5)
 #cr5.add_to_model()           # add restraint to the model
@@ -178,8 +187,8 @@ output_objects.append(cr3)   # add restraint to the output
 # resolution=1000 applies this expensive restraint to the lowest
 # resolution for each particle.
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
-                                            included_objects=[subunit1, 
-                                                              subunit2, subunit3, 
+                                            included_objects=[subunit10B, subunit6B, 
+                                                              subunit8, subunit4, 
                                                               m1, m2 ], #, #subunit4, subunit5, m1, m2],
                                             resolution=1000)
 evr.add_to_model()
@@ -192,14 +201,14 @@ xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
                           converter=xldbkc)
-xl_weight = 4.0 
+xl_weight = 75.0 
 
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
     database=xldb,        # The crosslink database.
-    length=11.0,          # The crosslinker plus side chain length
+    length=20.0,          # The crosslinker plus side chain length
     resolution=1.0,       # The resolution at which to evaluate the crosslink
-    slope=0.01,          # This adds a linear term to the scoring function
+    slope=0.001,          # This adds a linear term to the scoring function
                           #   to bias crosslinks towards each other
     weight=xl_weight,     # Scaling factor for the restraint score.
     linker=ihm.cross_linkers.dss)  # The linker chemistry
@@ -248,7 +257,7 @@ output_objects.append(xlr)
 sel = IMP.atom.Selection(r1_hier).get_selected_particles()
 IMP.pmi.tools.shuffle_configuration(sel,
                                     max_translation=200,
-                                    bounding_box=((-120,-120,-120),(120, 120, 120)),
+                                    bounding_box=((-150,-150,-150),(150, 150, 150)),
                                     avoidcollision_rb=False)
 dof.optimize_flexible_beads(100)
 
@@ -260,7 +269,7 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
                                    monte_carlo_steps=20,
-                                   number_of_frames=500,
+                                   number_of_frames=200,
                                    number_of_best_scoring_models=1)
 
 rex.execute_macro()

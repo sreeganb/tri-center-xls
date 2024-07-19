@@ -1,7 +1,7 @@
 Protein1,Residue1,Protein2,Residue2
-alp3,55,prot1,1
-alp6,174,prot1,1
-su10B,379,prot1,1
-alp3,43,prot2,1
-alp6,30,prot2,1
-su10B,48,prot2,1
+su6B,238,prot1,1
+su10B,72,prot1,1
+su8,222,prot1,1
+su4,258,prot2,1
+su10B,72,prot2,1
+su8,222,prot2,1
