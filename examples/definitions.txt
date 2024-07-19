@@ -2,3 +2,4 @@ Rpt3 --> 6B
 Rpt4 --> 10B
 Rpt6 --> 8
 Rpt2 --> 4
+Rpt5 --> 6A

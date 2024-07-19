@@ -157,21 +157,30 @@ rb4_su4 = dof.create_rigid_body(
 #----------------------------------------------------------------------
 # Connectivity restraint
 #----------------------------------------------------------------------
-cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit10B)
-cr.add_to_model()           # add restraint to the model
-output_objects.append(cr)   # add restraint to the output
+def add_connectivity_restraint(subunit):
+    cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit)
+    cr.add_to_model()           # add restraint to the model
+    output_objects.append(cr)   # add restraint to the output
+    
+cr =add_connectivity_restraint(subunit10B)
+add_connectivity_restraint(subunit6B)
+add_connectivity_restraint(subunit8)
+add_connectivity_restraint(subunit4)
+#cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit10B)
+#cr.add_to_model()           # add restraint to the model
+#output_objects.append(cr)   # add restraint to the output
 
-cr2 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit6B)
-cr2.add_to_model()           # add restraint to the model
-output_objects.append(cr2)   # add restraint to the output
+#cr2 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit6B)
+#cr2.add_to_model()           # add restraint to the model
+#output_objects.append(cr2)   # add restraint to the output
 
-cr3 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit8)
-cr3.add_to_model()           # add restraint to the model
-output_objects.append(cr3)   # add restraint to the output
+#cr3 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit8)
+#cr3.add_to_model()           # add restraint to the model
+#output_objects.append(cr3)   # add restraint to the output
 
-cr4 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit4)
-cr4.add_to_model()           # add restraint to the model
-output_objects.append(cr4)   # add restraint to the output
+#cr4 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit4)
+#cr4.add_to_model()           # add restraint to the model
+#output_objects.append(cr4)   # add restraint to the output
 
 #cr5 = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit5)
 #cr5.add_to_model()           # add restraint to the model
