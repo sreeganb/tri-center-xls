@@ -24,12 +24,14 @@ sys = IMP.pmi.topology.System(mdl, name ='Modeling of triple crosslinking')
 output = IMP.pmi.output.Output()
 
 st1 = sys.create_state()
-colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta']
+colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta', 'black']
 seq = 'K'*1
 m1 = st1.create_molecule("prot1", seq, chain_id = "B")
 m1.add_representation(m1, resolutions=[1], color=colors[0])
 m2 = st1.create_molecule("prot2", seq, chain_id = "C")
 m2.add_representation(m2, resolutions=[1], color=colors[1])
+m3 = st1.create_molecule("prot3", seq, chain_id = "D")
+m3.add_representation(m3, resolutions=[1], color=colors[2])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
@@ -51,6 +53,7 @@ subunit10B = st1.create_molecule("su10B", sequences["subunit10B"])
 subunit6B = st1.create_molecule("su6B", sequences["subunit6B"])
 subunit4 = st1.create_molecule("su4", sequences["subunit4"])
 subunit8 = st1.create_molecule("su8", sequences["subunit8"])
+subunit6A = st1.create_molecule("su6A", sequences["subunit6A"])
 
 #su1 = subunit1.add_structure(pdb_dir + 'alpha3.pdb', 
 #                             chain_id = 'n',
@@ -74,6 +77,8 @@ su6B = subunit6B.add_structure(pdb_dir + "subunit6B.pdb",
 su4 = subunit4.add_structure(pdb_dir + "subunit4.pdb",
                                 chain_id = 'I'
                                 )
+su6A = subunit6A.add_structure(pdb_dir + "subunit6A.pdb",
+                               chain_id = 'M')
 #----------------------------------------------------------------------
 subunit10B.add_representation(su10B, resolutions=[1 ,10], color=colors[2])
 subunit10B.add_representation(
@@ -103,13 +108,13 @@ subunit4.add_representation(
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-#subunit5.add_representation(su5, resolutions=[1, 10])
-#subunit5.add_representation(
-#    subunit5[:]-su5,
-#    # areas without structure can only be represented at one resolution
-#    resolutions=[1],
-#    # Set up spherical gaussian densities for these particles
-#    setup_particles_as_densities=False)
+subunit6A.add_representation(su6A, resolutions=[1, 10], color=colors[6])
+subunit6A.add_representation(
+    subunit6A[:]-su6A,
+    # areas without structure can only be represented at one resolution
+    resolutions=[1],
+    # Set up spherical gaussian densities for these particles
+    setup_particles_as_densities=False)
 #----------------------------------------------------------------------
 r1_hier = sys.build()
 output_objects = []
@@ -122,8 +127,7 @@ dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
 #----------------------------------------------------------------------
 dof.create_flexible_beads(m1)
 dof.create_flexible_beads(m2)
-
-print("non rigid parts: ", subunit10B.get_non_atomic_residues())
+dof.create_flexible_beads(m3)
 
 rb1_su10B = dof.create_rigid_body(
     subunit10B,
@@ -149,11 +153,9 @@ rb4_su4 = dof.create_rigid_body(
     #max_rot = 0.5,
     nonrigid_parts = subunit4.get_non_atomic_residues())
 
-#rb5_subunit8 = dof.create_rigid_body(
-#    subunit5,
-#    max_trans = 5.0,
-#    max_rot = 0.5,
-#    nonrigid_parts = subunit5.get_non_atomic_residues())
+rb1_su6A = dof.create_rigid_body(
+    subunit6A,
+    nonrigid_parts=subunit6A.get_non_atomic_residues())
 #----------------------------------------------------------------------
 # Connectivity restraint
 #----------------------------------------------------------------------
@@ -166,6 +168,7 @@ cr =add_connectivity_restraint(subunit10B)
 add_connectivity_restraint(subunit6B)
 add_connectivity_restraint(subunit8)
 add_connectivity_restraint(subunit4)
+add_connectivity_restraint(subunit6A)
 #cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit10B)
 #cr.add_to_model()           # add restraint to the model
 #output_objects.append(cr)   # add restraint to the output
@@ -196,10 +199,10 @@ add_connectivity_restraint(subunit4)
 # resolution=1000 applies this expensive restraint to the lowest
 # resolution for each particle.
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
-                                            included_objects=[subunit10B, subunit6B, 
+                                            included_objects=[subunit10B, subunit6B,
                                                               subunit8, subunit4, 
-                                                              m1, m2 ], #, #subunit4, subunit5, m1, m2],
-                                            resolution=1000)
+                                                              subunit6A],
+                                            resolution=10)
 evr.add_to_model()
 output_objects.append(evr)
 #----------------------------------------------------------------------
@@ -224,12 +227,6 @@ xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
 
 xlr.add_to_model()
 output_objects.append(xlr)
-#**********************************************************************
-# add some synthetic data and check if that can help our cause,
-# create crosslinks between residues of the same three proteins as above
-#**********************************************************************
-
-
 #----------------------------------------------------------------------
 # Crosslinking based on the decomposition of the three center crosslink
 # into a set of three regular crosslinks.
