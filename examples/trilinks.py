@@ -222,7 +222,7 @@ xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
                           converter=xldbkc)
-xl_weight = 75.0 
+xl_weight = 100.0 
 
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
@@ -283,8 +283,8 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    global_output_directory="output/",
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
-                                   monte_carlo_steps=20,
-                                   number_of_frames=200,
+                                   monte_carlo_steps=10,
+                                   number_of_frames=40,
                                    number_of_best_scoring_models=1)
 
 rex.execute_macro()
