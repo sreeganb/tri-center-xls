@@ -8,3 +8,6 @@ su8,222,prot2,1
 su10B,72,prot3,1
 su6A,125,prot3,1
 su8,222,prot3,1
+su7,116,prot4,1
+su6B,238,prot4,1
+su10B,206,prot4,1

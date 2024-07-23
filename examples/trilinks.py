@@ -32,6 +32,8 @@ m2 = st1.create_molecule("prot2", seq, chain_id = "C")
 m2.add_representation(m2, resolutions=[1], color=colors[1])
 m3 = st1.create_molecule("prot3", seq, chain_id = "D")
 m3.add_representation(m3, resolutions=[1], color=colors[2])
+m4 = st1.create_molecule("prot4", seq, chain_id = "E")
+m4.add_representation(m4, resolutions=[1], color=colors[3])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
@@ -54,20 +56,14 @@ subunit6B = st1.create_molecule("su6B", sequences["subunit6B"])
 subunit4 = st1.create_molecule("su4", sequences["subunit4"])
 subunit8 = st1.create_molecule("su8", sequences["subunit8"])
 subunit6A = st1.create_molecule("su6A", sequences["subunit6A"])
-
-#su1 = subunit1.add_structure(pdb_dir + 'alpha3.pdb', 
-#                             chain_id = 'n',
-#                             offset = 1
-#                            )
-#su2 = subunit2.add_structure(pdb_dir + 'alpha6.pdb',
-#                            chain_id = 'h'
-#                            )
+subunit7 =st1.create_molecule("su7", sequences["subunit7"])
+#----------------------------------------------------------------------
+su7 = subunit7.add_structure(pdb_dir + "subunit7.pdb",
+                            chain_id = 'H'
+                            )
 su10B = subunit10B.add_structure(pdb_dir + "sub10B.pdb", 
                              chain_id = 'L'
                              )
-#su4 = subunit4.add_structure(pdb_dir + "subunit6A.pdb",
-#                                chain_id = 'M'
-#                                )
 su8 = subunit8.add_structure(pdb_dir + "subunit8.pdb",
                                 chain_id = 'J'
                                 )
@@ -115,6 +111,13 @@ subunit6A.add_representation(
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
+subunit7.add_representation(su7, resolutions=[1, 10], color=colors[7])
+subunit7.add_representation(
+    subunit7[:]-su7,
+    # areas without structure can only be represented at one resolution
+    resolutions=[1],
+    # Set up spherical gaussian densities for these particles
+    setup_particles_as_densities=False)
 #----------------------------------------------------------------------
 r1_hier = sys.build()
 output_objects = []
@@ -128,6 +131,7 @@ dof = IMP.pmi.dof.DegreesOfFreedom(mdl)
 dof.create_flexible_beads(m1)
 dof.create_flexible_beads(m2)
 dof.create_flexible_beads(m3)
+dof.create_flexible_beads(m4)
 
 rb1_su10B = dof.create_rigid_body(
     subunit10B,
@@ -156,6 +160,10 @@ rb4_su4 = dof.create_rigid_body(
 rb1_su6A = dof.create_rigid_body(
     subunit6A,
     nonrigid_parts=subunit6A.get_non_atomic_residues())
+
+rb1_su7 = dof.create_rigid_body(
+    subunit7,
+    nonrigid_parts=subunit7.get_non_atomic_residues())
 #----------------------------------------------------------------------
 # Connectivity restraint
 #----------------------------------------------------------------------
@@ -169,6 +177,7 @@ add_connectivity_restraint(subunit6B)
 add_connectivity_restraint(subunit8)
 add_connectivity_restraint(subunit4)
 add_connectivity_restraint(subunit6A)
+add_connectivity_restraint(subunit7)
 #cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(subunit10B)
 #cr.add_to_model()           # add restraint to the model
 #output_objects.append(cr)   # add restraint to the output
@@ -201,7 +210,7 @@ add_connectivity_restraint(subunit6A)
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
                                             included_objects=[subunit10B, subunit6B,
                                                               subunit8, subunit4, 
-                                                              subunit6A],
+                                                              subunit6A, subunit7],
                                             resolution=10)
 evr.add_to_model()
 output_objects.append(evr)
@@ -218,9 +227,9 @@ xl_weight = 75.0
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
     database=xldb,        # The crosslink database.
-    length=20.0,          # The crosslinker plus side chain length
+    length=15.0,          # The crosslinker plus side chain length
     resolution=1.0,       # The resolution at which to evaluate the crosslink
-    slope=0.001,          # This adds a linear term to the scoring function
+    slope=0.0001,          # This adds a linear term to the scoring function
                           #   to bias crosslinks towards each other
     weight=xl_weight,     # Scaling factor for the restraint score.
     linker=ihm.cross_linkers.dss)  # The linker chemistry
@@ -262,10 +271,10 @@ output_objects.append(xlr)
 # system. For larger systems, you may want to increase max_translation
 sel = IMP.atom.Selection(r1_hier).get_selected_particles()
 IMP.pmi.tools.shuffle_configuration(sel,
-                                    max_translation=200,
-                                    bounding_box=((-150,-150,-150),(150, 150, 150)),
+                                    max_translation=250,
+                                    bounding_box=((-200,-200,-200),(200, 200, 200)),
                                     avoidcollision_rb=False)
-dof.optimize_flexible_beads(100)
+dof.optimize_flexible_beads(150)
 
 rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    root_hier=r1_hier,           
