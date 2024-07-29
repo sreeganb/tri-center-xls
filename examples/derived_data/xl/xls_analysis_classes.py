@@ -1,3 +1,7 @@
+#----------------------------------------------------------
+# Functions for analyzing thr data from XL-MS experiments
+#----------------------------------------------------------
+
 import pandas as pd
 import numpy as np
 import math
