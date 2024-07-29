@@ -11,3 +11,6 @@ su8,222,prot3,1
 su7,116,prot4,1
 su6B,238,prot4,1
 su10B,206,prot4,1
+su7,418,prot5,1
+alp7,27,prot5,1
+alp7,166,prot5,1

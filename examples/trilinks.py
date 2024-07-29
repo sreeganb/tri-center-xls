@@ -24,7 +24,9 @@ sys = IMP.pmi.topology.System(mdl, name ='Modeling of triple crosslinking')
 output = IMP.pmi.output.Output()
 
 st1 = sys.create_state()
-colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple', 'cyan', 'magenta', 'black']
+colors = ['red', 'blue', 'green', 'yellow', 'orange', 
+          'purple', 'cyan', 'magenta', 'black', 
+            'pink', 'brown', 'gold']
 seq = 'K'*1
 m1 = st1.create_molecule("prot1", seq, chain_id = "A")
 m1.add_representation(m1, resolutions=[1], color=colors[0])
@@ -34,6 +36,8 @@ m3 = st1.create_molecule("prot3", seq, chain_id = "C")
 m3.add_representation(m3, resolutions=[1], color=colors[2])
 m4 = st1.create_molecule("prot4", seq, chain_id = "E")
 m4.add_representation(m4, resolutions=[1], color=colors[3])
+m5 = st1.create_molecule("prot5", seq, chain_id = "F")
+m5.add_representation(m5, resolutions=[1], color=colors[4])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
@@ -54,6 +58,7 @@ subunit4 = st1.create_molecule("su4", sequences["subunit4"], chain_id = 'I')
 subunit8 = st1.create_molecule("su8", sequences["subunit8"], chain_id = 'J')
 subunit6A = st1.create_molecule("su6A", sequences["subunit6A"], chain_id = 'M')
 subunit7 =st1.create_molecule("su7", sequences["subunit7"], chain_id = 'H')
+subunitalpha7 = st1.create_molecule("alp7", sequences["subunitalpha7"], chain_id = 'k')
 #----------------------------------------------------------------------
 su7 = subunit7.add_structure(pdb_dir + "subunit7.pdb",
                             chain_id = 'H'
@@ -72,45 +77,54 @@ su4 = subunit4.add_structure(pdb_dir + "subunit4.pdb",
                                 )
 su6A = subunit6A.add_structure(pdb_dir + "subunit6A.pdb",
                                chain_id = 'M')
+sualp7 = subunitalpha7.add_structure(pdb_dir + "alpha7.pdb",
+                                    chain_id = 'k')
 #----------------------------------------------------------------------
-subunit10B.add_representation(su10B, resolutions=[1 ,10], color=colors[2])
+subunit10B.add_representation(su10B, resolutions=[1 ,10], color=colors[5])
 subunit10B.add_representation(
     subunit10B[:]-su10B,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit8.add_representation(su8, resolutions=[1, 10], color=colors[3])
+subunit8.add_representation(su8, resolutions=[1, 10], color=colors[6])
 subunit8.add_representation(
     subunit8[:]-su8,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit6B.add_representation(su6B, resolutions=[1, 10], color=colors[4])
+subunit6B.add_representation(su6B, resolutions=[1, 10], color=colors[7])
 subunit6B.add_representation(
     subunit6B[:]-su6B,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit4.add_representation(su4, resolutions=[1, 10], color=colors[5])
+subunit4.add_representation(su4, resolutions=[1, 10], color=colors[8])
 subunit4.add_representation(
     subunit4[:]-su4,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit6A.add_representation(su6A, resolutions=[1, 10], color=colors[6])
+subunit6A.add_representation(su6A, resolutions=[1, 10], color=colors[9])
 subunit6A.add_representation(
     subunit6A[:]-su6A,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
     setup_particles_as_densities=False)
-subunit7.add_representation(su7, resolutions=[1, 10], color=colors[7])
+subunit7.add_representation(su7, resolutions=[1, 10], color=colors[10])
 subunit7.add_representation(
     subunit7[:]-su7,
+    # areas without structure can only be represented at one resolution
+    resolutions=[1],
+    # Set up spherical gaussian densities for these particles
+    setup_particles_as_densities=False)
+subunitalpha7.add_representation(sualp7, resolutions=[1, 10], color=colors[11])
+subunitalpha7.add_representation(
+    subunitalpha7[:]-sualp7,
     # areas without structure can only be represented at one resolution
     resolutions=[1],
     # Set up spherical gaussian densities for these particles
@@ -129,6 +143,7 @@ dof.create_flexible_beads(m1)
 dof.create_flexible_beads(m2)
 dof.create_flexible_beads(m3)
 dof.create_flexible_beads(m4)
+dof.create_flexible_beads(m5)
 
 rb1_su10B = dof.create_rigid_body(
     subunit10B,
@@ -161,6 +176,9 @@ rb1_su6A = dof.create_rigid_body(
 rb1_su7 = dof.create_rigid_body(
     subunit7,
     nonrigid_parts=subunit7.get_non_atomic_residues())
+rb_sualp7 = dof.create_rigid_body(
+    subunitalpha7,
+    nonrigid_parts=subunitalpha7.get_non_atomic_residues())
 #----------------------------------------------------------------------
 # Connectivity restraint
 #----------------------------------------------------------------------
@@ -175,6 +193,7 @@ add_connectivity_restraint(subunit8)
 add_connectivity_restraint(subunit4)
 add_connectivity_restraint(subunit6A)
 add_connectivity_restraint(subunit7)
+add_connectivity_restraint(subunitalpha7)
 # -----------------------------
 # %%%%% EXCLUDED VOLUME RESTRAINT
 #
@@ -188,7 +207,8 @@ add_connectivity_restraint(subunit7)
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
                                             included_objects=[subunit10B, subunit6B,
                                                               subunit8, subunit4, 
-                                                              subunit6A, subunit7],
+                                                              subunit6A, subunit7, 
+                                                              subunitalpha7],
                                             resolution=100)
 evr.add_to_model()
 output_objects.append(evr)
@@ -262,7 +282,7 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
                                    monte_carlo_steps=20,
-                                   number_of_frames=200,
+                                   number_of_frames=500,
                                    number_of_best_scoring_models=1)
 
 rex.execute_macro()
