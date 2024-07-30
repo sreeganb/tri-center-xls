@@ -208,7 +208,7 @@ evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
                                             included_objects=[subunit10B, subunit6B,
                                                               subunit8, subunit4, 
                                                               subunit6A, subunit7, 
-                                                              subunitalpha7, m1, m2, m3, m4, m5],
+                                                              subunitalpha7],
                                             resolution=1)
 evr.add_to_model()
 output_objects.append(evr)
@@ -220,7 +220,7 @@ xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
                           converter=xldbkc)
-xl_weight = 110.0 
+xl_weight = 120.0 
 
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
@@ -270,7 +270,7 @@ output_objects.append(xlr)
 sel = IMP.atom.Selection(r1_hier).get_selected_particles()
 IMP.pmi.tools.shuffle_configuration(sel,
                                     max_translation=200,
-                                    bounding_box=((-250,-250,-250),(250, 250, 250)),
+                                    bounding_box=((-300,-300,-300),(300, 300, 300)),
                                     avoidcollision_rb=False)
 dof.optimize_flexible_beads(100)
 
@@ -281,7 +281,7 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    global_output_directory="output_new/",
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
-                                   monte_carlo_steps=20,
+                                   monte_carlo_steps=25,
                                    number_of_frames=50,
                                    number_of_best_scoring_models=1)
 
