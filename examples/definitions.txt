@@ -1,14 +1,14 @@
-Rpt3, 6B
-Rpt4, 10B
-Rpt6, 8
-Rpt2, 4
-Rpt5, 6A
-Rpt1, 7
-Rpn6, non-ATP 2
-Rpn11, non-ATP 14
-Rpn7, non-ATP 6
-Rpn3, non-ATP 3
-Rpn8, non-ATP 7
-Rpn2, non-ATP 1
-Rpn5, non-ATP 12
-Rpn9, non-ATP 13
+Rpt3, 6B, K, y, P43686
+Rpt4, 10B, L, z, 
+Rpt6, 8, J, x
+Rpt2, 4, I, w
+Rpt5, 6A, 0, M
+Rpt1, 7, H, v
+Rpn6, non-ATP 2, AC, Z
+Rpn11, non-ATP 14, 9, V
+Rpn7, non-ATP 6, 5, R
+Rpn3, non-ATP 3, 6, S
+Rpn8, non-ATP 7, 8, U
+Rpn2, non-ATP 1, 1, N 
+Rpn5, non-ATP 12, 3, P
+Rpn9, non-ATP 13, 2, O
