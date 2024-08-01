@@ -1,0 +1,174 @@
+HEADER    STRUCTURAL PROTEIN                      27-JAN-22   7QY7              
+TITLE     PROTEASOME-ZFAND5 COMPLEX Z-A STATE                                   
+COMPND    MOL_ID: 1;                                                            
+COMPND   2 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 13;           
+COMPND   3 CHAIN: a;                                                            
+COMPND   4 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN9,26S PROTEASOME       
+COMPND   5 REGULATORY SUBUNIT S11,26S PROTEASOME REGULATORY SUBUNIT P40.5;      
+COMPND   6 MOL_ID: 2;                                                           
+COMPND   7 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 4;            
+COMPND   8 CHAIN: b;                                                            
+COMPND   9 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN10,26S PROTEASOME      
+COMPND  10 REGULATORY SUBUNIT S5A,ANTISECRETORY FACTOR 1,ASF,MULTIUBIQUITIN     
+COMPND  11 CHAIN-BINDING PROTEIN;                                               
+COMPND  12 MOL_ID: 3;                                                           
+COMPND  13 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 14;           
+COMPND  14 CHAIN: c;                                                            
+COMPND  15 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN11,26S PROTEASOME-     
+COMPND  16 ASSOCIATED PAD1 HOMOLOG 1;                                           
+COMPND  17 EC: 3.4.19.-;                                                        
+COMPND  18 MOL_ID: 4;                                                           
+COMPND  19 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 8;            
+COMPND  20 CHAIN: d;                                                            
+COMPND  21 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN12,26S PROTEASOME      
+COMPND  22 REGULATORY SUBUNIT S14,P31;                                          
+COMPND  23 MOL_ID: 5;                                                           
+COMPND  24 MOLECULE: 26S PROTEASOME COMPLEX SUBUNIT SEM1;                       
+COMPND  25 CHAIN: e;                                                            
+COMPND  26 SYNONYM: 26S PROTEASOME COMPLEX SUBUNIT DSS1,DELETED IN SPLIT        
+COMPND  27 HAND/SPLIT FOOT PROTEIN 1,SPLIT HAND/FOOT DELETED PROTEIN 1,SPLIT    
+COMPND  28 HAND/FOOT MALFORMATION TYPE 1 PROTEIN;                               
+COMPND  29 MOL_ID: 6;                                                           
+COMPND  30 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 2;            
+COMPND  31 CHAIN: f;                                                            
+COMPND  32 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN1,26S PROTEASOME       
+COMPND  33 REGULATORY SUBUNIT S2,26S PROTEASOME SUBUNIT P97,PROTEIN 55.11,TUMOR 
+COMPND  34 NECROSIS FACTOR TYPE 1 RECEPTOR-ASSOCIATED PROTEIN 2;                
+COMPND  35 MOL_ID: 7;                                                           
+COMPND  36 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 1;            
+COMPND  37 CHAIN: U;                                                            
+COMPND  38 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN2,26S PROTEASOME       
+COMPND  39 REGULATORY SUBUNIT S1,26S PROTEASOME SUBUNIT P112;                   
+COMPND  40 MOL_ID: 8;                                                           
+COMPND  41 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 3;            
+COMPND  42 CHAIN: V;                                                            
+COMPND  43 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN3,26S PROTEASOME       
+COMPND  44 REGULATORY SUBUNIT S3,PROTEASOME SUBUNIT P58;                        
+COMPND  45 MOL_ID: 9;                                                           
+COMPND  46 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 12;           
+COMPND  47 CHAIN: W;                                                            
+COMPND  48 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN5,26S PROTEASOME       
+COMPND  49 REGULATORY SUBUNIT P55;                                              
+COMPND  50 MOL_ID: 10;                                                          
+COMPND  51 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 11;           
+COMPND  52 CHAIN: X;                                                            
+COMPND  53 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN6,26S PROTEASOME       
+COMPND  54 REGULATORY SUBUNIT S9,26S PROTEASOME REGULATORY SUBUNIT P44.5;       
+COMPND  55 MOL_ID: 11;                                                          
+COMPND  56 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 6;            
+COMPND  57 CHAIN: Y;                                                            
+COMPND  58 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN7,26S PROTEASOME       
+COMPND  59 REGULATORY SUBUNIT S10,BREAST CANCER-ASSOCIATED PROTEIN SGA-113M,    
+COMPND  60 PHOSPHONOFORMATE IMMUNO-ASSOCIATED PROTEIN 4,PROTEASOME REGULATORY   
+COMPND  61 PARTICLE SUBUNIT P44S10,P42A;                                        
+COMPND  62 MOL_ID: 12;                                                          
+COMPND  63 MOLECULE: 26S PROTEASOME NON-ATPASE REGULATORY SUBUNIT 7;            
+COMPND  64 CHAIN: Z;                                                            
+COMPND  65 SYNONYM: 26S PROTEASOME REGULATORY SUBUNIT RPN8,26S PROTEASOME       
+COMPND  66 REGULATORY SUBUNIT S12,MOV34 PROTEIN HOMOLOG,PROTEASOME SUBUNIT P40; 
+COMPND  67 MOL_ID: 13;                                                          
+COMPND  68 MOLECULE: 26S PROTEASE REGULATORY SUBUNIT 7;                         
+COMPND  69 CHAIN: A;                                                            
+COMPND  70 SYNONYM: 26S PROTEASOME AAA-ATPASE SUBUNIT RPT1,PROTEASOME 26S       
+COMPND  71 SUBUNIT ATPASE 2,PROTEIN MSS1;                                       
+COMPND  72 MOL_ID: 14;                                                          
+COMPND  73 MOLECULE: 26S PROTEASE REGULATORY SUBUNIT 4;                         
+COMPND  74 CHAIN: B;                                                            
+COMPND  75 SYNONYM: P26S4,26S PROTEASOME AAA-ATPASE SUBUNIT RPT2,PROTEASOME 26S 
+COMPND  76 SUBUNIT ATPASE 1;                                                    
+COMPND  77 MOL_ID: 15;                                                          
+COMPND  78 MOLECULE: PSMC5 ISOFORM 15;                                          
+COMPND  79 CHAIN: C;                                                            
+COMPND  80 SYNONYM: PSMC5 ISOFORM 17,PSMC5 ISOFORM 7;                           
+COMPND  81 MOL_ID: 16;                                                          
+COMPND  82 MOLECULE: 26S PROTEASE REGULATORY SUBUNIT 6B;                        
+COMPND  83 CHAIN: D;                                                            
+COMPND  84 SYNONYM: 26S PROTEASOME AAA-ATPASE SUBUNIT RPT3,MB67-INTERACTING     
+COMPND  85 PROTEIN,MIP224,PROTEASOME 26S SUBUNIT ATPASE 4,TAT-BINDING PROTEIN 7,
+COMPND  86 TBP-7;                                                               
+COMPND  87 MOL_ID: 17;                                                          
+COMPND  88 MOLECULE: 26S PROTEASE REGULATORY SUBUNIT 10B;                     
+COMPND  89 CHAIN: E;                                                            
+COMPND  90 MOL_ID: 18;                                                          
+COMPND  91 MOLECULE: 26S PROTEASE REGULATORY SUBUNIT 6A;                        
+COMPND  92 CHAIN: F;                                                            
+COMPND  93 SYNONYM: 26S PROTEASOME AAA-ATPASE SUBUNIT RPT5,PROTEASOME 26S       
+COMPND  94 SUBUNIT ATPASE 3,PROTEASOME SUBUNIT P50,TAT-BINDING PROTEIN 1,TBP-1; 
+COMPND  95 MOL_ID: 19;                                                          
+COMPND  96 MOLECULE: PROTEASOME SUBUNIT ALPHA TYPE-6;                           
+COMPND  97 CHAIN: G, g;                                                         
+COMPND  98 SYNONYM: 27 KDA PROSOMAL PROTEIN,PROS-27,P27K,MACROPAIN IOTA CHAIN,  
+COMPND  99 MULTICATALYTIC ENDOPEPTIDASE COMPLEX IOTA CHAIN,PROTEASOME IOTA      
+COMPND 100 CHAIN;                                                               
+COMPND 101 MOL_ID: 20;                                                          
+COMPND 102 MOLECULE: PROTEASOME SUBUNIT ALPHA TYPE-2;                           
+COMPND 103 CHAIN: H, h;                                                         
+COMPND 104 SYNONYM: MACROPAIN SUBUNIT C3,MULTICATALYTIC ENDOPEPTIDASE COMPLEX   
+COMPND 105 SUBUNIT C3,PROTEASOME COMPONENT C3;                                  
+COMPND 106 MOL_ID: 21;                                                          
+COMPND 107 MOLECULE: PROTEASOME SUBUNIT ALPHA TYPE-4;                           
+COMPND 108 CHAIN: I, i;                                                         
+COMPND 109 SYNONYM: MACROPAIN SUBUNIT C9,MULTICATALYTIC ENDOPEPTIDASE COMPLEX   
+COMPND 110 SUBUNIT C9,PROTEASOME COMPONENT C9,PROTEASOME SUBUNIT L;             
+COMPND 111 MOL_ID: 22;                                                          
+COMPND 112 MOLECULE: PROTEASOME SUBUNIT ALPHA TYPE-7;                           
+COMPND 113 CHAIN: J, j;                                                         
+COMPND 114 SYNONYM: PROTEASOME SUBUNIT RC6-1,PROTEASOME SUBUNIT XAPC7;          
+COMPND 115 MOL_ID: 23;                                                          
+COMPND 116 MOLECULE: PROTEASOME SUBUNIT ALPHA TYPE-5;                           
+COMPND 117 CHAIN: K, k;                                                         
+COMPND 118 SYNONYM: MACROPAIN ZETA CHAIN,MULTICATALYTIC ENDOPEPTIDASE COMPLEX   
+COMPND 119 ZETA CHAIN,PROTEASOME ZETA CHAIN;                                    
+COMPND 120 MOL_ID: 24;                                                          
+COMPND 121 MOLECULE: ISOFORM LONG OF PROTEASOME SUBUNIT ALPHA TYPE-1;           
+COMPND 122 CHAIN: L, l;                                                         
+COMPND 123 SYNONYM: 30 KDA PROSOMAL PROTEIN,PROS-30,MACROPAIN SUBUNIT C2,       
+COMPND 124 MULTICATALYTIC ENDOPEPTIDASE COMPLEX SUBUNIT C2,PROTEASOME COMPONENT 
+COMPND 125 C2,PROTEASOME NU CHAIN;                                              
+COMPND 126 MOL_ID: 25;                                                          
+COMPND 127 MOLECULE: PROTEASOME SUBUNIT ALPHA TYPE-3;                           
+COMPND 128 CHAIN: M, m;                                                         
+COMPND 129 SYNONYM: MACROPAIN SUBUNIT C8,MULTICATALYTIC ENDOPEPTIDASE COMPLEX   
+COMPND 130 SUBUNIT C8,PROTEASOME COMPONENT C8;                                  
+COMPND 131 MOL_ID: 26;                                                          
+COMPND 132 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-6;                            
+COMPND 133 CHAIN: N, n;                                                         
+COMPND 134 SYNONYM: MACROPAIN DELTA CHAIN,MULTICATALYTIC ENDOPEPTIDASE COMPLEX  
+COMPND 135 DELTA CHAIN,PROTEASOME DELTA CHAIN,PROTEASOME SUBUNIT Y;             
+COMPND 136 EC: 3.4.25.1;                                                        
+COMPND 137 MOL_ID: 27;                                                          
+COMPND 138 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-7;                            
+COMPND 139 CHAIN: O, o;                                                         
+COMPND 140 SYNONYM: MACROPAIN CHAIN Z,MULTICATALYTIC ENDOPEPTIDASE COMPLEX CHAIN
+COMPND 141 Z,PROTEASOME SUBUNIT Z;                                              
+COMPND 142 EC: 3.4.25.1;                                                        
+COMPND 143 MOL_ID: 28;                                                          
+COMPND 144 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-3;                            
+COMPND 145 CHAIN: P, p;                                                         
+COMPND 146 SYNONYM: PROTEASOME CHAIN 13,PROTEASOME COMPONENT C10-II,PROTEASOME  
+COMPND 147 THETA CHAIN;                                                         
+COMPND 148 EC: 3.4.25.1;                                                        
+COMPND 149 MOL_ID: 29;                                                          
+COMPND 150 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-2;                            
+COMPND 151 CHAIN: Q, q;                                                         
+COMPND 152 SYNONYM: MACROPAIN SUBUNIT C7-I,MULTICATALYTIC ENDOPEPTIDASE COMPLEX 
+COMPND 153 SUBUNIT C7-I,PROTEASOME COMPONENT C7-I;                              
+COMPND 154 EC: 3.4.25.1;                                                        
+COMPND 155 MOL_ID: 30;                                                          
+COMPND 156 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-5;                            
+COMPND 157 CHAIN: R, r;                                                         
+COMPND 158 SYNONYM: MACROPAIN EPSILON CHAIN,MULTICATALYTIC ENDOPEPTIDASE COMPLEX
+COMPND 159 EPSILON CHAIN,PROTEASOME CHAIN 6,PROTEASOME EPSILON CHAIN,PROTEASOME 
+COMPND 160 SUBUNIT MB1,PROTEASOME SUBUNIT X;                                    
+COMPND 161 EC: 3.4.25.1;                                                        
+COMPND 162 MOL_ID: 31;                                                          
+COMPND 163 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-1;                            
+COMPND 164 CHAIN: S, s;                                                         
+COMPND 165 SYNONYM: MACROPAIN SUBUNIT C5,MULTICATALYTIC ENDOPEPTIDASE COMPLEX   
+COMPND 166 SUBUNIT C5,PROTEASOME COMPONENT C5,PROTEASOME GAMMA CHAIN;           
+COMPND 167 MOL_ID: 32;                                                          
+COMPND 168 MOLECULE: PROTEASOME SUBUNIT BETA TYPE-4;                            
+COMPND 169 CHAIN: T, t;                                                         
+COMPND 170 SYNONYM: 26 KDA PROSOMAL PROTEIN,HSBPROS26,PROS-26,MACROPAIN BETA    
+COMPND 171 CHAIN,MULTICATALYTIC ENDOPEPTIDASE COMPLEX BETA CHAIN,PROTEASOME BETA
+COMPND 172 CHAIN,PROTEASOME CHAIN 3,HSN3                                        
