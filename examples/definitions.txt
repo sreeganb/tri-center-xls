@@ -1,14 +1,19 @@
 Rpt3, 6B, K, y, P43686
-Rpt4, 10B, L, z, 
-Rpt6, 8, J, x
-Rpt2, 4, I, w
-Rpt5, 6A, 0, M
-Rpt1, 7, H, v
-Rpn6, non-ATP 2, AC, Z
-Rpn11, non-ATP 14, 9, V
-Rpn7, non-ATP 6, 5, R
-Rpn3, non-ATP 3, 6, S
-Rpn8, non-ATP 7, 8, U
-Rpn2, non-ATP 1, 1, N 
-Rpn5, non-ATP 12, 3, P
-Rpn9, non-ATP 13, 2, O
+Rpt4, 10B, L, z, P62333
+Rpt6, 8, J, x, P62195
+Rpt2, 4, I, w, P62191
+Rpt5, 6A, 0, M, P17980
+Rpt1, 7, H, v, P35998
+Rpn6, non-ATP 2, AC, Z, O00231
+Rpn11, non-ATP 14, 9, V, O00487
+Rpn7, non-ATP 6, 5, R, Q15008
+Rpn3, non-ATP 3, 6, S, O43242
+Rpn8, non-ATP 7, 8, U, P51665
+Rpn2, non-ATP 1, 1, N, Q99460 
+Rpn5, non-ATP 12, 3, P, O00232
+Rpn9, non-ATP 13, 2, O, Q9UNM6
+alpha6, alp6, B, h, P25786 
+alpha3, alp3, X, n, P25789
+alpha4, alp4, D, j, O14818
+alpha7, alp7, E, k, P25788
+alpha1, alp1, G, m, P60900
