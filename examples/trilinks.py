@@ -54,36 +54,6 @@ xl_data = './derived_data/xl/xls_data.txt'
 # Read in the protein structure information
 # 1) Store the fasta sequences as a dictionary
 #----------------------------------------------------------------------
-def extract_protein_info_to_dataframe(fasta_file, csv_file):
-    """Extracts protein name, chain ID, and common name from FASTA and CSV files into a DataFrame."""
-    data = []
-    auth_pattern = r"\[auth (\w+)\]"
-
-    # Read CSV file
-    csv_df = pd.read_csv(csv_file)
-
-    with open(fasta_file, "r") as f_in, open("mod_5gjr.fasta", "w") as f_out:
-        for record in SeqIO.parse(f_in, "fasta"):
-            header = record.description
-            parts = header.split("|")
-
-            protein_name = parts[2] if len(parts) > 2 else "Unknown"
-            chain_id = ','.join(re.findall(auth_pattern, header)) if re.findall(auth_pattern, header) else "Unknown"
-
-            # Find corresponding common name from CSV
-            common_name = csv_df[csv_df['protein_name'] == protein_name]['Common/Gene Name A'].values
-            common_name = common_name[0] if len(common_name) > 0 else "Unknown"
-
-            data.append({'protein_name': protein_name, 'chain_id': chain_id, 'common_name': common_name})
-
-            # Write modified FASTA record to new file
-            f_out.write(f">{common_name}\n")
-            f_out.write(str(record.seq) + "\n")
-
-    return pd.DataFrame(data)
-
-seqdat = extract_protein_info_to_dataframe(fasta_dir + 'rcsb_pdb_5GJR.fasta', pdb_dir_1 + 'new-unique-xls.csv')
-
 sequences = IMP.pmi.topology.Sequences('mod_5gjr.fasta')
 
 def create_molecule_from_fasta(seqdat, sequences, st, chain_id):
