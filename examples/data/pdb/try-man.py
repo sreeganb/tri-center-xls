@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.11
+
 import pandas as pd
 import re
 from Bio import PDB, SeqIO
@@ -147,6 +149,30 @@ def extract_protein_info(fasta_file, csv_file):
 
     return pd.DataFrame(data)
 
+def extract_base_of_proteasome(input_file, output_file):
+    """Extracts rows where 'Common/Gene Name A' and 'Common/Gene Name B' are from base subunits,
+    and 'Common/Gene Name C' is either empty or from base subunits, and writes to a new CSV file."""
+    # Define the list of subunit names to filter
+    base_subunits = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn1', 'Rpn2', 'Rpn10', 'Rpn13'}
+
+    # Read the input CSV file
+    df = pd.read_csv(input_file)
+
+    # Check if 'Common/Gene Name A' and 'Common/Gene Name B' are in base_subunits
+    # and 'Common/Gene Name C' is either empty or in base_subunits
+    mask = df.apply(
+        lambda row: all(
+            value in base_subunits for value in [row['Common/Gene Name A'], row['Common/Gene Name B']]
+        ) and (pd.isna(row['Common/Gene Name C']) or row['Common/Gene Name C'] in base_subunits),
+        axis=1
+    )
+
+    # Filter rows based on the mask
+    filtered_df = df[mask]
+
+    # Write the filtered DataFrame to a new CSV file
+    filtered_df.to_csv(output_file, index=False)
+    
 def main():
     fasta_file = "../fasta/rcsb_pdb_5GJR.fasta"
     fasta_dir = "../fasta/"
@@ -186,6 +212,10 @@ def main():
     # Reset index if needed
     df1_exploded.reset_index(drop=True, inplace=True)
     df1_exploded.to_csv('new-unique-xls.csv', index=False)
+    # Call the function with the appropriate file paths
+    input_file = 'new-unique-xls.csv'
+    output_file = 'base-of-proteasome.csv'
+    extract_base_of_proteasome(input_file, output_file)
     seqdat = extract_protein_info(fasta_dir + 'rcsb_pdb_5GJR.fasta', pdb_dir_1 + 'new-unique-xls.csv')
     
     df1 = df1_exploded
