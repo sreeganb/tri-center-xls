@@ -53,6 +53,10 @@ xl_data = './derived_data/xl/xls_data.txt'
 #----------------------------------------------------------------------
 # Read in the protein structure information
 # 1) Store the fasta sequences as a dictionary
+# Modelling of the base subcomplex of the human proteasome
+# This consists of Rpt1-6 and Rpn1, 2, 10, 13
+# The structure of the base complex needs to be sequestered out of the 
+# pdb or mmCIF file and used for IMP modelling
 #----------------------------------------------------------------------
 sequences = IMP.pmi.topology.Sequences('mod_5gjr.fasta')
 
