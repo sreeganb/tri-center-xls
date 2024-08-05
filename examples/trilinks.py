@@ -12,8 +12,13 @@ import IMP.pmi.dof
 import ihm.cross_linkers
 import IMP.pmi.macros
 
+from Bio import PDB, SeqIO
+import warnings
+
 import numpy as np
+import pandas as pd
 import os
+import re
 
 #----------------------------------------------------------------------
 # Define a bead with residue name and chain id with IMP hierarchy
@@ -41,7 +46,7 @@ m5.add_representation(m5, resolutions=[1], color=colors[0])
 #----------------------------------------------------------------------
 # Define the path to data files
 #----------------------------------------------------------------------
-#pdb_dir = './data/pdb/'
+pdb_dir_1 = './data/pdb/'
 pdb_dir = './data/pdb/5gjr_structure/'
 fasta_dir = './data/fasta/'
 xl_data = './derived_data/xl/xls_data.txt'
@@ -49,7 +54,45 @@ xl_data = './derived_data/xl/xls_data.txt'
 # Read in the protein structure information
 # 1) Store the fasta sequences as a dictionary
 #----------------------------------------------------------------------
-sequences = IMP.pmi.topology.Sequences(fasta_dir + '26s_proteasome.fasta.txt')
+def extract_protein_info_to_dataframe(fasta_file, csv_file):
+    """Extracts protein name, chain ID, and common name from FASTA and CSV files into a DataFrame."""
+    data = []
+    auth_pattern = r"\[auth (\w+)\]"
+
+    # Read CSV file
+    csv_df = pd.read_csv(csv_file)
+
+    with open(fasta_file, "r") as f_in, open("mod_5gjr.fasta", "w") as f_out:
+        for record in SeqIO.parse(f_in, "fasta"):
+            header = record.description
+            parts = header.split("|")
+
+            protein_name = parts[2] if len(parts) > 2 else "Unknown"
+            chain_id = ','.join(re.findall(auth_pattern, header)) if re.findall(auth_pattern, header) else "Unknown"
+
+            # Find corresponding common name from CSV
+            common_name = csv_df[csv_df['protein_name'] == protein_name]['Common/Gene Name A'].values
+            common_name = common_name[0] if len(common_name) > 0 else "Unknown"
+
+            data.append({'protein_name': protein_name, 'chain_id': chain_id, 'common_name': common_name})
+
+            # Write modified FASTA record to new file
+            f_out.write(f">{common_name}\n")
+            f_out.write(str(record.seq) + "\n")
+
+    return pd.DataFrame(data)
+
+seqdat = extract_protein_info_to_dataframe(fasta_dir + 'rcsb_pdb_5GJR.fasta', pdb_dir_1 + 'new-unique-xls.csv')
+
+sequences = IMP.pmi.topology.Sequences('mod_5gjr.fasta')
+
+def create_molecule_from_fasta(seqdat, sequences, st, chain_id):
+    """Create a molecule from a FASTA file and add it to the system."""
+    for i, row in seqdat.iterrows():
+        seq = sequences[row['protein_name']]
+        m = st.create_molecule(row['protein_name'], seq, chain_id=chain_id.split(',')[0])
+        m.add_representation(m, resolutions=[1], color=colors[0])
+        return m
 
 #subunit1 = st1.create_molecule("alp3", sequences["subunitalpha3"])
 subunit10B = st1.create_molecule("su10B", sequences["subunit10B"], chain_id = 'L')
@@ -285,7 +328,7 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    number_of_frames=50,
                                    number_of_best_scoring_models=1)
 
-rex.execute_macro()
+#rex.execute_macro()
 
 # ihm is for depositing structures into the CIF file
 # add dsso as linker for placeholder 
