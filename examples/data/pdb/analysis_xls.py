@@ -145,6 +145,7 @@ def main():
     
     not_found = 0
     valid_entries = []  # To store valid residue pairs and chain IDs
+    n_double_links = df1['XL A'].len()  # Number of double links
     for i in range(non_empty_entries):
         if not df1.loc[i, 'XL A'].startswith('K') or not df1.loc[i, 'XL B'].startswith('K') or not df1.loc[i, 'XL C'].startswith('K'):
             continue
