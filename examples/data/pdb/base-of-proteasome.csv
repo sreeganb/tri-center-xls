@@ -1,0 +1,44 @@
+Subunit A,XL A,Subunit B,XL B,Subunit C,XL C,Subunit Name A,Subunit Name B,Subunit Name C,Common/Gene Name A,Common/Gene Name B,Common/Gene Name C,Average Score,chain ID A,chain ID B,chain ID C
+Q99460,K666,Q99460,K807,Q99460,K890,26S proteasome non-ATPase regulatory subunit 1,26S proteasome non-ATPase regulatory subunit 1,26S proteasome non-ATPase regulatory subunit 1,Rpn2,Rpn2,Rpn2,36.43333333333334,"1,N","1,N","1,N"
+P35998,K422,P62191,K293,P62191,K350,26S protease regulatory subunit 7,26S protease regulatory subunit 4,26S protease regulatory subunit 4,Rpt1,Rpt2,Rpt2,29.5,"H,v","I,w","I,w"
+P35998,K116,P43686,K238,P62333,K206,26S protease regulatory subunit 7,26S protease regulatory subunit 6B,26S protease regulatory subunit 10B,Rpt1,Rpt3,Rpt4,42.86666666666667,"H,v","K,y","L,z"
+P62333,K42,P17980,K70,P17980,K81,26S protease regulatory subunit 10B,26S protease regulatory subunit 6A,26S protease regulatory subunit 6A,Rpt4,Rpt5,Rpt5,17.066666666666666,"L,z","0,M","0,M"
+P17980,K70,P17980,K74,P17980,K81,26S protease regulatory subunit 6A,26S protease regulatory subunit 6A,26S protease regulatory subunit 6A,Rpt5,Rpt5,Rpt5,20.266666666666666,"0,M","0,M","0,M"
+P35998,K57,P62191,K178,P62195,K287,26S protease regulatory subunit 7,26S protease regulatory subunit 4,26S protease regulatory subunit 8,Rpt1,Rpt2,Rpt6,40.46666666666667,"H,v","I,w","J,x"
+P62191,K258,P62333,K72,P62195,K222,26S protease regulatory subunit 4,26S protease regulatory subunit 10B,26S protease regulatory subunit 8,Rpt2,Rpt4,Rpt6,43.6,"I,w","L,z","J,x"
+P62191,K258,P17980,K300,P62195,K222,26S protease regulatory subunit 4,26S protease regulatory subunit 6A,26S protease regulatory subunit 8,Rpt2,Rpt5,Rpt6,37.2,"I,w","0,M","J,x"
+P43686,K192,P43686,K306,P62195,K335,26S protease regulatory subunit 6B,26S protease regulatory subunit 6B,26S protease regulatory subunit 8,Rpt3,Rpt3,Rpt6,18.46666666666667,"K,y","K,y","J,x"
+P43686,K238,P62333,K72,P62195,K222,26S protease regulatory subunit 6B,26S protease regulatory subunit 10B,26S protease regulatory subunit 8,Rpt3,Rpt4,Rpt6,42.2,"K,y","L,z","J,x"
+P43686,K238,P17980,K125,P62195,K222,26S protease regulatory subunit 6B,26S protease regulatory subunit 6A,26S protease regulatory subunit 8,Rpt3,Rpt5,Rpt6,39.06666666666667,"K,y","0,M","J,x"
+P62333,K72,P17980,K125,P62195,K222,26S protease regulatory subunit 10B,26S protease regulatory subunit 6A,26S protease regulatory subunit 8,Rpt4,Rpt5,Rpt6,36.4,"L,z","0,M","J,x"
+P62195,K88,P62195,K130,P62195,K222,26S protease regulatory subunit 8,26S protease regulatory subunit 8,26S protease regulatory subunit 8,Rpt6,Rpt6,Rpt6,31.53333333333333,"J,x","J,x","J,x"
+Q99460,K720,Q99460,K823,,,26S proteasome non-ATPase regulatory subunit 1,26S proteasome non-ATPase regulatory subunit 1,,Rpn2,Rpn2,,16.65,"1,N","1,N",
+Q99460,K720,Q99460,K825,,,26S proteasome non-ATPase regulatory subunit 1,26S proteasome non-ATPase regulatory subunit 1,,Rpn2,Rpn2,,16.65,"1,N","1,N",
+Q99460,K720,P35998,K84,,,26S proteasome non-ATPase regulatory subunit 1,26S protease regulatory subunit 7,,Rpn2,Rpt1,,29.4,"1,N","H,v",
+Q99460,K720,P62191,K98,,,26S proteasome non-ATPase regulatory subunit 1,26S protease regulatory subunit 4,,Rpn2,Rpt2,,27.75,"1,N","I,w",
+Q99460,K574,P43686,K70,,,26S proteasome non-ATPase regulatory subunit 1,26S protease regulatory subunit 6B,,Rpn2,Rpt3,,23.35,"1,N","K,y",
+Q99460,K720,P62195,K82,,,26S proteasome non-ATPase regulatory subunit 1,26S protease regulatory subunit 8,,Rpn2,Rpt6,,19.55,"1,N","J,x",
+Q99460,K720,P62195,K83,,,26S proteasome non-ATPase regulatory subunit 1,26S protease regulatory subunit 8,,Rpn2,Rpt6,,19.55,"1,N","J,x",
+P35998,K181,P35998,K356,,,26S protease regulatory subunit 7,26S protease regulatory subunit 7,,Rpt1,Rpt1,,35.75,"H,v","H,v",
+P35998,K418,P62191,K350,,,26S protease regulatory subunit 7,26S protease regulatory subunit 4,,Rpt1,Rpt2,,27.6,"H,v","I,w",
+P35998,K422,P62191,K350,,,26S protease regulatory subunit 7,26S protease regulatory subunit 4,,Rpt1,Rpt2,,27.6,"H,v","I,w",
+P35998,K116,P43686,K238,,,26S protease regulatory subunit 7,26S protease regulatory subunit 6B,,Rpt1,Rpt3,,41.0,"H,v","K,y",
+P35998,K116,P62333,K206,,,26S protease regulatory subunit 7,26S protease regulatory subunit 10B,,Rpt1,Rpt4,,36.25,"H,v","L,z",
+P35998,K116,P17980,K146,,,26S protease regulatory subunit 7,26S protease regulatory subunit 6A,,Rpt1,Rpt5,,32.05,"H,v","0,M",
+P35998,K116,P17980,K155,,,26S protease regulatory subunit 7,26S protease regulatory subunit 6A,,Rpt1,Rpt5,,32.05,"H,v","0,M",
+P35998,K11,P62195,K330,,,26S protease regulatory subunit 7,26S protease regulatory subunit 8,,Rpt1,Rpt6,,23.25,"H,v","J,x",
+P35998,K13,P62195,K330,,,26S protease regulatory subunit 7,26S protease regulatory subunit 8,,Rpt1,Rpt6,,23.25,"H,v","J,x",
+P62191,K91,P62191,K98,,,26S protease regulatory subunit 4,26S protease regulatory subunit 4,,Rpt2,Rpt2,,29.450000000000003,"I,w","I,w",
+P62191,K258,P62333,K72,,,26S protease regulatory subunit 4,26S protease regulatory subunit 10B,,Rpt2,Rpt4,,41.2,"I,w","L,z",
+P62191,K429,P62195,K314,,,26S protease regulatory subunit 4,26S protease regulatory subunit 8,,Rpt2,Rpt6,,14.95,"I,w","J,x",
+P43686,K404,P43686,K409,,,26S protease regulatory subunit 6B,26S protease regulatory subunit 6B,,Rpt3,Rpt3,,26.85,"K,y","K,y",
+P43686,K80,P62333,K68,,,26S protease regulatory subunit 6B,26S protease regulatory subunit 10B,,Rpt3,Rpt4,,34.55,"K,y","L,z",
+P43686,K66,P62195,K55,,,26S protease regulatory subunit 6B,26S protease regulatory subunit 8,,Rpt3,Rpt6,,21.65,"K,y","J,x",
+P43686,K69,P62195,K55,,,26S protease regulatory subunit 6B,26S protease regulatory subunit 8,,Rpt3,Rpt6,,21.65,"K,y","J,x",
+P62333,K20,P62333,K27,,,26S protease regulatory subunit 10B,26S protease regulatory subunit 10B,,Rpt4,Rpt4,,14.9,"L,z","L,z",
+P62333,K14,P17980,K56,,,26S protease regulatory subunit 10B,26S protease regulatory subunit 6A,,Rpt4,Rpt5,,22.15,"L,z","0,M",
+P62333,K15,P17980,K56,,,26S protease regulatory subunit 10B,26S protease regulatory subunit 6A,,Rpt4,Rpt5,,22.15,"L,z","0,M",
+P62333,K72,P62195,K222,,,26S protease regulatory subunit 10B,26S protease regulatory subunit 8,,Rpt4,Rpt6,,44.35,"L,z","J,x",
+P17980,K74,P17980,K81,,,26S protease regulatory subunit 6A,26S protease regulatory subunit 6A,,Rpt5,Rpt5,,20.4,"0,M","0,M",
+P17980,K125,P62195,K222,,,26S protease regulatory subunit 6A,26S protease regulatory subunit 8,,Rpt5,Rpt6,,37.3,"0,M","J,x",
+P62195,K346,P62195,K393,,,26S protease regulatory subunit 8,26S protease regulatory subunit 8,,Rpt6,Rpt6,,31.0,"J,x","J,x",
