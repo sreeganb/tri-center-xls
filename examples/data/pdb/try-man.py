@@ -9,6 +9,8 @@ import csv
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+from Bio.PDB import MMCIFParser, PDBIO, Select
+
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
@@ -172,7 +174,27 @@ def extract_base_of_proteasome(input_file, output_file):
 
     # Write the filtered DataFrame to a new CSV file
     filtered_df.to_csv(output_file, index=False)
-    
+
+def extract_all_chains_to_pdb(mmcif_file, output_pdb):
+    """Extracts all chains from an mmCIF file and combines them into a single PDB file.
+
+    Args:
+        mmcif_file (str): Path to the input mmCIF file.
+        output_pdb (str): Path to the output PDB file.
+    """
+
+    parser = MMCIFParser(QUIET=True)
+    structure = parser.get_structure("structure", mmcif_file)
+
+    io = PDBIO()
+    counter = 0
+    for model in structure:
+        for chain in model:
+            chain_id = chr(ord('A') + counter)  # Assign a new chain ID
+            counter += 1
+            io.set_structure(chain)
+            io.save(output_pdb, select=lambda x: x.id == chain_id, append=True)
+
 def main():
     fasta_file = "../fasta/rcsb_pdb_5GJR.fasta"
     fasta_dir = "../fasta/"
@@ -219,6 +241,12 @@ def main():
     seqdat = extract_protein_info(fasta_dir + 'rcsb_pdb_5GJR.fasta', pdb_dir_1 + 'new-unique-xls.csv')
     
     df1 = df1_exploded
+    
+    # Using the newly created dataframe for the base of the proteasome here
+    # We should check with this and then revert back to the full proteasome 
+    # or not, doesnt matter for now at least
+    base_df = pd.read_csv('./base-of-proteasome.csv')
+    df1 = base_df
     # Plot the density of the proteins that are crosslinked
     comb_data = pd.concat([df1['Common/Gene Name A'], df1['Common/Gene Name B'], df1['Common/Gene Name C']])
     value_counts = comb_data.value_counts().sort_index()
@@ -239,6 +267,26 @@ def main():
     plt.show()
 
     cif_file = './5gjr.cif'
+    # Create a list of unique elements
+    # Split the entries and create separate lists for first and second elements
+    first_elements = []
+    second_elements = []
+
+    for entry in df1['chain ID A']:
+        first, second = entry.split(',')
+        first_elements.append(first)
+        second_elements.append(second)
+
+    # Remove duplicates by converting to sets and then back to lists
+    unique_first_elements = list(set(first_elements))
+    unique_second_elements = list(set(second_elements))
+
+    # Print the results
+    print("Unique first elements:", unique_first_elements)
+    print("Unique second elements:", unique_second_elements)
+
+    #unique_chain_ids = list(set(sum(df1['chain ID A'].str.split(','), [])))
+    #print("the unique chain IDs are: ", unique_chain_ids)
     parser = PDB.MMCIFParser()
     structure = parser.get_structure('structure', cif_file)
     
