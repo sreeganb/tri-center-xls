@@ -2,14 +2,13 @@
 
 import pandas as pd
 import re
-from Bio import PDB, SeqIO
+from Bio import PDB, SeqIO, SearchIO
 import warnings
 import numpy as np
 import csv
-import os
 import matplotlib.pyplot as plt
 import seaborn as sns
-from Bio.PDB import MMCIFParser, PDBIO, Select
+from Bio.PDB import MMCIFParser, PDBIO, Structure, Model, Chain
 
 
 # Suppress all warnings
@@ -155,7 +154,7 @@ def extract_base_of_proteasome(input_file, output_file):
     """Extracts rows where 'Common/Gene Name A' and 'Common/Gene Name B' are from base subunits,
     and 'Common/Gene Name C' is either empty or from base subunits, and writes to a new CSV file."""
     # Define the list of subunit names to filter
-    base_subunits = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn1', 'Rpn2', 'Rpn10', 'Rpn13'}
+    base_subunits = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn2'}
 
     # Read the input CSV file
     df = pd.read_csv(input_file)
@@ -175,25 +174,36 @@ def extract_base_of_proteasome(input_file, output_file):
     # Write the filtered DataFrame to a new CSV file
     filtered_df.to_csv(output_file, index=False)
 
-def extract_all_chains_to_pdb(mmcif_file, output_pdb):
-    """Extracts all chains from an mmCIF file and combines them into a single PDB file.
+def extract_chains_to_pdb(mmcif_file, output_pdb, chain_ids):
+    """Extracts specified chains from an mmcif file and writes to a PDB file.
 
     Args:
-        mmcif_file (str): Path to the input mmCIF file.
+        mmcif_file (str): Path to the input mmcif file.
         output_pdb (str): Path to the output PDB file.
+        chain_ids (list[str]): List of chain IDs to extract.
     """
-
     parser = MMCIFParser(QUIET=True)
     structure = parser.get_structure("structure", mmcif_file)
 
-    io = PDBIO()
-    counter = 0
+    # Create a new structure with one model
+    combined_structure = Structure.Structure("combined_structure")
+    combined_model = Model.Model(0)
+    combined_structure.add(combined_model)
+    print(f"Chain IDs to extract: {chain_ids}")
+
     for model in structure:
         for chain in model:
-            chain_id = chr(ord('A') + counter)  # Assign a new chain ID
-            counter += 1
-            io.set_structure(chain)
-            io.save(output_pdb, select=lambda x: x.id == chain_id, append=True)
+            if len(chain.id) <= 1 and chain.id in chain_ids:
+                print(f"Adding chain {chain.id}")
+                # Create a new chain and copy its contents
+                new_chain = Chain.Chain(chain.id)
+                for residue in chain:
+                    new_chain.add(residue.copy())
+                combined_model.add(new_chain)
+
+    io = PDBIO()
+    io.set_structure(combined_structure)
+    io.save(output_pdb)
 
 def main():
     fasta_file = "../fasta/rcsb_pdb_5GJR.fasta"
@@ -280,13 +290,12 @@ def main():
     # Remove duplicates by converting to sets and then back to lists
     unique_first_elements = list(set(first_elements))
     unique_second_elements = list(set(second_elements))
+    output_pdb = "alt_base_proteasome.pdb"
+    
+    # Hard coded here, just to extract the right chains 
+    base_1_ids = ['v', 'w', 'x', 'y', 'z', '0', '1']
+    extract_chains_to_pdb(cif_file, output_pdb, base_1_ids)
 
-    # Print the results
-    print("Unique first elements:", unique_first_elements)
-    print("Unique second elements:", unique_second_elements)
-
-    #unique_chain_ids = list(set(sum(df1['chain ID A'].str.split(','), [])))
-    #print("the unique chain IDs are: ", unique_chain_ids)
     parser = PDB.MMCIFParser()
     structure = parser.get_structure('structure', cif_file)
     
