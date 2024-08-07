@@ -166,6 +166,20 @@ def plot_histograms(triple_links, double_links):
 
     plt.tight_layout()
     plt.show()
+    
+def replace_chain_ids(df, mapping):
+    """Replaces chain IDs in the DataFrame with their corresponding gene names."""
+    chain_id_columns = ['chain ID 1', 'chain ID 2']
+    
+    for col in chain_id_columns:
+        if col in df.columns:
+            df[col] = df[col].map(lambda x: mapping.get(x, x))
+        else:
+            print(f"Warning: Column '{col}' not found in the DataFrame.")
+    # Rename the columns chain ID 1 and chain ID 2 to protein1 and protein2
+    df.rename(columns={'chain ID 1': 'protein1', 'chain ID 2': 'protein2'}, inplace=True)
+
+    return df
 
 def main():
     # Load and filter the CSV file into a DataFrame
@@ -203,7 +217,6 @@ def main():
     
     # Load the DataFrame from CSV
     df = pd.read_csv('triple_links_distances.csv')
-
     # Define the replacement mapping
     replacement_mapping = {
         'x': 'Rpt6',
@@ -213,37 +226,13 @@ def main():
         '0': 'Rpt5',
         'w': 'Rpt2',
         'v': 'Rpt1'
-        }
-
-    # Replace chain IDs in the DataFrame
-    def replace_chain_ids(df, mapping):
-        """Replaces chain IDs in the DataFrame with their corresponding gene names."""
-        chain_id_columns = ['chain ID 1', 'chain ID 2']
-    
-        for col in chain_id_columns:
-            df[col] = df[col].map(lambda x: mapping.get(x, x))
-            
-        return df
-    # Rename columns
-    def rename_columns(df):
-        """Renames columns in the DataFrame."""
-        df = df.rename(columns={
-            'chain ID 1': 'protein1',
-            'chain ID 2': 'protein2'
-        })
-        return df
-
-    # Apply the replacement
+    }
+    # Replace the chain IDs with the gene names
     df = replace_chain_ids(df, replacement_mapping)
+    # Save the modified DataFrame to a new CSV file
+    # Lose the last column before saving
+    df = df.iloc[:, :-1]
+    df.to_csv('replaced_triple_links.csv', index=False)
     
-    # Rename columns
-    df = rename_columns(df)
-
-    # Save the updated DataFrame leaving the last column out
-    df.iloc[:, :-1].to_csv('updated_dataframe.csv', index=False)
-    #df.to_csv('updated_dataframe.csv', index=False)
-
-    print(df)
-
 if __name__ == '__main__':
     main()
