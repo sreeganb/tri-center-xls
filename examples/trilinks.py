@@ -60,14 +60,6 @@ xl_data = './derived_data/xl/xls_data.txt'
 #----------------------------------------------------------------------
 sequences = IMP.pmi.topology.Sequences('mod_5gjr.fasta')
 
-def create_molecule_from_fasta(seqdat, sequences, st, chain_id):
-    """Create a molecule from a FASTA file and add it to the system."""
-    for i, row in seqdat.iterrows():
-        seq = sequences[row['protein_name']]
-        m = st.create_molecule(row['protein_name'], seq, chain_id=chain_id.split(',')[0])
-        m.add_representation(m, resolutions=[1], color=colors[0])
-        return m
-
 #subunit1 = st1.create_molecule("alp3", sequences["subunitalpha3"])
 subunit10B = st1.create_molecule("su10B", sequences["subunit10B"], chain_id = 'L')
 subunit6B = st1.create_molecule("su6B", sequences["subunit6B"], chain_id = 'K')

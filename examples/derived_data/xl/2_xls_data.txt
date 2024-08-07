@@ -1,4 +1,0 @@
-Protein1,Residue1,Protein2,Residue2
-su6A,125,su10B,72
-su10B,72,su8,222
-su8,222,su6A,125
