@@ -234,5 +234,27 @@ def main():
     df = df.iloc[:, :-1]
     df.to_csv('replaced_triple_links.csv', index=False)
     
+    # Initialize results list
+    results = []
+
+    # Process DataFrame in chunks of 3 rows
+    for start in range(0, len(df), 3):
+        chunk = df.iloc[start:start+3]
+    
+        # Collect unique (protein, res) pairs and their occurrences
+        for _, row in chunk.iterrows():
+            results.append([row['protein1'], row['res 1'], f'p{(start // 3) + 1}', 1])
+            results.append([row['protein2'], row['res 2'], f'p{(start // 3) + 1}', 1])
+
+    # Create DataFrame from results
+    result_df = pd.DataFrame(results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
+
+    # Remove duplicates
+    result_df = result_df.drop_duplicates()
+
+    # Print the DataFrame
+    print(result_df)
+    result_df.to_csv('final_triple_xls.csv', index=False)
+    
 if __name__ == '__main__':
     main()
