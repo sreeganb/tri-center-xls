@@ -103,8 +103,6 @@ def create_and_process_molecules(proteins, chain_ids, sequences, st, colors):
 
   return molecules, sub_names
 
-# ... rest of your code
-
 proteins = ['Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn2']
 chain_ids = ['v', 'w', 'y', 'z', '0', 'x', '1']
 
@@ -160,7 +158,7 @@ add_connectivity_restraints(subunits)
 # resolution for each particle.
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
                                             included_objects=molecules[nbeads:],
-                                            resolution=10)
+                                            resolution=5)
 evr.add_to_model()
 output_objects.append(evr)
 #----------------------------------------------------------------------
@@ -171,7 +169,7 @@ xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
                           converter=xldbkc)
-xl_weight = 120.0 
+xl_weight = 130.0 
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
     database=xldb,        # The crosslink database.
@@ -194,8 +192,8 @@ output_objects.append(xlr)
 # system. For larger systems, you may want to increase max_translation
 sel = IMP.atom.Selection(r1_hier).get_selected_particles()
 IMP.pmi.tools.shuffle_configuration(sel,
-                                    max_translation=200,
-                                    bounding_box=((-300,-300,-300),(300, 300, 300)),
+                                    max_translation=300,
+                                    bounding_box=((-400,-400,-400),(400, 400, 400)),
                                     avoidcollision_rb=False)
 dof.optimize_flexible_beads(100)
 rex=IMP.pmi.macros.ReplicaExchange(mdl,
@@ -205,8 +203,8 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    global_output_directory="output_new/",
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
-                                   monte_carlo_steps=10,
-                                   number_of_frames=500,
+                                   monte_carlo_steps=20,
+                                   number_of_frames=1000,
                                    number_of_best_scoring_models=1)
 
 rex.execute_macro()
