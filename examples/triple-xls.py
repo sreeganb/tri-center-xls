@@ -158,7 +158,7 @@ add_connectivity_restraints(subunits)
 # resolution for each particle.
 evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
                                             included_objects=molecules[nbeads:],
-                                            resolution=5)
+                                            resolution=1)
 evr.add_to_model()
 output_objects.append(evr)
 #----------------------------------------------------------------------
@@ -169,7 +169,7 @@ xldbkc.set_standard_keys()
 xldb = IMP.pmi.io.crosslink.CrossLinkDataBase()
 xldb.create_set_from_file(file_name=xl_data,
                           converter=xldbkc)
-xl_weight = 130.0 
+xl_weight = 150.0 
 xlr = IMP.pmi.restraints.crosslinking.CrossLinkingMassSpectrometryRestraint(
     root_hier=r1_hier,    # Must pass the root hierarchy to the system
     database=xldb,        # The crosslink database.
@@ -203,8 +203,8 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    global_output_directory="output_new/",
                                    output_objects=output_objects,
                                    nframes_write_coordinates=1,
-                                   monte_carlo_steps=20,
-                                   number_of_frames=1000,
+                                   monte_carlo_steps=40,
+                                   number_of_frames=20000,
                                    number_of_best_scoring_models=1)
 
 rex.execute_macro()
