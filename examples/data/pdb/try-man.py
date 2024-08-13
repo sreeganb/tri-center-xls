@@ -9,6 +9,7 @@ import csv
 import matplotlib.pyplot as plt
 import seaborn as sns
 from Bio.PDB import MMCIFParser, PDBIO, Structure, Model, Chain
+import os
 
 
 # Suppress all warnings
@@ -55,8 +56,10 @@ def remove_rows_with_empty_chain_id_a_b(df):
     return df[(df['chain ID A'] != '') & (df['chain ID B'] != '')]
 
 def remove_duplicate_rows(input_file, output_file):
-    """Removes duplicate rows from the CSV file based on Subunit columns."""
+    """Removes duplicate rows from the CSV file based on Subunit columns.
+        Also if subunits are same between two rows then check for the crosslinking residues"""
     unique_rows = {}
+    
     
     with open(input_file, mode='r') as infile:
         reader = csv.DictReader(infile)
@@ -72,6 +75,14 @@ def remove_duplicate_rows(input_file, output_file):
         writer.writeheader()
         for row in unique_rows.values():
             writer.writerow(row)
+    
+    df_in = pd.read_csv(input_file)
+    columns_to_check = ['XL A', 'XL B', 'XL C']
+    unique_df = df_in.drop_duplicates(subset=columns_to_check)
+    unique_df.to_csv('row_unique.csv', index=False)
+    # delete the output file and write unique_df to output_file
+    os.remove(output_file)
+    unique_df.to_csv(output_file, index=False)
 
 def calculate_ca_distance(structure, res1_num, chain1_id, res2_num, chain2_id):
     """Calculates the distance between two C-alpha atoms in a structure."""
