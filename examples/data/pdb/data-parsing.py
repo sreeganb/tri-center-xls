@@ -59,8 +59,7 @@ def remove_duplicate_rows(input_file, output_file):
     """Removes duplicate rows from the CSV file based on Subunit columns.
         Also if subunits are same between two rows then check for the crosslinking residues"""
     unique_rows = {}
-    
-    
+        
     with open(input_file, mode='r') as infile:
         reader = csv.DictReader(infile)
         fieldnames = reader.fieldnames
@@ -332,7 +331,6 @@ def main():
     calpha_distances = []
     calpha_doubles = []
     non_empty_entries = df1['XL C'].notnull().sum()
-    print(f"Number of non-empty entries: {non_empty_entries}")
     
     not_found = 0
     valid_entries = []  # To store valid residue pairs and chain IDs
