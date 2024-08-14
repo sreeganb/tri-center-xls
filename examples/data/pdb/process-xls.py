@@ -253,6 +253,12 @@ def main():
     # Lose the last column before saving
     df = df.iloc[:, :-1]
     df.to_csv('replaced_triple_links.csv', index=False)
+    # Replace the chain IDs with the gene names for double links
+    double_links_df = replace_chain_ids(double_links_df, replacement_mapping)
+    # Save the modified DataFrame to a new CSV file
+    # Lose the last column before saving
+    double_links_df = double_links_df.iloc[:, :-1]
+    double_links_df.to_csv('replaced_double_links.csv', index=False)
     
     # Initialize results list
     results = []
