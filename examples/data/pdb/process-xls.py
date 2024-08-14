@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import pandas as pd
 from Bio.PDB import PDBParser
 import numpy as np
@@ -144,27 +145,46 @@ def process_distances(df, structure):
     return triple_links, double_links, triple_links_df, double_links_df
 
 def plot_histograms(triple_links, double_links):
-    plt.figure(figsize=(14, 6))
+    # Define figure dimensions in inches based on the golden ratio
+    fig_width_inch = 7.2  # Width in inches (183 mm)
+    fig_height_inch = fig_width_inch / 1.618  # Height in inches based on the golden ratio
+
+    plt.figure(figsize=(fig_width_inch, fig_height_inch))
 
     # Histogram for triple-links
     plt.subplot(1, 2, 1)
     sns.histplot(triple_links, bins=30, kde=False, color='blue')
     plt.axvline(x=35.0, color='red', linestyle='--', label='x=35.0')
-    plt.xlabel('Distance')
-    plt.ylabel('Frequency')
-    plt.title('Triple-links: All A, B, C')
-    plt.legend()
+    plt.xlabel(r'Distance (${\AA}$)', fontsize=14)
+    plt.ylabel('Frequency', fontsize=14)
+    plt.title('Triple-links: All A, B, C', fontsize=16)
+    plt.legend(loc='upper right', fontsize=12)
+
+    # Calculate total number of triple-links
+    total_triple_links = len(triple_links)
+    # Add text annotation for triple-links
+    plt.text(0.98, 0.85, f'Total Triple-links: {total_triple_links/3}', 
+            ha='right', va='top', fontsize=12, color='blue', 
+            transform=plt.gca().transAxes)
 
     # Histogram for double-links
     plt.subplot(1, 2, 2)
     sns.histplot(double_links, bins=30, kde=False, color='green')
     plt.axvline(x=35.0, color='red', linestyle='--', label='x=35.0')
-    plt.xlabel('Distance')
-    plt.ylabel('Frequency')
-    plt.title('Double-links: A and B')
-    plt.legend()
+    plt.xlabel(r'Distance (${\AA}$)', fontsize=14)
+    plt.ylabel('Frequency', fontsize=14)
+    plt.title('Double-links: A and B', fontsize=16)
+    plt.legend(loc='upper right', fontsize=12)
+
+    # Calculate total number of double-links
+    total_double_links = len(double_links)
+    # Add text annotation for double-links
+    plt.text(0.98, 0.85, f'Total Double-links: {total_double_links}', 
+            ha='right', va='top', fontsize=12, color='green', 
+            transform=plt.gca().transAxes)
 
     plt.tight_layout()
+    plt.savefig('xls_satisfaction_base.pdf', format='pdf', dpi=300)
     plt.show()
     
 def replace_chain_ids(df, mapping):
