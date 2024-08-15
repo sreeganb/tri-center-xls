@@ -259,6 +259,11 @@ def main():
     # Lose the last column before saving
     double_links_df = double_links_df.iloc[:, :-1]
     double_links_df.to_csv('replaced_double_links.csv', index=False)
+    # find similar rows
+    df1 = pd.read_csv('replaced_triple_links.csv')
+    df2 = pd.read_csv('replaced_double_links.csv')
+    common_rows = pd.merge(df1,df2, on=['protein1', 'res 1', 'protein2', 'res 2'], how='inner')
+    print("common rows between the datasets: ", common_rows)
     
     # Initialize results list
     results = []
@@ -279,7 +284,7 @@ def main():
     result_df = result_df.drop_duplicates()
 
     # Print the DataFrame
-    print(result_df)
+    #print(result_df)
     result_df.to_csv('final_triple_xls.csv', index=False)
     
 if __name__ == '__main__':
