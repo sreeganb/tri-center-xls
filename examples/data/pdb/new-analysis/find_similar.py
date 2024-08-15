@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.12
+#!/usr/bin/env python3.11
 
 import pandas as pd
 import re
@@ -68,21 +68,33 @@ def extract_protein_residue(row):
         proteins[2], residues[2] if len(residues) > 2 else ''
     ]
 
+def is_ambiguous(entry):
+    # Define what constitutes an ambiguous entry
+    return any(delim in entry for delim in [';', '|'])
+
 def process_csv(file_path):
     df_raw = pd.read_csv(file_path, header=None)
     
-    # Apply extraction function to each row
+    # Lists to store the rows
     extracted_rows = []
+    ambiguous_rows = []
+
     for index, row in df_raw.iterrows():
         row_data = row[0]
-        if '-' in row_data or '|' in row_data:
-            extracted_rows.append(parse_protein_residue(row_data))
+        if is_ambiguous(row_data):
+            ambiguous_rows.append(row_data)
         else:
-            extracted_rows.append(extract_protein_residue(row_data))
+            if '-' in row_data or '|' in row_data:
+                extracted_rows.append(parse_protein_residue(row_data))
+            else:
+                extracted_rows.append(extract_protein_residue(row_data))
     
-    # Create a DataFrame with the desired columns
+    # Create DataFrames
     df_processed = pd.DataFrame(extracted_rows, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3'])
     
+    # Create a DataFrame for ambiguous entries
+    df_ambiguous = pd.DataFrame(ambiguous_rows, columns=['Ambiguous'])
+
     # Split into two DataFrames based on the presence of non-empty entries
     df_triple_links = df_processed.dropna().loc[
         (df_processed[['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']] != '').all(axis=1)
@@ -90,9 +102,22 @@ def process_csv(file_path):
     df_double_links = df_processed[~df_processed.index.isin(df_triple_links.index)]
     df_double_links = df_double_links.drop(columns=['Protein3', 'Residue3'])
 
+    # Filter ambiguous rows from triple_links and double_links
+    def filter_ambiguous(df):
+        return df[df.apply(lambda row: any(is_ambiguous(val) for val in row[['Residue1', 'Residue2', 'Residue3']]), axis=1)]
+
+    ambiguous_triples = filter_ambiguous(df_triple_links)
+    ambiguous_doubles = filter_ambiguous(df_double_links)
+
+    # Remove ambiguous entries from the original DataFrames
+    df_triple_links = df_triple_links[~df_triple_links.index.isin(ambiguous_triples.index)]
+    df_double_links = df_double_links[~df_double_links.index.isin(ambiguous_doubles.index)]
+
     # Save DataFrames to CSV files
     df_triple_links.to_csv('triple-links.csv', index=False)
     df_double_links.to_csv('double-links.csv', index=False)
+    ambiguous_triples.to_csv('ambiguous-triples.csv', index=False)
+    ambiguous_doubles.to_csv('ambiguous-doubles.csv', index=False)
 
     return df_processed
 
@@ -102,6 +127,6 @@ df_processed = process_csv(file_path)
 
 # Print the resulting DataFrames
 print("Triple Links DataFrame:")
-print(df_processed[(df_processed[['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']] != '').all(axis=1)])
+print(df_triple_links)
 print("\nDouble Links DataFrame:")
-print(df_processed[~df_processed.index.isin(df_processed[(df_processed[['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']] != '').all(axis=1)].index)].drop(columns=['Protein3', 'Residue3']))
+print(df_double_links)
