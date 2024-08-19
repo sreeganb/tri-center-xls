@@ -76,7 +76,6 @@ if total_rows_original_df == total_count:
 else:
     print("The totals do not match.")
 #-----------------------------------------------------------------------------
-
 # Calculate the number of times each unique row is repeated in the DataFrame
 row_counts = df.groupby(['Protein1', 'Residue1', 'Protein2', 'Residue2']).size().reset_index(name='count')
 #print("repeat counts: ", row_counts)
