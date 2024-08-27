@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.11
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Read the CSV file into a DataFrame, skipping the first row
 headers = ['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']
@@ -39,3 +40,6 @@ df3 = pd.DataFrame(matching_rows)
 
 #print("Matching rows saved to 'matching_rows.csv'")
 print(df3)
+
+#Print the number of rows that are in df1 but not in df2
+print("Number of rows in df1 but not in df2: ", len(new_df) - len(df3))
