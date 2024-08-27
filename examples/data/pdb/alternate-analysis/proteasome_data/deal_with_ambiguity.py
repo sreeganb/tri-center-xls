@@ -48,9 +48,7 @@ else:
 df_unique = df.drop_duplicates(subset=['Protein1', 'Residue1', 'Protein2', 'Residue2'], keep='first')
 #print(df_unique)
 
-# Read the file named "unique_double_links.csv" into a new DataFrame
 double_unique = pd.read_csv('cleaned_double_links.csv')
-
 #---------------------------------------------------------------------------
 # Find unique rows and their counts
 unique_rows = double_unique.value_counts()
