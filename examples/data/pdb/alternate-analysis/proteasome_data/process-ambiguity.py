@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.12
 
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def replace_and_split_columns(df, columns, old, new):
     df[columns] = df[columns].apply(lambda x: x.str.replace(old, new).str.split(new))
@@ -154,3 +155,44 @@ print("triple links: ", unique_triple_df)
 #df3.to_csv('matching_rows.csv', index=False)                                               
                                                                                             
 #print("Matching rows saved to 'matching_rows.csv'")                                        
+
+# 
+# Sample DataFrames for demonstration
+data1 = {
+    'Protein1': ['Rpn2', 'Rpn3', 'Rpn4'],
+    'Residue1': [666, 777, 888],
+    'Protein2': ['Rpn2', 'Rpn3', 'Rpn4'],
+    'Residue2': [807, 808, 809]
+}
+df1 = pd.DataFrame(data1)
+
+data2 = {
+    'Protein1': ['Rpn2', 'Rpn2', 'Rpn3', 'Rpn4', 'Rpn2'],
+    'Residue1': [666, 666, 777, 888, 666],
+    'Protein2': ['Rpn2', 'Rpn2', 'Rpn3', 'Rpn4', 'Rpn2'],
+    'Residue2': [807, 807, 808, 809, 807]
+}
+df2 = pd.DataFrame(data2)
+
+# Initialize a list to store the results
+results = []
+
+# Iterate over each row in df1
+for index, row in df1.iterrows():
+    protein1 = row['Protein1']
+    residue1 = row['Residue1']
+    protein2 = row['Protein2']
+    residue2 = row['Residue2']
+    
+    # Count the occurrences of the pair in df2
+    count = ((df2['Protein1'] == protein1) & (df2['Residue1'] == residue1) & 
+             (df2['Protein2'] == protein2) & (df2['Residue2'] == residue2)).sum()
+    
+    # Append the result to the list
+    results.append({'Protein1': protein1, 'Residue1': residue1, 'Protein2': protein2, 'Residue2': residue2, 'Count': count})
+
+# Convert the results list to a DataFrame
+results_df = pd.DataFrame(results)
+
+# Print the results DataFrame
+print(results_df)
