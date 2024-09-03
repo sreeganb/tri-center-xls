@@ -2,7 +2,6 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
 
 def replace_and_split_columns(df, columns, old, new):
     df[columns] = df[columns].apply(lambda x: x.str.replace(old, new).str.split(new))
@@ -136,44 +135,7 @@ unique_triple_df = drop_duplicates(new_triple_df, ['Protein1', 'Residue1', 'Prot
    
 unique_triple_df.to_csv('paired_triple_links.csv', index=False)                                       
 print("triple links: ", unique_triple_df)
-#--------------------------------------------------------------------------
-def filter_proteins(df_triple_links, df_double_links):                                                                   
-    """                                                                                                                  
-    Filters the DataFrames to include only rows where Protein1, Protein2, and Protein3 (for triple links)                
-    or Protein1 and Protein2 (for double links) are exclusively from the allowed set.                                    
-                                                                                                                         
-    Args:                                                                                                                
-        df_triple_links (DataFrame): The DataFrame containing triple links.                                              
-        df_double_links (DataFrame): The DataFrame containing double links.                                              
-                                                                                                                         
-    Returns:                                                                                                             
-        tuple: A tuple containing the filtered triple links DataFrame and double links DataFrame.                        
-    """                                                                                                                  
-    allowed_proteins = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn2'}                                          
-                                                                                                                         
-    #filtered_triple_links = df_triple_links[                                                                             
-    #    df_triple_links[['Protein1', 'Protein2', 'Protein3']].apply(lambda x: set(x).issubset(allowed_proteins), axis=1) 
-    #]                                                                                                                    
-                                                                                                                         
-    filtered_double_links = df_double_links[                                                                             
-        df_double_links[['Protein1', 'Protein2']].apply(lambda x: set(x).issubset(allowed_proteins), axis=1)             
-    ]                                                                                                                    
-                                                                                                                         
-    # Ensure the directory exists                                                                                        
-    output_dir = 'base_subcomplex_data'                                                                                  
-    if not os.path.exists(output_dir):                                                                                   
-        os.makedirs(output_dir)                                                                                          
-                                                                                                                         
-    # Save filtered DataFrames to CSV files    
-    #print("filtered triple links: ", filtered_triple_links)
-    print("filtered double links: ", filtered_double_links)                                                                          
-    #filtered_triple_links.to_csv(os.path.join(output_dir, 'filtered-triple-links.csv'), index=False)                     
-    filtered_double_links.to_csv(os.path.join(output_dir, 'filtered-double-links.csv'), index=False)                     
-                                                                                                                         
-    #return filtered_triple_links, filtered_double_links                                                                  
-#--------------------------------------------------------------------------
-filter_proteins(unique_triple_df, unique_combined_df)
-                                                                       
+                                                                                            
 # Read the combined_double_links.csv file into a DataFrame                                  
 #combined_df = pd.read_csv('combined_double_links.csv')                                      
                                                                                             
