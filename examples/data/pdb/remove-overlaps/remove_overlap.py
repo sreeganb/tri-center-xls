@@ -97,39 +97,17 @@ class DataTransformer:
         # Ensure columns have the same data type
         df1 = df1.astype(str)
         df2 = df2.astype(str)
-
-        # Create two DataFrames with different column orders for df1
-        df1_order1 = df1[['Protein1', 'Residue1', 'Protein2', 'Residue2']]
-        df1_order2 = df1[['Protein2', 'Residue2', 'Protein1', 'Residue1']]
-
-        # Merge DataFrames with indicator to find common rows
-        merged_df1 = df1_order1.merge(df2, indicator=True, how='outer')
-        merged_df2 = df1_order2.merge(df2, indicator=True, how='outer')
-
-        # Identify common rows for both orders
-        common_rows1 = merged_df1[merged_df1['_merge'] == 'both']
-        common_rows2 = merged_df2[merged_df2['_merge'] == 'both']
-
-        # Print common rows for both orders separately
-        print(f"Number of common rows (order 1): {common_rows1.shape[0]}")
-        print("Common rows (order 1):")
-        #print(common_rows1)
-
-        print(f"Number of common rows (order 2): {common_rows2.shape[0]}")
-        print("Common rows (order 2):")
-        #print(common_rows2)
-
-        # Identify unique rows in df1 for both orders separately
-        df1_unique1 = merged_df1[merged_df1['_merge'] == 'left_only'].drop(columns=['_merge'])
-        df1_unique2 = merged_df2[merged_df2['_merge'] == 'left_only'].drop(columns=['_merge'])
-
-        print(f"Number of unique rows (order 1): {df1_unique1.shape[0]}")
-        print("Unique rows (order 1):")
-        #print(df1_unique1)
-
-        print(f"Number of unique rows (order 2): {df1_unique2.shape[0]}")
-        print("Unique rows (order 2):")
-        #print(df1_unique2)
+        print("df1 : ", df1)
+        print("df2 : ", df2)
+        
+        # Identify common rows
+        common_rows = pd.merge(df1, df2, how='inner')
+        if not common_rows.empty:
+            print("Common rows found:")
+            print(common_rows)
+        else:
+            print("No common rows found.")
+        print("Common rows: ", common_rows)
 
 # Example usage
 if __name__ == "__main__":
