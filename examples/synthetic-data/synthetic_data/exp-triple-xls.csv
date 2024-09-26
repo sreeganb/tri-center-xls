@@ -1,0 +1,15 @@
+Protein1,Residue1,Protein2,Residue2,Protein3,Residue3
+Rpn2,666,Rpn2,807,Rpn2,890
+Rpt1,422,Rpt2,293,Rpt2,350
+Rpt1,116,Rpt3,238,Rpt4,206
+Rpt4,42,Rpt5,70,Rpt5,81
+Rpt4,42,Rpt5,70,Rpt5,74
+Rpt5,70,Rpt5,74,Rpt5,81
+Rpt1,57,Rpt2,178,Rpt6,287
+Rpt2,258,Rpt4,72,Rpt6,222
+Rpt2,258,Rpt5,300,Rpt6,222
+Rpt3,192,Rpt3,306,Rpt6,335
+Rpt3,238,Rpt4,72,Rpt6,222
+Rpt3,238,Rpt5,125,Rpt6,222
+Rpt4,72,Rpt5,125,Rpt6,222
+Rpt6,88,Rpt6,130,Rpt6,222

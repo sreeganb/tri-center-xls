@@ -92,16 +92,17 @@ class DataTransformer:
         # Read the CSV files into DataFrames
         df1 = pd.read_csv(file1)
         df2 = pd.read_csv(file2)
-        #print(f"Data read from {file1} and {file2}")
-
+        
         # Ensure columns have the same data type
         df1 = df1.astype(str)
         df2 = df2.astype(str)
-        #print("df1 : ", df1)
-        #print("df2 : ", df2)
         
+        # Sort the columns within each row
+        df1_sorted = df1.apply(lambda row: sorted(row), axis=1)
+        df2_sorted = df2.apply(lambda row: sorted(row), axis=1)
+
         # Identify common rows
-        common_rows = pd.merge(df1, df2, how='inner')
+        common_rows = df1_sorted[df1_sorted.isin(df2_sorted.to_list())]
         if not common_rows.empty:
             print("Common rows found:")
             #print(common_rows)
@@ -110,8 +111,8 @@ class DataTransformer:
         print("Common rows: ", common_rows)
 
         # Remove common rows from both df1 and df2
-        df1_unique = df1[~df1.apply(tuple, 1).isin(common_rows.apply(tuple, 1))]
-        df2_unique = df2[~df2.apply(tuple, 1).isin(common_rows.apply(tuple, 1))]
+        df1_unique = df1[~df1_sorted.isin(df2_sorted.to_list())]
+        df2_unique = df2[~df2_sorted.isin(df1_sorted.to_list())]
 
         # Ensure the output directory exists
         os.makedirs('full-proteasome-data', exist_ok=True)
@@ -121,11 +122,11 @@ class DataTransformer:
         output_path2 = os.path.join('full-proteasome-data', output_file2)
         df1_unique.to_csv(output_path1, index=False)
         df2_unique.to_csv(output_path2, index=False)
-        #print(f"Unique data from {file1} has been written to {output_path1}")
+        print(f"Unique data from {file1} has been written to {output_path1}")
         #print(f"Unique data from {file2} has been written to {output_path2}")
 
         # Call filter_proteins with the unique DataFrames
-        self.filter_proteins(df1_unique, df2_unique)
+        #self.filter_proteins(df1_unique, df2_unique)
 
     def filter_proteins(self, df_triple_links, df_double_links):
         """

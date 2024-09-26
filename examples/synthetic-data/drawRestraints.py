@@ -33,7 +33,7 @@ def replace_protein_names(df, mapping):
 
     return df
 
-def drawRestraints(pdb_file, csv_file, selection='all', prefix='xl', threshold=35.0, atom='CA', quiet=1):
+def drawRestraints(pdb_file, csv_file, selection='all', prefix='xl', threshold=30.0, atom='CA', quiet=1):
     # Load the PDB file
     cmd.load(pdb_file, 'structure')
     
