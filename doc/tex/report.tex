@@ -22,6 +22,7 @@
 
 %\usetheme{CambridgeUS}
 %\usecolortheme{wolverine}
+\usepackage[utf8]{inputenc} % Load inputenc before biblatex
 \usepackage[
     backend=biber,
 %    style=phys,
@@ -32,7 +33,6 @@
     maxbibnames=3 %,
 %    doi=false, url=false, isbn=false
 ]{biblatex}
-\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{bm}
 \usepackage{tabularx,booktabs}
@@ -73,18 +73,6 @@
 \maketitle
 %
 \begin{frame}
-  \frametitle{Bayesian Modeling of Tri-functional Crosslinkers to Elucidate Protein 
-Complex Structures: Human 26s Proteasome}
-  \begin{figure}
-    \centering
-    \includegraphics[scale=1.0]{figures/tri-linker.eps}
-    \caption{Structure of a trioxane based trifunctional cross linker with a 
-    spacer arm length of 14 {\AA}}
-  \end{figure}
-  DSSO has a spacer arm length of $10.1$ {\AA}.
-\end{frame}
-%
-\begin{frame}
     \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figures/5gjr_structure.png}
@@ -98,7 +86,7 @@ Complex Structures: Human 26s Proteasome}
         \hline
         Type of XL & Number of unique XLs \\ \hline
         Triple & 35 \\ \hline
-        Double & 491 \\ \hline
+        Double & 691 \\ \hline
     \end{tabular}
 \end{table}
 \end{frame}
@@ -114,52 +102,69 @@ of the human 26S proteasome}
 \end{frame}
 %
 \begin{frame}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.6\textwidth]{figures/xl_density.pdf}
-    \caption{Trifunctional cross linking mass spectrometry data}
-  \end{figure}
-\end{frame}
-%
-\begin{frame}
+\frametitle{Comparison of the double and triple XL datasets}
+\begin{block}{}
+\begin{itemize}
+  \item Only bifunctional set ($n(bi) = 164$)
+  \item Only trifunctional set ($n(tri)= 42$)
+  \item bifunctional + trifunctional set ($n(bi) + n(tri) = 206$)
+  \item n($bi \cup tri) = n(bi) + n(tri) - n(bi\cap tri) = 186$
+\end{itemize}
+\end{block}
     \begin{figure}
-    \centering
-    \includegraphics[width=0.6\textwidth]{figures/xls_satisfaction_base.pdf}
-    \caption{Double and triple cross linked residues mapped onto the pdb strucutre 5GJR}
+      \centering
+      \includegraphics[width=0.43\textwidth]{figures/only-doubles.png}
+      \includegraphics[width=0.43\textwidth]{figures/removed-doubles-plus-triples.png}
+      \caption{$n(bi) = 164$ (left) and n($bi \cup tri = 186$) (right) set of cross links mapped onto the base subcomplex}
     \end{figure}
-    \begin{itemize}
-        \item Total number of double XLs: 214, out of which 59 entries had 
-        residues that are not part of the 5GJR pdb structure
-        \item Total number of triple XLs: 14 and all the residues are part 
-        of the pdb structure
-    \end{itemize}
 \end{frame}
-
-\begin{frame}
-  \frametitle{Bayesian modeling of trifunctional cross linkers}
-  \begin{block}{Using all the XLs}
-    \begin{itemize}
-      \item 155 double XLs and 14 triple XLs (14$\times$3=42) with a 
-      total of 198 XLs are used
-    \end{itemize}
-  \end{block}
-  \end{frame}
 %
 \begin{frame}
-\frametitle{PSD modeling}
-Modeling intra-protein cross links for O08749 interactor protein of Bassoon. 
+\frametitle{Comparison of the double and triple XL datasets}
+\begin{table}
+  \centering
+  \caption{Comparison of the double and triple XL datasets}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+                                   & Samp. precision ({\AA}) & Clust. pop. & Clust. precision\\ \hline
+      bifunctional ($n(bi) = 164$) & 4.42  & 21820 & 3.335 \\ \hline
+      $n(bi) + n(tri) = 206$       & 5.58  & 28449 & 3.666 \\ \hline
+      n($bi \cup tri) = 186$       & 10.68 & 29395 & 7.388 \\ \hline
+  \end{tabular}
+\end{table}
+Clustering at sampling precision $6.0$ {\AA}
+\begin{table}
+  \centering
+  \caption{Comparison of the double and triple XL datasets}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+                                   & Clust. pop. & Clust. precision\\ \hline
+      bifunctional ($n(bi) = 164$) & 27397 & 3.755 \\ \hline
+      $n(bi) + n(tri) = 206$       &  &  \\ \hline
+      n($bi \cup tri) = 186$       & 24090 & 4.118 \\ \hline
+  \end{tabular}
+\end{table}
+\end{frame}
+%
+\begin{frame}
+\frametitle{DSSO crosslinking data}
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{figures/xls_mapped.png}
-\includegraphics[width=0.5\textwidth]{figures/distances_O08749.pdf}
+\includegraphics[width=0.5\textwidth]{figures/dsso-mapped-xls.png}
+\caption{DSSO crosslinking data mapped onto the base subcomplex}
 \end{figure}
 \end{frame}
-\begin{frame}
-\frametitle{PSD modeling}
-Using Alphafold multimer to obtain the homodimer strucutre and map the XLs onto it. 
-\end{frame}
-\begin{frame}
-\frametitle{BHM project}
-Will continue to work
-\end{frame}
+%\begin{frame}
+%\frametitle{PSD modeling}
+%Modeling intra-protein cross links for O08749 interactor protein of Bassoon. 
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.5\textwidth]{figures/xls_mapped.png}
+%\includegraphics[width=0.5\textwidth]{figures/distances_O08749.pdf}
+%\end{figure}
+%\end{frame}
+%\begin{frame}
+%\frametitle{PSD modeling}
+%Using Alphafold multimer to obtain the homodimer strucutre and map the XLs onto it. 
+%\end{frame}
 \end{document}
