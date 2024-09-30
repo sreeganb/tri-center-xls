@@ -18,6 +18,24 @@ def ensure_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+def process_triple_links(input_file, output_file):
+    # Read the CSV file into a DataFrame, skipping the first row
+    headers = ['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']
+    df = pd.read_csv(input_file, header=0, names=headers)
+
+    # Initialize an empty list to store the new rows
+    new_rows = []
+
+    # Process each row in the DataFrame
+    for index, row in df.iterrows():
+        new_rows.append([row['Protein1'], row['Residue1'], row['Protein2'], row['Residue2']])
+        new_rows.append([row['Protein2'], row['Residue2'], row['Protein3'], row['Residue3']])
+        new_rows.append([row['Protein3'], row['Residue3'], row['Protein1'], row['Residue1']])
+
+    # Create a new DataFrame from the new rows
+    new_df = pd.DataFrame(new_rows, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
+    new_df.to_csv(output_file, index=False)
+
 def format_for_pymol(input_file, output_file):
     # Read the input file into a DataFrame
     df = pd.read_csv(input_file)
@@ -44,8 +62,12 @@ def main():
     output_directory = 'pymol_data'
     ensure_directory(output_directory)
     
-    # Format random lysine doubles for PyMOL
-    format_for_pymol('filtered_cleaned_double_links.csv', os.path.join(output_directory, 'dsso-xls.csv'))
+    # Process triple links
+    process_triple_links('synthetic_data/random_lysine_triplets.csv', os.path.join(output_directory, 'paired_double_links.csv'))
+    
+    # Format random lysine doubles and triplets for PyMOL
+    format_for_pymol('synthetic_data/random_lysine_doubles.csv', os.path.join(output_directory, 'formatted_random_lysine_doubles.csv'))
+    format_for_pymol(os.path.join(output_directory, 'paired_double_links.csv'), os.path.join(output_directory, 'formatted_random_lysine_triplets.csv'))
 
 if __name__ == "__main__":
     main()
