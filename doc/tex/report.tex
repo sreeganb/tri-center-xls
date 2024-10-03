@@ -172,6 +172,7 @@ Clustering at sampling precision $6.0$ {\AA}
 \caption{DSSO crosslinking data mapped onto the base subcomplex}
 \end{figure}
 \end{frame}
+%
 %\begin{frame}
 %\frametitle{PSD modeling}
 %Modeling intra-protein cross links for O08749 interactor protein of Bassoon. 
@@ -185,4 +186,70 @@ Clustering at sampling precision $6.0$ {\AA}
 %\frametitle{PSD modeling}
 %Using Alphafold multimer to obtain the homodimer strucutre and map the XLs onto it. 
 %\end{frame}
+%
+\begin{frame}
+\frametitle{Optimizing the crosslinker length}
+\begin{block}{}
+\begin{itemize}
+  \item use the proteins Rpt2, Rpt4, Rpt5, Rpt6 for the simulations
+  \item There are 4 trifunctional cross links between these proteins
+  \item The cross linker length is varied from 11 to 21 {\AA}
+  \item The 4 cross links are made into 12 pairs of regular crosslinks and used to get the reference distance distributions
+\end{itemize}
+\end{block}
+\begin{figure}
+\centering
+\includegraphics[width=0.41\textwidth]{test-figures/only-bi.pdf}
+\includegraphics[width=0.41\textwidth]{test-figures/only-tri.pdf}
+\caption{On the left, the distance distributions using bifunctional crosslinks and 
+on the right, the distance distributions using trifunctional crosslinks (11 {\AA} linker length)}
+\end{figure}
+%
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \begin{tabular}{lcc}
+  \hline
+  Residue Pair & Mean (Å) & Std Dev (Å) \\
+  \hline
+  Pair 1 & 16.1 & 4.0 \\
+  Pair 2 & 16.9 & 3.3 \\
+  Pair 3 & 20.1 & 2.7 \\
+  \hline
+  \end{tabular}
+  \captionof{table}{Bifunctional crosslinks}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+  \centering
+  \begin{tabular}{lcc}
+  \hline
+  Residue Pair & Mean (Å) & Std Dev (Å) \\
+  \hline
+  Pair 1 & 69.5 & 24.7 \\
+  Pair 2 & 69.3 & 25.2 \\
+  Pair 3 & 81.3 & 30.36 \\
+  \hline
+  \end{tabular}
+  \captionof{table}{Trifunctional crosslinks}
+  \end{minipage}
+\end{frame}
+%
+\begin{frame}
+\frametitle{Optimizing the crosslinker length}
+\begin{figure}
+\centering
+\includegraphics[width=0.41\textwidth]{test-figures/full-only-tri.pdf}
+\caption{Distance distributions using trifunctional crosslinks (21 {\AA} linker length)}
+\end{figure}
+\begin{tabular}
+  {lcc}
+  \hline
+  Residue Pair & Mean (Å) & Std Dev (Å) \\
+  \hline
+  Pair 1 & 25.7 & 6.0 \\
+  Pair 2 & 24.9 & 5.8\\
+  Pair 3 & 28.9 & 6.6 \\
+  \hline
+\end{tabular}
+\end{frame}
 \end{document}
