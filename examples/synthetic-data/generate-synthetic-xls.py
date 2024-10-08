@@ -138,15 +138,16 @@ class LysineCrosslinkAnalyzer:
         output_directory = 'synthetic_data'
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
+        selected_distances = []
             
         # Randomly pick 30 crosslinks from the doubles
         random_doubles = self.distances_df.sample(n=40, random_state=9182791)
+        selected_distances = random_doubles['Distance'].tolist()
         random_doubles = random_doubles.drop(columns=['Distance'])
         random_doubles['Protein1'] = random_doubles['ChainID1'].map({v: k for k, v in self.protein_to_chain.items()})
         random_doubles['Protein2'] = random_doubles['ChainID2'].map({v: k for k, v in self.protein_to_chain.items()})
         random_doubles = random_doubles[['Protein1', 'Residue1', 'Protein2', 'Residue2']]
         random_doubles.to_csv(os.path.join(output_directory, 'random_lysine_doubles.csv'), index=False)
-
 
         # Load the experimental triplets from the CSV file
         exp_triplets_path = os.path.join(output_directory, 'exp-triple-xls.csv')
@@ -155,6 +156,7 @@ class LysineCrosslinkAnalyzer:
         # Randomly pick the remaining crosslinks from the triplets
         remaining_triplets_count = 30 - len(exp_triplets)
         random_triplets = self.triplets_df.sample(n=remaining_triplets_count, random_state=2129081000)
+        selected_distances.extend(random_triplets[['Distance12', 'Distance23', 'Distance31']].values.flatten().tolist())
         random_triplets = random_triplets.drop(columns=['Distance12', 'Distance23', 'Distance31'])
         random_triplets['Protein1'] = random_triplets['ChainID1'].map({v: k for k, v in self.protein_to_chain.items()})
         random_triplets['Protein2'] = random_triplets['ChainID2'].map({v: k for k, v in self.protein_to_chain.items()})
@@ -185,6 +187,17 @@ class LysineCrosslinkAnalyzer:
 
         print("Randomly picked 30 crosslinks from doubles and 30 from triplets and saved to files in synthetic_data.")
         print("Generated additional file with specific format and saved to synthetic_data.")
+
+        # Plot the distance distribution of selected pairs and triplets
+        print(f"Number of selected distances: {len(selected_distances)}")
+        print(f"mean distance: {np.mean(selected_distances):.4f} Å")
+        print(f"std distance: {np.std(selected_distances):.4f} Å")
+        plt.hist(selected_distances, bins=30, edgecolor='black')
+        plt.title('Distribution of Selected Distances Between C-alpha Atoms of Lysine Residues')
+        plt.xlabel('Distance (Å)')
+        plt.ylabel('Frequency')
+        plt.savefig(os.path.join(output_directory, 'selected_lysine_distances_distribution.png'))
+        plt.show()
 
 # Example usage
 input_pdb = 'data/pdb/base_proteasome.pdb'
