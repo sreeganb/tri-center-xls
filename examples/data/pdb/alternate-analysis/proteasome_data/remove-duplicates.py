@@ -1,4 +1,5 @@
 import pandas as pd
+<<<<<<< HEAD
 import math
 import matplotlib.pyplot as plt
 from Bio.PDB import PDBParser
@@ -96,6 +97,9 @@ with open(output_file, 'w') as file:
 print(f"atom_coords has been written to {output_file}")
 
 # Process triples-chainid.csv
+=======
+
+>>>>>>> 719d28d (some more code)
 # Read the DataFrame from a CSV file
 df = pd.read_csv('cleaned_triple_links.csv')
 
@@ -105,7 +109,11 @@ df = df.drop_duplicates()
 # Save the cleaned DataFrame to a new CSV file
 df.to_csv('unique_triples.csv', index=False)
 
+<<<<<<< HEAD
 print("Duplicate rows removed and cleaned data saved to 'unique_triples.csv'.")
+=======
+print("Duplicate rows removed and cleaned data saved to 'output_file.csv'.")
+>>>>>>> 719d28d (some more code)
 #--------------------------------------------------------------------------
 # Now comes the triple links, here we will follow one code snippet from 
 # another script file
@@ -126,6 +134,7 @@ for index, row in triple_df.iterrows():
 # Create a new DataFrame from the new rows                                                  
 new_triple_df = pd.DataFrame(new_rows, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
 new_triple_df.to_csv('paired_triples.csv', index=False)
+<<<<<<< HEAD
 print("Triple links processed and saved to 'paired_triples.csv'.")
 
 #--------------------------------------------------------------------------
@@ -186,3 +195,6 @@ doubles_df = doubles_df[['Chain1', 'Residue1', 'Atom1', 'Chain2', 'Residue2', 'A
 
 # Process doubles DataFrame
 process_dataframe(doubles_df, atom_coords, 'exp-double-dist.csv', 'Distribution of Calculated Distances for Doubles')
+=======
+print("Triple links processed and saved to 'paired_triples.csv'.")
+>>>>>>> 719d28d (some more code)
