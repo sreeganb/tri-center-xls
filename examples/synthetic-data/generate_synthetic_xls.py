@@ -101,7 +101,7 @@ class LysineCrosslinkAnalyzer:
         plt.xlabel('Distance (Å)')
         plt.ylabel('Frequency')
         plt.savefig(os.path.join(output_directory, 'lysine_distances_distribution.png'))
-        plt.show()
+        #plt.show()
 
         # Find triplets of lysine residues
         triplets = []
@@ -197,7 +197,7 @@ class LysineCrosslinkAnalyzer:
         plt.xlabel('Distance (Å)')
         plt.ylabel('Frequency')
         plt.savefig(os.path.join(output_directory, 'selected_lysine_distances_distribution.png'))
-        plt.show()
+        #plt.show()
 
 # Example usage
 input_pdb = 'data/pdb/base_proteasome.pdb'

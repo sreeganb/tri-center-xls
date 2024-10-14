@@ -71,6 +71,7 @@ def main(pdb_file, csv_file, output_csv):
 
     # Create a histogram with density plot
     sns.histplot(data=df['Distances'], kde=False, color="steelblue", bins=30, alpha=0.7)
+    df['Distances'].to_csv('exp-distance-distribution.csv', index=False)
 
     # Add labels and title
     plt.xlabel('Distances', fontsize=12)
