@@ -27,6 +27,8 @@ class LysineCrosslinkAnalyzer:
         self.x0 = x0
         self.distances_df = None
         self.triplets_df = None
+        self.selected_distances = []  # Add this line
+        self.combined_triplets = None  # Add this line
 
     def logistic_function(self, x):
         """
@@ -138,11 +140,11 @@ class LysineCrosslinkAnalyzer:
         output_directory = 'synthetic_data'
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
-        selected_distances = []
+        self.selected_distances = []  # Initialize the attribute
             
         # Randomly pick 30 crosslinks from the doubles
         random_doubles = self.distances_df.sample(n=40, random_state=9182791)
-        selected_distances = random_doubles['Distance'].tolist()
+        self.selected_distances = random_doubles['Distance'].tolist()
         random_doubles = random_doubles.drop(columns=['Distance'])
         random_doubles['Protein1'] = random_doubles['ChainID1'].map({v: k for k, v in self.protein_to_chain.items()})
         random_doubles['Protein2'] = random_doubles['ChainID2'].map({v: k for k, v in self.protein_to_chain.items()})
@@ -156,7 +158,7 @@ class LysineCrosslinkAnalyzer:
         # Randomly pick the remaining crosslinks from the triplets
         remaining_triplets_count = 30 - len(exp_triplets)
         random_triplets = self.triplets_df.sample(n=remaining_triplets_count, random_state=2129081000)
-        selected_distances.extend(random_triplets[['Distance12', 'Distance23', 'Distance31']].values.flatten().tolist())
+        self.selected_distances.extend(random_triplets[['Distance12', 'Distance23', 'Distance31']].values.flatten().tolist())
         random_triplets = random_triplets.drop(columns=['Distance12', 'Distance23', 'Distance31'])
         random_triplets['Protein1'] = random_triplets['ChainID1'].map({v: k for k, v in self.protein_to_chain.items()})
         random_triplets['Protein2'] = random_triplets['ChainID2'].map({v: k for k, v in self.protein_to_chain.items()})
@@ -164,14 +166,14 @@ class LysineCrosslinkAnalyzer:
         random_triplets = random_triplets[['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']]
 
         # Combine the experimental triplets with the randomly picked triplets
-        combined_triplets = pd.concat([exp_triplets, random_triplets], ignore_index=True)
-        combined_triplets.to_csv(os.path.join(output_directory, 'random_lysine_triplets.csv'), index=False)
+        self.combined_triplets = pd.concat([exp_triplets, random_triplets], ignore_index=True)  # Add this line
+        self.combined_triplets.to_csv(os.path.join(output_directory, 'random_lysine_triplets.csv'), index=False)
 
         # Process DataFrame in chunks of 1 row
         results = []
         protein_group_counter = 1
-        for start in range(0, len(combined_triplets), 1):
-            chunk = combined_triplets.iloc[start:start+1]
+        for start in range(0, len(self.combined_triplets), 1):
+            chunk = self.combined_triplets.iloc[start:start+1]
 
             # Collect unique (protein, res) pairs and their occurrences
             for _, row in chunk.iterrows():
@@ -189,10 +191,10 @@ class LysineCrosslinkAnalyzer:
         print("Generated additional file with specific format and saved to synthetic_data.")
 
         # Plot the distance distribution of selected pairs and triplets
-        print(f"Number of selected distances: {len(selected_distances)}")
-        print(f"mean distance: {np.mean(selected_distances):.4f} Å")
-        print(f"std distance: {np.std(selected_distances):.4f} Å")
-        plt.hist(selected_distances, bins=30, edgecolor='black')
+        print(f"Number of selected distances: {len(self.selected_distances)}")
+        print(f"mean distance: {np.mean(self.selected_distances):.4f} Å")
+        print(f"std distance: {np.std(self.selected_distances):.4f} Å")
+        plt.hist(self.selected_distances, bins=30, edgecolor='black')
         plt.title('Distribution of Selected Distances Between C-alpha Atoms of Lysine Residues')
         plt.xlabel('Distance (Å)')
         plt.ylabel('Frequency')
