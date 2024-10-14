@@ -73,6 +73,31 @@
 \maketitle
 %
 \begin{frame}
+  \frametitle{Modeling with DSSO crosslinking data}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/dsso-mapped-xls.png}
+  \caption{DSSO crosslinking data mapped onto the base subcomplex}
+  \end{figure}
+  Total of 95 crosslinks
+  \end{frame}
+%  
+\begin{frame}
+\frametitle{Results}
+\begin{table}
+\centering
+\caption{Modeling with DSSO XL data for the base subcomplex}
+\begin{tabular}{|c|c|}
+    \hline
+    Cluster precision ({\AA}) & Accuracy({\AA}) \\ \hline
+    12.2 & 33 \\ \hline
+\end{tabular}
+\end{table}
+Clustering at sampling precision $20.0$ {\AA} with
+a cluster of population 28000. 
+\end{frame}
+%
+\begin{frame}
     \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figures/5gjr_structure.png}
@@ -124,24 +149,24 @@ of the human 26S proteasome}
 \begin{table}
   \centering
   \caption{Comparison of the double and triple XL datasets}
-  \begin{tabular}{|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|}
       \hline
-                                   & Samp. precision ({\AA}) & Clust. pop. & Clust. precision\\ \hline
-      bifunctional ($n(bi) = 164$) & 4.42  & 21820 & 3.335 \\ \hline
-      $n(bi) + n(tri) = 206$       & 5.58  & 28449 & 3.666 \\ \hline
-      n($bi \cup tri) = 186$       & 10.68 & 29395 & 7.388 \\ \hline
+                                   & Samp. precision ({\AA}) & Clust. pop. & Clust. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) & 4.42  & 21820 & 3.335 & 14.43 \\\hline
+      $n(bi) + n(tri) = 206$       & 5.58  & 28449 & 3.666 & \\ \hline
+      n($bi \cup tri) = 186$       & 10.68 & 29395 & 7.388 &  16.09 \\\hline
   \end{tabular}
 \end{table}
 Clustering at sampling precision $6.0$ {\AA}
 \begin{table}
   \centering
   \caption{Comparison of the double and triple XL datasets}
-  \begin{tabular}{|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|c|}
       \hline
-                                   & Clust. pop. & Clust. precision\\ \hline
-      bifunctional ($n(bi) = 164$) & 27397 & 3.755 \\ \hline
-      $n(bi) + n(tri) = 206$       &  &  \\ \hline
-      n($bi \cup tri) = 186$       & 24090 & 4.118 \\ \hline
+                                   & Clust. pop. & Clust. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) & 27397 & 3.755 & 14.42\\ \hline
+      $n(bi) + n(tri) = 206$       &  &  & \\ \hline
+      n($bi \cup tri) = 186$       & 24090 & 4.118 & 16.06\\ \hline
   \end{tabular}
 \end{table}
 \begin{block}{}
@@ -149,6 +174,14 @@ Clustering at sampling precision $6.0$ {\AA}
 \end{block}
 \end{frame}
 %
+\begin{frame}
+  \frametitle{TSTO crosslinking data distance distribution}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{test-figures/distance_histogram.png}
+  \end{figure}
+  \end{frame}
+%  
 \begin{frame}
 \frametitle{XL residue pair distance distributions}
 \begin{figure}
@@ -164,14 +197,6 @@ Clustering at sampling precision $6.0$ {\AA}
   \end{figure}  
 \end{frame}
 %
-\begin{frame}
-\frametitle{DSSO crosslinking data}
-\begin{figure}
-\centering
-\includegraphics[width=0.5\textwidth]{figures/dsso-mapped-xls.png}
-\caption{DSSO crosslinking data mapped onto the base subcomplex}
-\end{figure}
-\end{frame}
 %
 %\begin{frame}
 %\frametitle{PSD modeling}
@@ -283,5 +308,84 @@ using trifunctional crosslinks (18 {\AA} linker length)}
 %  Pair 3 & 28.9 & 6.6 \\
 %  \hline
 %\end{tabular}
+\end{frame}
+%
+\begin{frame}
+\frametitle{Results for optimized crosslinker length}
+\begin{table}
+  \centering
+  \caption{Comparison of the double and triple XL datasets}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+                                   & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) & 4.42  & 3.3 & 14.43 \\\hline
+      n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
+      XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
+  \end{tabular}
+\end{table}
+\begin{block}{}
+  Simulations with synthetic crosslinks with the optimized crosslinker length
+\end{block}
+\end{frame}
+%
+\begin{frame}
+  \frametitle{TSTO modeling}
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Define the coordinates of the triangle corners
+      \coordinate (A) at (0, 0);
+      \coordinate (B) at (4, 0);
+      \coordinate (C) at (2, 3.46); % Height of an equilateral triangle with side length 4
+
+      % Draw the triangle
+      \draw[thick] (A) -- (B) -- (C) -- cycle;
+
+      % Label the corners
+      \node[below left] at (A) {res1};
+      \node[below right] at (B) {res2};
+      \node[above] at (C) {res3};
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \centering
+    Modeling with triangular geometrical restraints
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.48\textwidth}
+    \centering
+    \begin{tikzpicture}
+      % Define the coordinates of the triangle corners
+      \coordinate (A) at (0, 0);
+      \coordinate (B) at (4, 0);
+      \coordinate (C) at (2, 3.46); % Height of an equilateral triangle with side length 4
+
+      % Calculate the center of the triangle
+      \coordinate (D) at (2, 1.15); % Centroid of the equilateral triangle
+
+      % Draw lines from the dummy bead to the corners
+      \draw[thick] (D) -- (A);
+      \draw[thick] (D) -- (B);
+      \draw[thick] (D) -- (C);
+
+      % Draw the dummy bead
+      \filldraw[black] (D) circle (2pt);
+      \node[above right] at (D) {dummy bead};
+
+      % Label the corners
+      \node[below left] at (A) {res1};
+      \node[below right] at (B) {res2};
+      \node[above] at (C) {res3};
+    \end{tikzpicture}
+    \vspace{0.5cm}
+    \centering
+    Modeling with a dummy bead
+  \end{minipage}
+  \begin{block}{TODO}
+    \begin{itemize}
+      \item Optimize the standard deviation of the distance distribution using the $\sigma$ parameter of crossliking restraint
+      \item Try using triangular geometric restraints instead of the dummy beads
+      \item Analyze the simulations with synthetic data
+    \end{itemize}
+  \end{block}
 \end{frame}
 \end{document}
