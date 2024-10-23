@@ -46,6 +46,8 @@
 \usepackage{epsfig}
 \usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
 
 \addbibresource{presentation.bib}
 \usetikzlibrary{arrows}
@@ -178,24 +180,25 @@ Clustering at sampling precision $6.0$ {\AA}
   \frametitle{TSTO crosslinking data distance distribution}
   \begin{figure}
     \centering
-    \includegraphics[scale=0.5]{test-figures/distance_histogram.png}
+    \includegraphics[scale=0.3]{test-figures/distance_histogram.png}
+    \includegraphics[scale=0.2]{test-figures/dsso_distances.png}
   \end{figure}
   \end{frame}
 %  
-\begin{frame}
-\frametitle{XL residue pair distance distributions}
-\begin{figure}
-\centering
-\includegraphics[width=0.45\textwidth]{figures/Rpt2_258_to_Rpt4_72_distances_distribution.pdf}
-\includegraphics[width=0.45\textwidth]{figures/Rpt2_258_to_Rpt5_300_distances_distribution.pdf}
-\end{figure}
+%\begin{frame}
+%\frametitle{XL residue pair distance distributions}
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.45\textwidth]{figures/Rpt2_258_to_Rpt4_72_distances_distribution.pdf}
+%\includegraphics[width=0.45\textwidth]{figures/Rpt2_258_to_Rpt5_300_distances_distribution.pdf}
+%\end{figure}
 %
-\begin{figure}
-  \centering
-  \includegraphics[width=0.45\textwidth]{figures/Rpt6_222_to_Rpt2_258_distances_distribution.pdf}
-  \includegraphics[width=0.45\textwidth]{figures/Rpt6_222_to_Rpt5_300_distances_distribution.pdf}
-  \end{figure}  
-\end{frame}
+%\begin{figure}
+%  \centering
+%  \includegraphics[width=0.45\textwidth]{figures/Rpt6_222_to_Rpt2_258_distances_distribution.pdf}
+%  \includegraphics[width=0.45\textwidth]{figures/Rpt6_222_to_Rpt5_300_distances_distribution.pdf}
+%  \end{figure}  
+%\end{frame}
 %
 %
 %\begin{frame}
@@ -418,4 +421,19 @@ using trifunctional crosslinks (18 {\AA} linker length)}
   \end{tabular}
 \end{table}
 \end{frame}
+%
+\begin{frame}[fragile=singleslide]
+\frametitle{upper bound distance restraint}
+\begin{verbatim}
+  disres = IMP.pmi.restraints.basic.DistanceRestraint(root_hier, 
+  tuple1, tuple2, min = 0.0, max=16.0, resolution=1.0, kappa=0.3)
+  \end{verbatim}
+  \begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{test-figures/disres_dist.pdf}
+    \caption{Distribution of distances when upper bound distance restraint is 
+    applied to the residues that are linked by trifunctional Xl for a 2000 step MCMC trajectory.}
+  \end{figure}
+\end{frame}
+%
 \end{document}
