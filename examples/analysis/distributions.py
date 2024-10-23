@@ -88,8 +88,24 @@ def process_dataframe(df, atom_coords):
             print(f"Coordinates not found for: {chain1}-{residue1}-{atom1} or {chain2}-{residue2}-{atom2}")
     return distances
 
+def plot_distance_distribution(distances, output_directory):
+    # Remove None values from distances
+    distances = [d for d in distances if d is not None]
+    dis = pd.DataFrame(distances)
+    print("mean: ", dis.mean())
+    print("std: ", dis.std())
+    print("len: ", len(dis))
+    print("max: ", dis.max())
+    plt.figure(figsize=(10, 6))
+    sns.histplot(distances, bins=20)
+    plt.title('Distance Distribution')
+    plt.xlabel('Distance (Å)')
+    plt.ylabel('Frequency')
+    plt.savefig(f'{output_directory}/distance_distribution.png', dpi=300)
+    plt.show()
+
 # Main function to read CSV, parse PDB, and calculate distances
-def main(pdb_file, csv_file, output_csv):
+def main(pdb_file, csv_file, output_csv, is_dsso=False):
     # Parse the PDB file
     atom_coords = parse_pdb(pdb_file)
     
@@ -108,37 +124,45 @@ def main(pdb_file, csv_file, output_csv):
     distances_df.to_csv(output_csv, index=False)
     distances_df['Distance'].to_csv('data/exp_distances.csv', index=False)
     
-    # Graphing
-    # Group the distances by row number: 0,3,6,9,... is group1; 1,4,7,10,... is group2; 2,5,8,11,... is group3
-    df = pd.read_csv('data/exp_distances.csv')
-    df['Group'] = df.index % 3
-    df1 = df[df['Group'] == 0]
-    df2 = df[df['Group'] == 1]
-    df3 = df[df['Group'] == 2]
-    
-    print("Mean of the distances for group1: ", df1['Distance'].mean())
-    print("Std of the distances for group1: ", df1['Distance'].std())
-    print("Mean of the distances for group2: ", df2['Distance'].mean())
-    print("Std of the distances for group2: ", df2['Distance'].std())
-    print("Mean of the distances for group3: ", df3['Distance'].mean())
-    print("Std of the distances for group3: ", df3['Distance'].std())
-    
-    # Plotting the distances for df1, df2, and df3 on the same graph
-    plt.figure(figsize=(10, 6))
-    sns.histplot(df1['Distance'], bins=5, label='len1')
-    sns.histplot(df2['Distance'], bins=5, label='len2')
-    sns.histplot(df3['Distance'], bins=5, label='len3')
-    
-    plt.title('Distance Distribution for Triple Crosslinks')
-    plt.xlabel('Distance (Å)')
-    plt.ylabel('Frequency')
-    plt.legend()
-    plt.savefig('data/tri-distribution.png', dpi=300)
-    #plt.show()
+    if is_dsso:
+        return distances_df
+    else:
+        # Graphing
+        # Group the distances by row number: 0,3,6,9,... is group1; 1,4,7,10,... is group2; 2,5,8,11,... is group3
+        df = pd.read_csv('data/exp_distances.csv')
+        df['Group'] = df.index % 3
+        df1 = df[df['Group'] == 0]
+        df2 = df[df['Group'] == 1]
+        df3 = df[df['Group'] == 2]
+        
+        print("Mean of the distances for group1: ", df1['Distance'].mean())
+        print("Std of the distances for group1: ", df1['Distance'].std())
+        print("Mean of the distances for group2: ", df2['Distance'].mean())
+        print("Std of the distances for group2: ", df2['Distance'].std())
+        print("Mean of the distances for group3: ", df3['Distance'].mean())
+        print("Std of the distances for group3: ", df3['Distance'].std())
+        
+        # Plotting the distances for df1, df2, and df3 on the same graph
+        plt.figure(figsize=(10, 6))
+        sns.histplot(df1['Distance'], bins=5, label='len1')
+        sns.histplot(df2['Distance'], bins=5, label='len2')
+        sns.histplot(df3['Distance'], bins=5, label='len3')
+        
+        plt.title('Distance Distribution for Triple Crosslinks')
+        plt.xlabel('Distance (Å)')
+        plt.ylabel('Frequency')
+        plt.legend()
+        plt.savefig('data/tri-distribution.png', dpi=300)
+        #plt.show()
     
 # Example usage
 if __name__ == "__main__":
     pdb_file = 'data/5gjr.pdb'
-    csv_file = 'data/paired_tri_xls.csv'
-    output_csv = 'data/paired_tri_distances.csv'
-    main(pdb_file, csv_file, output_csv)
+    #csv_file = 'data/paired_tri_xls.csv'
+    csv_file = 'data/dsso-xls.csv'
+    #output_csv = 'data/paired_tri_distances.csv'
+    output_csv = 'data/dsso_distances.csv'
+    is_dsso = True
+    main(pdb_file, csv_file, output_csv, is_dsso)
+    if is_dsso:
+        plot_distance_distribution(main(pdb_file, csv_file, output_csv, is_dsso=True)['Distance'], 'data')

@@ -156,7 +156,7 @@ class LysineCrosslinkAnalyzer:
         exp_triplets = pd.read_csv(exp_triplets_path)
 
         # Randomly pick the remaining crosslinks from the triplets
-        remaining_triplets_count = 30 - len(exp_triplets)
+        remaining_triplets_count = 40 - len(exp_triplets)
         random_triplets = self.triplets_df.sample(n=remaining_triplets_count, random_state=2129081000)
         self.selected_distances.extend(random_triplets[['Distance12', 'Distance23', 'Distance31']].values.flatten().tolist())
         random_triplets = random_triplets.drop(columns=['Distance12', 'Distance23', 'Distance31'])

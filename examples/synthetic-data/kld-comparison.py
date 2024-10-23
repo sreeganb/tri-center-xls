@@ -32,7 +32,7 @@ def calculate_kl_divergence(selected_distances, reference_distribution, bins=30)
     
     return entropy(p_hist, q_hist)
 
-def check_protein_occurrence(combined_triplets, protein1='Rpn2', protein2='Rpt3', min_occurrences=3):
+def check_protein_occurrence(combined_triplets, protein1='Rpn2', protein2='Rpt3', min_occurrences=2):
     """
     Check if the proteins occur in the same row at least a specified number of times.
     
