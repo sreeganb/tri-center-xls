@@ -89,6 +89,7 @@ def process_dataframe(df, atom_coords):
     return distances
 
 def plot_distance_distribution(distances, output_directory):
+    plt.rc('font', size = 18)
     # Remove None values from distances
     distances = [d for d in distances if d is not None]
     dis = pd.DataFrame(distances)
@@ -97,10 +98,10 @@ def plot_distance_distribution(distances, output_directory):
     print("len: ", len(dis))
     print("max: ", dis.max())
     plt.figure(figsize=(10, 6))
-    sns.histplot(distances, bins=20)
-    plt.title('Distance Distribution')
-    plt.xlabel('Distance (Å)')
-    plt.ylabel('Frequency')
+    sns.histplot(distances, bins=11)
+    plt.title('Distance Distribution', size = 14)
+    plt.xlabel('Distance (Å)', size = 14)
+    plt.ylabel('Frequency', size = 14)
     plt.savefig(f'{output_directory}/distance_distribution.png', dpi=300)
     plt.show()
 
@@ -143,6 +144,7 @@ def main(pdb_file, csv_file, output_csv, is_dsso=False):
         print("Std of the distances for group3: ", df3['Distance'].std())
         
         # Plotting the distances for df1, df2, and df3 on the same graph
+        plt.rc('font', size = 14)
         plt.figure(figsize=(10, 6))
         sns.histplot(df1['Distance'], bins=5, label='len1')
         sns.histplot(df2['Distance'], bins=5, label='len2')
@@ -158,11 +160,11 @@ def main(pdb_file, csv_file, output_csv, is_dsso=False):
 # Example usage
 if __name__ == "__main__":
     pdb_file = 'data/5gjr.pdb'
-    #csv_file = 'data/paired_tri_xls.csv'
-    csv_file = 'data/dsso-xls.csv'
-    #output_csv = 'data/paired_tri_distances.csv'
-    output_csv = 'data/dsso_distances.csv'
-    is_dsso = True
+    csv_file = 'data/paired_tri_xls.csv'
+    #csv_file = 'data/dsso-xls.csv'
+    output_csv = 'data/paired_tri_distances.csv'
+    #output_csv = 'data/dsso_distances.csv'
+    is_dsso = False
     main(pdb_file, csv_file, output_csv, is_dsso)
     if is_dsso:
-        plot_distance_distribution(main(pdb_file, csv_file, output_csv, is_dsso=True)['Distance'], 'data')
+        plot_distance_distribution(main(pdb_file, csv_file, output_csv, is_dsso=False)['Distance'], 'data')

@@ -7,6 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Define the mapping from Protein to Chain (corrected)
+# trying to be exhaustive here, get all the names possibly 
+# from the experimental dataset
 protein_to_chain = {
     'Rpt6': 'x',
     'Rpt3': 'y',
@@ -14,7 +16,20 @@ protein_to_chain = {
     'Rpn2': '1',
     'Rpt5': '0',
     'Rpt2': 'w',
-    'Rpt1': 'v'
+    'Rpt1': 'v',
+    'Rpn11': '9',
+    'Rpn3': '6',
+    'Rpn5': '3',
+    'Rpn9': '2',
+    'alpha3': 'D',
+    'alpha6': 'G',
+    'alpha7': 'X',
+    'beta5': 'F',
+    'alpha4': 'E',
+    'alpha1': 'B',
+    'beta6': 'f',
+    'alpha2': 'C',
+    'beta4': 'd'
 }
 
 def ensure_directory(directory):
