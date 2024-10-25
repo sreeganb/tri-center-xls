@@ -177,6 +177,17 @@ Clustering at sampling precision $6.0$ {\AA}
 \end{frame}
 %
 \begin{frame}
+  \frametitle{Distance analysis for the triangular XL restraint}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{test-figures/exp-triples.png}
+    \includegraphics[width=0.45\textwidth]{test-figures/tri-distribution.png}
+    \caption{Experimental trifunctional XLs mapped onto the pdb structure (left), and the distance distribution on the right, with
+    mean = 19.8 {\AA}, 21.9 {\AA}, 20.0 {\AA} and std dev = 10.0 {\AA}, 14.0 {\AA}, 9.0 {\AA}, for the three pairs, respectively.}
+    \end{figure}
+\end{frame}
+%
+\begin{frame}
   \frametitle{TSTO crosslinking data distance distribution}
   \begin{figure}
     \centering
@@ -393,23 +404,76 @@ using trifunctional crosslinks (18 {\AA} linker length)}
 \end{frame}
 %
 \begin{frame}
-  \frametitle{Distance analysis for the triangular XL restraint}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.3\textwidth]{test-figures/exp-triples.png}
-    \includegraphics[width=0.45\textwidth]{test-figures/tri-distribution.png}
-    \caption{Experimental trifunctional XLs mapped onto the pdb structure (left), and the distance distribution on the right, with
-    mean = 19.8 {\AA}, 21.9 {\AA}, 20.0 {\AA} and std dev = 10.0 {\AA}, 14.0 {\AA}, 9.0 {\AA}, for the three pairs, respectively.}
-    \end{figure}
+\frametitle{tri-XL connected residues linked via dummy bead}
+\begin{tikzpicture}
+  % Define the coordinates of the triangle corners
+  \coordinate (A) at (0, 0);
+  \coordinate (B) at (4, 0);
+  \coordinate (C) at (2, 3.46); % Height of an equilateral triangle with side length 4
+
+  % Calculate the center of the triangle
+  \coordinate (D) at (2, 1.15); % Centroid of the equilateral triangle
+
+  % Draw lines from the dummy bead to the corners
+  \draw[thick] (D) -- (A);
+  \draw[thick] (D) -- (B);
+  \draw[thick] (D) -- (C);
+
+  % Draw the dummy bead
+  \filldraw[black] (D) circle (2pt);
+  \node[above right] at (D) {dummy bead};
+
+  % Label the corners
+  \node[below left] at (A) {res1};
+  \node[below right] at (B) {res2};
+  \node[above] at (C) {res3};
+\end{tikzpicture}
+\begin{table}
+  \centering
+  \caption{Comparison of the double and triple XL datasets}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+                                   & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
+      n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
+      n($bi \cup tri) = 186$ XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
+  \end{tabular}
+\end{table}
+%
+\begin{table}
+  \centering
+  \caption{Comparison with bifunctional XLs}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+                                   & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) & 4.42  & 3.3 & 14.43 \\\hline
+      n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
+      XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
+  \end{tabular}
+\end{table}
 \end{frame}
 %
 \begin{frame}
 \frametitle{tri-XL connected residues linked via regular XL restraints}
-\begin{itemize}
-  \item No dummy bead used
-  \item Regular XL restraints used to connect the residues with lengths of 21 and 18 {\AA} for the simulations.
-  \item Simulations run with inclusion of overlap removed bi-functional data
-\end{itemize}
+%\begin{itemize}
+%  \item No dummy bead used
+%  \item Regular XL restraints used to connect the residues with lengths of 21 and 18 {\AA} for the simulations.
+%  \item Simulations run with inclusion of overlap removed bi-functional data
+%\end{itemize}
+\begin{tikzpicture}
+  % Define the coordinates of the triangle corners
+  \coordinate (A) at (0, 0);
+  \coordinate (B) at (4, 0);
+  \coordinate (C) at (2, 3.46); % Height of an equilateral triangle with side length 4
+
+  % Draw the triangle
+  \draw[thick] (A) -- (B) -- (C) -- cycle;
+
+  % Label the corners
+  \node[below left] at (A) {res1};
+  \node[below right] at (B) {res2};
+  \node[above] at (C) {res3};
+\end{tikzpicture}
+
 \begin{table}
   \centering
   \caption{Results for the tri-XL connected residues linked via regular XL restraints}
@@ -421,6 +485,16 @@ using trifunctional crosslinks (18 {\AA} linker length)}
       186 XLs, XL $=$ 18 {\AA} & 4.38   & 16000 & 3.32 & 13.51\\ \hline
   \end{tabular}
 \end{table}
+\begin{table}
+  \centering
+  \caption{Comparison to modeling done with only bifunctional XLs}
+  \begin{tabular}{|c|c|c|c|}
+      \hline
+                                   & Samp. precision ({\AA}) & Cl. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) & 4.42  & 3.3 & 14.43 \\\hline
+  \end{tabular}
+\end{table}
+
 \end{frame}
 %
 \begin{frame}[fragile=singleslide]
@@ -449,20 +523,14 @@ using trifunctional crosslinks (18 {\AA} linker length)}
 \end{frame}
 %
 \begin{frame}
-  \frametitle{Comparison with DSSO crosslinking data}
+\frametitle{Comparison with DSSO crosslinking data}
   \begin{figure}
-  \centering
-  \includegraphics[width=0.4\textwidth]{figures/dsso-mapped-xls.png}
-  \includegraphics[width=0.4\textwidth]{test-figures/unique_to_tsto.png}
-  \caption{XLs identified using DSSO XL (left) and Xls that are unique to TSTO (right) mapped onto the base subcomplex structure}
-  There are $\sim 100$ more unique crosslinks identified using TSTO.
+   \centering
+   \includegraphics[width=0.4\textwidth]{figures/dsso-mapped-xls.png}
+   \includegraphics[width=0.4\textwidth]{test-figures/unique_to_tsto.png}
+   \caption{XLs identified using DSSO XL (left) and Xls that are unique to TSTO (right) mapped onto the base subcomplex structure}
+   There are $\sim 100$ more unique crosslinks identified using TSTO.
   \end{figure}
-  \end{frame}
-\begin{frame}
-\frametitle{DSSO vs TSTO crosslinking data}
-\begin{itemize}
-\item The residue pairs that are connected by DSSO vs TSTO for the 
-base subcomplex
-\end{itemize}
-  \end{frame}
+\end{frame}
+%
 \end{document}
