@@ -48,6 +48,7 @@
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{caption}
+\usetikzlibrary{calc}
 
 \addbibresource{presentation.bib}
 \usetikzlibrary{arrows}
@@ -533,4 +534,48 @@ using trifunctional crosslinks (18 {\AA} linker length)}
   \end{figure}
 \end{frame}
 %
+\begin{frame}
+  \frametitle{Distance distribution of experimental trifunctional XLs}
+  \centering
+  \begin{tikzpicture}[scale=0.5]
+    % Define the coordinates of the triangle corners
+    \coordinate (A) at (0, 0);
+    \coordinate (B) at (4, 0);
+    \coordinate (C) at (2, 3.46); % Height of an equilateral triangle with side length 4
+  
+    % Draw the triangle
+    \draw[thick] (A) -- (B) -- (C) -- cycle;
+  
+    % Label the corners
+    \node[below left] at (A) {res1};
+    \node[below right] at (B) {res2};
+    \node[above] at (C) {res3};
+  
+    % Label the sides
+    \node[below] at ($(A)!0.5!(B)$) {side 1};
+    \node[right] at ($(B)!0.5!(C)$) {side 2};
+    \node[left] at ($(C)!0.5!(A)$) {side 3};
+  \end{tikzpicture}
+  %
+  \begin{table}
+    \centering
+    \caption{Distance distribution of experimental trifunctional XLs}
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Side & Mean ({\AA}) & Std ({\AA}) & Max ({\AA}) & Min ({\AA}) & Count $> 30${\AA} \\
+    \midrule
+    side 1 & 13.27 & 3.53 & 24.73 & 6.80 & 0 \\
+    side 2 & 25.16 & 16.54 & 77.91 & 10.59 & 8 \\
+    side 3 & 30.93 & 19.79 & 95.91 & 14.44 & 11 \\
+    \bottomrule
+    \end{tabular}   
+  \end{table} 
+  \begin{block}
+    {}
+    \begin{itemize}
+      \item There are 35 experimental trifunctional crosslinks identified for the proteasome
+      \item The distances are obtained by mapping the XLs onto the pdb structure with code: 5GJR
+    \end{itemize}
+    \end{block}
+\end{frame}
 \end{document}

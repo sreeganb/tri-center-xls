@@ -17,7 +17,7 @@ class LysineCrosslinkAnalyzer:
         'Rpt1': 'v'
     }
 
-    def __init__(self, input_pdb, output_pdb, distance_threshold=30, k=0.3, x0=28):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=30, k=0.4, x0=29):
         """
         Initialize the LysineCrosslinkAnalyzer with input PDB file, output PDB file, and distance threshold.
         """
@@ -205,4 +205,4 @@ output_pdb = 'lysine_residues.pdb'
 distance_threshold = 30  # Set the distance threshold to 30 Å
 analyzer = LysineCrosslinkAnalyzer(input_pdb, output_pdb, distance_threshold)
 analyzer.extract_lysine_residues()
-analyzer.select_triplets_with_pairs(n=100, interacting_pairs_file='input_data/interacting_pairs.csv')
+analyzer.select_triplets_with_pairs(n=80, interacting_pairs_file='input_data/interacting_pairs.csv')
