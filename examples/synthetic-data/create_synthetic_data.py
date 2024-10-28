@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from Bio import PDB
 import os
+from collections import defaultdict
 
 class LysineCrosslinkAnalyzer:
     # Define the protein to chain mapping
@@ -16,7 +17,7 @@ class LysineCrosslinkAnalyzer:
         'Rpt1': 'v'
     }
 
-    def __init__(self, input_pdb, output_pdb, distance_threshold=30, k=0.4, x0=28):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=30, k=0.3, x0=28):
         """
         Initialize the LysineCrosslinkAnalyzer with input PDB file, output PDB file, and distance threshold.
         """
@@ -132,10 +133,76 @@ class LysineCrosslinkAnalyzer:
         # Print the number of triplets found
         print(f"Number of triplets found: {len(triplets)}")
 
+    def select_triplets_with_pairs(self, n, interacting_pairs_file):
+        """
+        Select n triplets at random and ensure the resulting set contains at least two crosslinks for each pair in the interacting pairs list.
+        """
+        output_directory = 'synthetic_data'
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+
+        # Read the interacting pairs from the CSV file
+        interacting_pairs = pd.read_csv(interacting_pairs_file)
+        interacting_pairs_set = set(tuple(x) for x in interacting_pairs.values)
+
+        while True:
+            selected_triplets = self.triplets_df.sample(n=n, random_state=np.random.randint(0, 10000))
+            pair_counts = defaultdict(int)
+
+            for _, row in selected_triplets.iterrows():
+                pairs = [
+                    (row['Residue1'], row['Residue2']),
+                    (row['Residue2'], row['Residue3']),
+                    (row['Residue3'], row['Residue1'])
+                ]
+                for pair in pairs:
+                    if pair in interacting_pairs_set or (pair[1], pair[0]) in interacting_pairs_set:
+                        pair_counts[pair] += 1
+
+            # Check if each pair in the interacting pairs list appears at least two times
+            valid = all(count >= 12 for pair, count in pair_counts.items() if pair in interacting_pairs_set or (pair[1], pair[0]) in interacting_pairs_set)
+            if valid:
+                break
+
+        selected_triplets = selected_triplets.drop(columns=['Distance12', 'Distance23', 'Distance31'])
+        selected_triplets['Protein1'] = selected_triplets['ChainID1'].map({v: k for k, v in self.protein_to_chain.items()})
+        selected_triplets['Protein2'] = selected_triplets['ChainID2'].map({v: k for k, v in self.protein_to_chain.items()})
+        selected_triplets['Protein3'] = selected_triplets['ChainID3'].map({v: k for k, v in self.protein_to_chain.items()})
+        selected_triplets = selected_triplets[['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']]
+        
+        # Save the selected triplets to a file
+        selected_triplets.to_csv(os.path.join(output_directory, 'selected_lysine_triplets.csv'), index=False)
+        print(f"Selected {n} triplets with at least two crosslinks for each pair in the interacting pairs list.")
+        
+        # Process DataFrame in chunks of 1 row
+        results = []
+        pair_results = []
+        protein_group_counter = 1
+        for start in range(0, len(selected_triplets), 1):
+            chunk = selected_triplets.iloc[start:start+1]
+
+            # Collect unique (protein, res) pairs and their occurrences
+            for _, row in chunk.iterrows():
+                results.append([row['Protein1'], row['Residue1'], f'p{protein_group_counter}', 1])
+                results.append([row['Protein2'], row['Residue2'], f'p{protein_group_counter}', 1])
+                results.append([row['Protein3'], row['Residue3'], f'p{protein_group_counter}', 1])
+               
+                pair_results.append([row['Protein1'], row['Residue1'], row['Protein2'], row['Residue2']])
+                pair_results.append([row['Protein2'], row['Residue2'], row['Protein3'], row['Residue3']])
+                pair_results.append([row['Protein3'], row['Residue3'], row['Protein1'], row['Residue1']])
+
+            protein_group_counter += 1
+
+        # Create DataFrame from results
+        result_df = pd.DataFrame(results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
+        result_df.to_csv(os.path.join(output_directory, 'additional_random_lysine_triplets.csv'), index=False)
+        result_df = pd.DataFrame(pair_results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
+        result_df.to_csv(os.path.join(output_directory, 'paired_triplets.csv'), index=False)
+
 # Example usage
 input_pdb = 'data/pdb/base_proteasome.pdb'
 output_pdb = 'lysine_residues.pdb'
 distance_threshold = 30  # Set the distance threshold to 30 Å
 analyzer = LysineCrosslinkAnalyzer(input_pdb, output_pdb, distance_threshold)
 analyzer.extract_lysine_residues()
-#analyzer.pick_random_crosslinks()
+analyzer.select_triplets_with_pairs(n=100, interacting_pairs_file='input_data/interacting_pairs.csv')
