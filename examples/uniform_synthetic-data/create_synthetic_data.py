@@ -19,7 +19,7 @@ class LysineCrosslinkAnalyzer:
         'Rpt1': 'v'
     }
 
-    def __init__(self, input_pdb, output_pdb, distance_threshold=30, k=0.2, x0=28):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=29, k=0.7, x0=29):
         """
         Initialize the LysineCrosslinkAnalyzer with input PDB file, output PDB file, and distance threshold.
         """
@@ -162,7 +162,7 @@ class LysineCrosslinkAnalyzer:
                         pair_counts[pair] += 1
 
             # Check if each pair in the interacting pairs list appears at least two times
-            valid = all(count >= 6 for pair, count in pair_counts.items() if pair in interacting_pairs_set or (pair[1], pair[0]) in interacting_pairs_set)
+            valid = all(count >= 7 for pair, count in pair_counts.items() if pair in interacting_pairs_set or (pair[1], pair[0]) in interacting_pairs_set)
             if valid:
                 break
 
