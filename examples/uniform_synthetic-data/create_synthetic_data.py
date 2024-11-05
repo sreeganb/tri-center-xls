@@ -6,6 +6,7 @@ import pandas as pd
 from Bio import PDB
 import os
 from collections import defaultdict
+from scipy.stats import norm, skewnorm
 
 class LysineCrosslinkAnalyzer:
     # Define the protein to chain mapping
@@ -19,7 +20,7 @@ class LysineCrosslinkAnalyzer:
         'Rpt1': 'v'
     }
 
-    def __init__(self, input_pdb, output_pdb, distance_threshold=29, k=0.7, x0=29):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=29, k=0.7, x0=29, skewness = 7.6, mean=8.087, scale=14.8):
         """
         Initialize the LysineCrosslinkAnalyzer with input PDB file, output PDB file, and distance threshold.
         """
@@ -32,6 +33,9 @@ class LysineCrosslinkAnalyzer:
         self.triplets_df = None
         self.selected_distances = []  # Add this line
         self.combined_triplets = None  # Add this line
+        self.mean = mean
+        self.skewness = skewness
+        self.scale = scale
 
     def logistic_function(self, x):
         """
@@ -44,6 +48,11 @@ class LysineCrosslinkAnalyzer:
         array-like: Output values of the logistic function.
         """
         return 1 / (1 + np.exp(self.k * (x - self.x0)))
+    
+    # Function to generate a normal Gaussian distribution
+    def normal_gaussian(self, x):
+        #return norm.pdf(x, loc=self.mean, scale=self.std)
+        return skewnorm.pdf(x, self.skewness, loc=self.mean, scale=self.scale)
 
     def extract_lysine_residues(self):
         """
@@ -92,8 +101,8 @@ class LysineCrosslinkAnalyzer:
                     ca1 = res1['CA']
                     ca2 = res2['CA']
                     distance = ca1 - ca2
-                    probability = self.logistic_function(distance)
-                    if np.random.rand() < probability:  # Select based on logistic probability
+                    probability = self.normal_gaussian(distance)
+                    if np.random.rand() < probability:  # Select based on normal Gaussian probability
                         distances.append((res1.get_id()[1], res1.get_parent().id, res2.get_id()[1], res2.get_parent().id, distance))
 
         # Save distances to a file
@@ -116,15 +125,15 @@ class LysineCrosslinkAnalyzer:
                     ca1 = res1['CA']
                     ca2 = res2['CA']
                     distance1_2 = ca1 - ca2
-                    probability1_2 = self.logistic_function(distance1_2)
-                    if np.random.rand() < probability1_2:  # Select based on logistic probability
+                    probability1_2 = self.normal_gaussian(distance1_2)
+                    if np.random.rand() < probability1_2:  # Select based on normal Gaussian probability
                         for k, res3 in enumerate(lysine_selector.lysine_residues):
                             if j < k:
                                 ca3 = res3['CA']
                                 distance2_3 = ca2 - ca3
                                 distance3_1 = ca3 - ca1
-                                probability2_3 = self.logistic_function(distance2_3)
-                                probability3_1 = self.logistic_function(distance3_1)
+                                probability2_3 = self.normal_gaussian(distance2_3)
+                                probability3_1 = self.normal_gaussian(distance3_1)
                                 if np.random.rand() < probability2_3 and np.random.rand() < probability3_1:
                                     triplets.append((res1.get_id()[1], res1.get_parent().id, res2.get_id()[1], res2.get_parent().id, res3.get_id()[1], res3.get_parent().id, distance1_2, distance2_3, distance3_1))
 
@@ -146,6 +155,10 @@ class LysineCrosslinkAnalyzer:
         # Read the interacting pairs from the CSV file
         interacting_pairs = pd.read_csv(interacting_pairs_file)
         interacting_pairs_set = set(tuple(x) for x in interacting_pairs.values)
+
+        # Check if the number of triplets requested exceeds the available triplets
+        if n > len(self.triplets_df):
+            raise ValueError(f"Requested {n} triplets, but only {len(self.triplets_df)} are available.")
 
         while True:
             selected_triplets = self.triplets_df.sample(n=n, random_state=np.random.randint(0, 10000))
@@ -208,4 +221,4 @@ output_pdb = 'lysine_residues.pdb'
 distance_threshold = 30  # Set the distance threshold to 30 Å
 analyzer = LysineCrosslinkAnalyzer(input_pdb, output_pdb, distance_threshold)
 analyzer.extract_lysine_residues()
-analyzer.select_triplets_with_pairs(n=50, interacting_pairs_file='input_data/interacting_pairs.csv')
+analyzer.select_triplets_with_pairs(n=2, interacting_pairs_file='input_data/interacting_pairs.csv')

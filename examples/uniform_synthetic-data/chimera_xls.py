@@ -3,9 +3,12 @@ from chimerax.core.commands import run
 from chimerax.core.errors import UserError
 from chimerax.atomic import Residue, Atoms, AtomicStructure
 from chimerax.geometry import distance
+import numpy as np
+import pandas as pd # Import pandas for data processing
 
 # Define the file paths (hardcoded)
-PDB_FILE = "base_proteasome.pdb"
+PDB_FILE = "chopped_base_proteasome.pdb"
+#PDB_FILE = "data/pdb/af-base.pdb"
 #CROSSLINK_FILE = "pymol_data/formatted_random_lysine_doubles.csv"
 CROSSLINK_FILE = "pymol_data/formatted_random_lysine_triplets.csv"
 
@@ -38,7 +41,7 @@ def find_atom_by_chain_residue(model, chain, residue_num, atom_name):
 def plot_crosslinks(session, pdb_model, crosslinks):
     violation_count = 0
     processed_crosslinks = set()
-    
+    distances = []
     for crosslink in crosslinks:
         chain1, res1, atom1, chain2, res2, atom2 = crosslink
 
@@ -63,8 +66,13 @@ def plot_crosslinks(session, pdb_model, crosslinks):
                 run(session, f'distance {atom1_obj.atomspec} {atom2_obj.atomspec} color {color} radius 0.6')
             except UserError:
                 run(session, f'distance style {atom1_obj.atomspec} {atom2_obj.atomspec} color {color} radius 0.6')
+        distances.append(dist)
     
     print(f'Number of crosslink distance violations: {violation_count}')
+    print(f'Mean distance: {np.mean(distances):.2f} Å')
+    print(f'Standard deviation: {np.std(distances):.2f} Å')
+    print(f'Maximum distance: {np.max(distances):.2f} Å')
+    print(f'Minimum distance: {np.min(distances):.2f} Å')
 
 # Main function to run in ChimeraX
 def visualize_crosslinks(session):
