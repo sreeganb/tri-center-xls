@@ -4,7 +4,7 @@ from chimerax.core.errors import UserError
 from chimerax.atomic import Residue, Atoms, AtomicStructure
 from chimerax.geometry import distance
 import numpy as np
-import pandas as pd # Import pandas for data processing
+#import pandas as pd # Import pandas for data processing
 
 # Define the file paths (hardcoded)
 PDB_FILE = "chopped_base_proteasome.pdb"
