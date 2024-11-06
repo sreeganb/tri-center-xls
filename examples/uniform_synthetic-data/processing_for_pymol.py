@@ -65,7 +65,8 @@ def main():
     # Process triple links
     #process_triple_links('synthetic_data/random_lysine_triplets.csv', os.path.join(output_directory, 'paired_double_links.csv'))
     #process_triple_links('synthetic_data/selected_lysine_triplets.csv', os.path.join(output_directory, 'paired_double_links.csv'))
-    process_triple_links('synthetic_data/selected_triplets.csv', os.path.join(output_directory, 'paired_double_links.csv'))
+    #process_triple_links('synthetic_data/selected_triplets.csv', os.path.join(output_directory, 'paired_double_links.csv'))
+    process_triple_links('replicates_20_xls/replicate_3/selected_triplets.csv', os.path.join(output_directory, 'paired_double_links.csv'))
     
     # Format random lysine doubles and triplets for PyMOL
     #format_for_pymol('synthetic_data/random_lysine_doubles.csv', os.path.join(output_directory, 'formatted_random_lysine_doubles.csv'))

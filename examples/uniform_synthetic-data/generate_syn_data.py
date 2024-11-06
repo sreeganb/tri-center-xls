@@ -123,7 +123,7 @@ class LysineCrosslinkAnalyzer:
                             distance1_2, distance2_3, distance3_1
                         )
                         triplets.append(triplet)
-                        print("Triplet selected:", triplet)
+                        #print("Triplet selected:", triplet)
                     
         print("Total triplets found:", len(triplets))
         
@@ -174,85 +174,101 @@ lysine_residues = analyzer.extract_lysine_residues()
 analyzer.precompute_pairwise_distances(lysine_residues)
 triplet = analyzer.select_synthetic_triplets(lysine_residues)
 
-# Accept user input for the number of triplets
-n = int(input("Enter the number of triplets to select: "))
-min_frequency = 3  # Minimum frequency for each protein
+# ... (previous code remains unchanged)
 
-# Ensure each protein occurs at least min_frequency times
+n = int(input("Enter the number of triplets to select: "))
+min_frequency = 4  # Minimum frequency for each protein
+
 proteins = ['Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6']
-selected_triplets_df = None
 max_attempts = 1000  # To prevent infinite loops
 
 if triplet.empty:
     print("No triplets available for selection.")
 else:
-    for attempt in range(max_attempts):
-        sampled_triplets = triplet.sample(n=n, replace=False)
-        # Combine Protein columns into a single series
-        all_proteins = pd.concat([sampled_triplets['Protein1'], sampled_triplets['Protein2'], sampled_triplets['Protein3']])
-        protein_counts = all_proteins.value_counts()
-        # Check if all proteins meet the minimum frequency
-        if all(protein_counts.get(protein, 0) >= min_frequency for protein in proteins):
-            # Process DataFrame in chunks of 1 row
-            results = []
-            pair_results = []
-            distances = []
-            protein_group_counter = 1
-            for _, row in sampled_triplets.iterrows():
-                # Collect unique (protein, res) pairs and their occurrences
-                results.append([row['Protein1'], row['Residue1'], f'p{protein_group_counter}', 1])
-                results.append([row['Protein2'], row['Residue2'], f'p{protein_group_counter}', 1])
-                results.append([row['Protein3'], row['Residue3'], f'p{protein_group_counter}', 1])
-                
-                pair_results.append([row['Protein1'], row['Residue1'], row['Protein2'], row['Residue2']])
-                pair_results.append([row['Protein2'], row['Residue2'], row['Protein3'], row['Residue3']])
-                pair_results.append([row['Protein3'], row['Residue3'], row['Protein1'], row['Residue1']])
-            
-                protein_group_counter += 1
+    output_directory = f'replicates_{n}_xls'
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
 
-            # Create DataFrame from pair_results
+    for replicate_num in range(1, 4):
+        selected_triplets_df = None
+        for attempt in range(max_attempts):
+            sampled_triplets = triplet.sample(n=n, replace=False)
+            all_proteins = pd.concat([
+                sampled_triplets['Protein1'],
+                sampled_triplets['Protein2'],
+                sampled_triplets['Protein3']
+            ])
+            protein_counts = all_proteins.value_counts()
+            if all(protein_counts.get(protein, 0) >= min_frequency for protein in proteins):
+                results = []
+                pair_results = []
+                distances = []
+                protein_group_counter = 1
+                for _, row in sampled_triplets.iterrows():
+                    results.extend([
+                        [row['Protein1'], row['Residue1'], f'p{protein_group_counter}', 1],
+                        [row['Protein2'], row['Residue2'], f'p{protein_group_counter}', 1],
+                        [row['Protein3'], row['Residue3'], f'p{protein_group_counter}', 1]
+                    ])
+                    pair_results.extend([
+                        [row['Protein1'], row['Residue1'], row['Protein2'], row['Residue2']],
+                        [row['Protein2'], row['Residue2'], row['Protein3'], row['Residue3']],
+                        [row['Protein3'], row['Residue3'], row['Protein1'], row['Residue1']]
+                    ])
+                    protein_group_counter += 1
+
+                pair_df = pd.DataFrame(pair_results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
+
+                residue_dict = {residue.get_id()[1]: residue for residue in lysine_residues}
+                for _, pair in pair_df.iterrows():
+                    res1 = residue_dict.get(pair['Residue1'])
+                    res2 = residue_dict.get(pair['Residue2'])
+                    if res1 is None or res2 is None:
+                        continue
+                    ca1 = res1['CA'].get_coord()
+                    ca2 = res2['CA'].get_coord()
+                    distance = np.linalg.norm(ca1 - ca2)
+                    distances.append(distance)
+
+                if distances:
+                    mean_distance = np.mean(distances)
+                    print(f"Replicate {replicate_num}, Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
+                    if 16 <= mean_distance <= 23:
+                        selected_triplets_df = sampled_triplets
+                        print(f"Selected triplets for replicate {replicate_num} with mean distance {mean_distance:.2f} Å")
+                        break
+                    else:
+                        print(f"Mean distance {mean_distance:.2f} Å not within 16-23 Å, retrying...")
+                else:
+                    print("No distances computed, retrying...")
+            else:
+                print(f"Attempt {attempt+1}: Protein frequency criteria not met, retrying...")
+                continue
+
+        if selected_triplets_df is None:
+            print(f"Could not find a selection for replicate {replicate_num} after {max_attempts} attempts.")
+        else:
+            result_df = pd.DataFrame(results, columns=['Protein', 'Residue', 'Group', 'Occurrence'])
             pair_df = pd.DataFrame(pair_results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
             
-            # Compute distances
-            residue_dict = {residue.get_id()[1]: residue for residue in lysine_residues}
-            for _, pair in pair_df.iterrows():
-                res1 = residue_dict.get(pair['Residue1'])
-                res2 = residue_dict.get(pair['Residue2'])
-                if res1 is None or res2 is None:
-                    continue  # Skip if residues are not found
-                ca1 = res1['CA'].get_coord()
-                ca2 = res2['CA'].get_coord()
-                distance = np.linalg.norm(ca1 - ca2)
-                distances.append(distance)
+            replicate_folder = os.path.join(output_directory, f'replicate_{replicate_num}')
+            if not os.path.exists(replicate_folder):
+                os.makedirs(replicate_folder)
 
-            if distances:
-                mean_distance = np.mean(distances)
-                print(f"Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
-                if 16 <= mean_distance <= 23:
-                    # Accept this selection
-                    selected_triplets_df = sampled_triplets
-                    print(f"Selected triplets with mean distance {mean_distance:.2f} Å")
-                    break
-                else:
-                    print(f"Mean distance {mean_distance:.2f} Å not within 16-22 Å, retrying...")
-            else:
-                print("No distances computed, retrying...")
-        else:
-            print(f"Attempt {attempt+1}: Protein frequency criteria not met, retrying...")
-            continue  # Try next attempt
+            selected_triplets_df.to_csv(os.path.join(replicate_folder, 'selected_triplets.csv'), index=False)
+            result_df.to_csv(os.path.join(replicate_folder, 'additional_random_lysine_triplets.csv'), index=False)
+            pair_df.to_csv(os.path.join(replicate_folder, 'paired_triplets.csv'), index=False)
 
-    if selected_triplets_df is None:
-        print(f"Could not find a selection satisfying the minimum frequency of {min_frequency} and mean distance within 16-22 Å after {max_attempts} attempts.")
-    else:
-        # Create DataFrames from results
-        result_df = pd.DataFrame(results, columns=['Protein', 'Residue', 'Group', 'Occurrence'])
-        pair_df = pd.DataFrame(pair_results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
-        
-        # Save the dataframes to CSV files
-        output_directory = 'synthetic_data'
-        if not os.path.exists(output_directory):
-            os.makedirs(output_directory)
-        
-        selected_triplets_df.to_csv(os.path.join(output_directory, 'selected_triplets.csv'), index=False)
-        result_df.to_csv(os.path.join(output_directory, 'additional_random_lysine_triplets.csv'), index=False)
-        pair_df.to_csv(os.path.join(output_directory, 'paired_triplets.csv'), index=False)
+            # Function to randomly remove two rows per group of three
+            def remove_two_rows_per_three(df):
+                indices_to_remove = []
+                for i in range(0, len(df), 3):
+                    indices = np.arange(i, i+3)
+                    if len(indices) == 3:
+                        remove_indices = np.random.choice(indices, size=2, replace=False)
+                        indices_to_remove.extend(remove_indices)
+                return df.drop(indices_to_remove).reset_index(drop=True)
+
+            # Apply the function
+            removed_df = remove_two_rows_per_three(pair_df)
+            removed_df.to_csv(os.path.join(replicate_folder, 'removed_bi_xls.csv'), index=False)
