@@ -177,10 +177,10 @@ triplet = analyzer.select_synthetic_triplets(lysine_residues)
 # ... (previous code remains unchanged)
 
 n = int(input("Enter the number of triplets to select: "))
-min_frequency = 4  # Minimum frequency for each protein
+min_frequency = 5  # Minimum frequency for each protein
 
 proteins = ['Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6']
-max_attempts = 1000  # To prevent infinite loops
+max_attempts = 10000  # To prevent infinite loops
 
 if triplet.empty:
     print("No triplets available for selection.")
@@ -248,7 +248,7 @@ else:
         if selected_triplets_df is None:
             print(f"Could not find a selection for replicate {replicate_num} after {max_attempts} attempts.")
         else:
-            result_df = pd.DataFrame(results, columns=['Protein', 'Residue', 'Group', 'Occurrence'])
+            result_df = pd.DataFrame(results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
             pair_df = pd.DataFrame(pair_results, columns=['Protein1', 'Residue1', 'Protein2', 'Residue2'])
             
             replicate_folder = os.path.join(output_directory, f'replicate_{replicate_num}')
