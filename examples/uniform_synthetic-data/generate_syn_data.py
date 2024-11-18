@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class LysineCrosslinkAnalyzer:
-    def __init__(self, input_pdb, output_pdb, distance_threshold=30.0, mean=19.2, scale=9.4, probability_scaling_factor=6000, skewness=7.6, loc=8.087, skew_scale=14.797):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=30.0, mean=19.2, scale=9.4, probability_scaling_factor=4000, skewness=7.0, loc=6.8, skew_scale=14.0):
         self.input_pdb = input_pdb
         self.output_pdb = output_pdb
         self.distance_threshold = distance_threshold
@@ -139,10 +139,18 @@ class LysineCrosslinkAnalyzer:
             print("No triplets found with the given parameters.")
             return df_triplets
         
+        min_distance = 0.0
+        max_distance = 50.0
+        skewness = 7.6
+        loc = 8.087
+        scale = 14.797
+        x_values = np.linspace(min_distance, max_distance, 1000)
+        y_values = 18000*skewnorm.pdf(x_values, skewness, loc=loc, scale=scale)
+        plt.plot(x_values, y_values, color='red', lw=2)
         # Write distances to CSV
         dis_df = pd.concat([df_triplets['Distance12'], df_triplets['Distance23'], df_triplets['Distance31']])
         dis_df.to_csv('synthetic_data/triplet_distances.csv', index=False)
-        plt.hist(dis_df, bins=20, alpha=0.5, label='All Distances', edgecolor='black')
+        plt.hist(dis_df, bins=13, alpha=0.5, label='All Distances', edgecolor='black')
         plt.xlabel('Distance (Å)')
         plt.ylabel('Frequency')
         plt.title('Distribution of Distances for Selected Triplets')
@@ -189,7 +197,7 @@ else:
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    for replicate_num in range(1, 4):
+    for replicate_num in range(4, 6):
         selected_triplets_df = None
         for attempt in range(max_attempts):
             sampled_triplets = triplet.sample(n=n, replace=False)
@@ -233,7 +241,7 @@ else:
                 if distances:
                     mean_distance = np.mean(distances)
                     print(f"Replicate {replicate_num}, Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
-                    if 16 <= mean_distance <= 23:
+                    if 16 <= mean_distance <= 23.0:
                         selected_triplets_df = sampled_triplets
                         print(f"Selected triplets for replicate {replicate_num} with mean distance {mean_distance:.2f} Å")
                         break
@@ -259,15 +267,49 @@ else:
             result_df.to_csv(os.path.join(replicate_folder, 'additional_random_lysine_triplets.csv'), index=False)
             pair_df.to_csv(os.path.join(replicate_folder, 'paired_triplets.csv'), index=False)
 
-            # Function to randomly remove two rows per group of three
             def remove_two_rows_per_three(df):
-                indices_to_remove = []
+                """
+                For each group of three rows in the DataFrame, randomly remove two rows ensuring
+                that the remaining row has 'protein1' != 'protein2'. If this condition is not met,
+                repeat the process for that group until it is satisfied.
+                """
+                indices_to_keep = []
+
                 for i in range(0, len(df), 3):
-                    indices = np.arange(i, i+3)
-                    if len(indices) == 3:
-                        remove_indices = np.random.choice(indices, size=2, replace=False)
-                        indices_to_remove.extend(remove_indices)
-                return df.drop(indices_to_remove).reset_index(drop=True)
+                    group = df.iloc[i:i+3]
+                    if len(group) == 3:
+                        attempts = 0
+                        max_attempts = 10  # Prevent infinite loops in case of impossible conditions
+                        success = False
+
+                        while attempts < max_attempts and not success:
+                            # Randomly select two indices to remove
+                            remove_indices = group.sample(n=2, replace=False).index
+                            # The index of the remaining row
+                            keep_index = group.index.difference(remove_indices)[0]
+                            remaining_row = df.loc[keep_index]
+
+                            # Check if 'protein1' != 'protein2' in the remaining row
+                            if remaining_row['Protein1'] != remaining_row['Protein2']:
+                                indices_to_keep.append(keep_index)
+                                success = True
+                            else:
+                                # Retry removal
+                                attempts += 1
+
+                        if not success:
+                            # If after max_attempts the condition is not met, handle accordingly
+                            # Here, we choose to skip this group or keep the row anyway
+                            # You can adjust based on your requirements
+                            print(f"Could not find a valid row in group starting at index {i}, proceeding without modification.")
+                    else:
+                        # For groups with less than three rows, keep them as is
+                        indices_to_keep.extend(group.index.tolist())
+
+                # Create the resulting DataFrame with only the kept rows
+                result_df = df.loc[indices_to_keep].reset_index(drop=True)
+                return result_df
+
 
             # Apply the function
             removed_df = remove_two_rows_per_three(pair_df)

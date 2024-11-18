@@ -59,8 +59,8 @@ def plot_crosslinks(session, pdb_model, crosslinks):
         # If both atoms are found, create or modify a link (distance line)
         if atom1_obj and atom2_obj:
             dist = distance(atom1_obj.coord, atom2_obj.coord)
-            color = 'dark green' if dist < 30 else 'dark red'
-            if dist >= 30:
+            color = 'dark green' if dist < 32 else 'dark red'
+            if dist >= 32:
                 violation_count += 1
             try:
                 run(session, f'distance {atom1_obj.atomspec} {atom2_obj.atomspec} color {color} radius 0.6')

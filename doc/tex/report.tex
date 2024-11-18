@@ -76,35 +76,55 @@
 \maketitle
 %
 \begin{frame}
+\frametitle{26S proteasome}
+\begin{figure}
+\centering
+\includegraphics[width=0.3\textwidth]{figures/5gjr_structure.png}
+\caption{EM structure at 3.5 {\AA} resolution of the human 26S proteasome, PDB ID: 5GJR}
+\end{figure}
+\begin{block}{}
+  \begin{itemize}
+    \item Choosing to work with the base subcomplex of the human 26S proteasome
+  \end{itemize}
+\end{block}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.3\textwidth]{figures/base_proteasome_5gjr.png}
+  \caption{Base subcomplex consists of the Rpt1, Rpt2, Rpt3, Rpt4, Rpt5, Rpt6 and Rpn2 subunits
+  of the human 26S proteasome}
+\end{figure}
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}
   \frametitle{Modeling with DSSO crosslinking data}
   \begin{figure}
   \centering
-  \includegraphics[width=0.5\textwidth]{figures/dsso-mapped-xls.png}
-  \caption{DSSO crosslinking data mapped onto the base subcomplex}
+  \includegraphics[width=0.4\textwidth]{figures/dsso-mapped-xls.png}
+  \caption{DSSO crosslinking data mapped onto the base subcomplex, 
+  there is a total of 95 identified crosslinks.}
   \end{figure}
-  Total of 95 crosslinks
+  %
+  \begin{table}
+    \centering
+    \caption{Modeling with DSSO XL data for the base subcomplex}
+    \begin{tabular}{|c|c|}
+        \hline
+        Cluster precision ({\AA}) & Accuracy({\AA}) \\ \hline
+        12.2 & 33 \\ \hline
+    \end{tabular}
+    \end{table}
+    Clustering at sampling precision $20.0$ {\AA} with
+    a cluster of population 28000.
   \end{frame}
-%  
+%------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Results}
-\begin{table}
-\centering
-\caption{Modeling with DSSO XL data for the base subcomplex}
-\begin{tabular}{|c|c|}
-    \hline
-    Cluster precision ({\AA}) & Accuracy({\AA}) \\ \hline
-    12.2 & 33 \\ \hline
-\end{tabular}
-\end{table}
-Clustering at sampling precision $20.0$ {\AA} with
-a cluster of population 28000. 
-\end{frame}
-%
-\begin{frame}
+  \frametitle{Modeling with TSTO crosslinking data}
+  \begin{minipage}{0.48\textwidth}
+    \centering
     \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{figures/5gjr_structure.png}
-    \caption{EM structure at 3.5 {\AA} resolution of the human 26S proteasome, PDB ID: 5GJR}
+    \caption{Structure of the human 26S proteasome, PDB ID: 5GJR}
     \end{figure}
     % a table with two rows and two columns
 \begin{table}
@@ -113,24 +133,35 @@ a cluster of population 28000.
     \begin{tabular}{|c|c|}
         \hline
         Type of XL & Number of unique XLs \\ \hline
-        Triple & 35 \\ \hline
-        Double & 691 \\ \hline
+        Tri & 35 \\ \hline
+        Bi & 691 \\ \hline
     \end{tabular}
 \end{table}
-\end{frame}
-%
-\begin{frame}
-    \frametitle{Working with the base subcomplex}
-\begin{figure}
-\centering
-\includegraphics[width=0.5\textwidth]{figures/base_proteasome_5gjr.png}
-\caption{Base subcomplex consisting of Rpt1, Rpt2, Rpt3, Rpt4, Rpt5, Rpt6, Rpn2 of subunits 
-of the human 26S proteasome}
+\end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+  \centering
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/base_proteasome_5gjr.png}
+  \caption{Base subcomplex of the human 26S proteasome}
   \end{figure}
+  %
+\begin{table}
+  \centering
+  \caption{Number of unique cross links}
+  \begin{tabular}{|c|c|}
+      \hline
+      Type of XL & Number of unique XLs \\ \hline
+      Tri & 14 \\ \hline
+      Bi & 164 \\ \hline
+  \end{tabular}
+\end{table}
+\end{minipage}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Comparison of the double and triple XL datasets}
+\frametitle{Comparison of the bi- and tri-functional XL datasets}
 \begin{block}{}
 \begin{itemize}
   \item Only bifunctional set ($n(bi) = 164$)
@@ -146,37 +177,33 @@ of the human 26S proteasome}
       \caption{$n(bi) = 164$ (left) and n($bi \cup tri = 186$) (right) set of cross links mapped onto the base subcomplex}
     \end{figure}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
-\frametitle{Comparison of the double and triple XL datasets}
+\frametitle{Results}
 \begin{table}
   \centering
   \caption{Comparison of the double and triple XL datasets}
-  \begin{tabular}{|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|}
       \hline
-                                   & Samp. precision ({\AA}) & Clust. pop. & Clust. precision & Accuracy\\ \hline
-      bifunctional ($n(bi) = 164$) & 4.42  & 21820 & 3.335 & 14.43 \\\hline
-      $n(bi) + n(tri) = 206$       & 5.58  & 28449 & 3.666 & \\ \hline
-      n($bi \cup tri) = 186$       & 10.68 & 29395 & 7.388 &  16.09 \\\hline
+                                   & Samp. precision ({\AA}) &  Clust. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) & 4.42   & 3.335 & 14.43 \\\hline
+      $n(bi) + n(tri) = 206$       & 5.58   & 3.666 & \\ \hline
+      n($bi \cup tri) = 186$       & 10.68  & 7.388 &  16.09 \\\hline
   \end{tabular}
 \end{table}
 Clustering at sampling precision $6.0$ {\AA}
 \begin{table}
   \centering
   \caption{Comparison of the double and triple XL datasets}
-  \begin{tabular}{|c|c|c|c|c|}
+  \begin{tabular}{|c|c|c|c|}
       \hline
-                                   & Clust. pop. & Clust. precision & Accuracy\\ \hline
-      bifunctional ($n(bi) = 164$) & 27397 & 3.755 & 14.42\\ \hline
-      $n(bi) + n(tri) = 206$       &  &  & \\ \hline
-      n($bi \cup tri) = 186$       & 24090 & 4.118 & 16.06\\ \hline
+                                   &  Clust. precision & Accuracy\\ \hline
+      bifunctional ($n(bi) = 164$) &  3.755 & 14.42\\ \hline
+      n($bi \cup tri) = 186$       &  4.118 & 16.06\\ \hline
   \end{tabular}
 \end{table}
-\begin{block}{}
-  Remove the excluded volume for the dummy beads and the distribution of the XL distances 
-\end{block}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
   \frametitle{Distance analysis for the triangular XL restraint}
   \begin{figure}
@@ -187,7 +214,7 @@ Clustering at sampling precision $6.0$ {\AA}
     mean = 19.8 {\AA}, 21.9 {\AA}, 20.0 {\AA} and std dev = 10.0 {\AA}, 14.0 {\AA}, 9.0 {\AA}, for the three pairs, respectively.}
     \end{figure}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
   \frametitle{TSTO crosslinking data distance distribution}
   \begin{figure}
@@ -196,37 +223,7 @@ Clustering at sampling precision $6.0$ {\AA}
     \includegraphics[scale=0.2]{test-figures/dsso_distances.png}
   \end{figure}
   \end{frame}
-%  
-%\begin{frame}
-%\frametitle{XL residue pair distance distributions}
-%\begin{figure}
-%\centering
-%\includegraphics[width=0.45\textwidth]{figures/Rpt2_258_to_Rpt4_72_distances_distribution.pdf}
-%\includegraphics[width=0.45\textwidth]{figures/Rpt2_258_to_Rpt5_300_distances_distribution.pdf}
-%\end{figure}
-%
-%\begin{figure}
-%  \centering
-%  \includegraphics[width=0.45\textwidth]{figures/Rpt6_222_to_Rpt2_258_distances_distribution.pdf}
-%  \includegraphics[width=0.45\textwidth]{figures/Rpt6_222_to_Rpt5_300_distances_distribution.pdf}
-%  \end{figure}  
-%\end{frame}
-%
-%
-%\begin{frame}
-%\frametitle{PSD modeling}
-%Modeling intra-protein cross links for O08749 interactor protein of Bassoon. 
-%\begin{figure}
-%\centering
-%\includegraphics[width=0.5\textwidth]{figures/xls_mapped.png}
-%\includegraphics[width=0.5\textwidth]{figures/distances_O08749.pdf}
-%\end{figure}
-%\end{frame}
-%\begin{frame}
-%\frametitle{PSD modeling}
-%Using Alphafold multimer to obtain the homodimer strucutre and map the XLs onto it. 
-%\end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
 \frametitle{Optimizing the crosslinker length}
 \begin{block}{}
@@ -273,7 +270,7 @@ on the right, the distance distributions using trifunctional crosslinks (11 {\AA
   \captionof{table}{Trifunctional crosslinks (11 {\AA} linker)}
   \end{minipage}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
 \frametitle{Optimizing the crosslinker length}
 \begin{figure}
@@ -324,7 +321,7 @@ using trifunctional crosslinks (18 {\AA} linker length)}
 %  \hline
 %\end{tabular}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
 \frametitle{Results for optimized crosslinker length}
 \begin{table}
@@ -342,9 +339,9 @@ using trifunctional crosslinks (18 {\AA} linker length)}
   Simulations with synthetic crosslinks with the optimized crosslinker length
 \end{block}
 \end{frame}
-%
+%------------------------------------------------------------------------------
 \begin{frame}
-  \frametitle{TSTO modeling}
+  \frametitle{Modeling with TSTO crosslinker}
   \begin{minipage}{0.48\textwidth}
     \centering
     \begin{tikzpicture}
@@ -395,13 +392,6 @@ using trifunctional crosslinks (18 {\AA} linker length)}
     \centering
     Modeling with a dummy bead
   \end{minipage}
-  \begin{block}{TODO}
-    \begin{itemize}
-      \item Optimize the standard deviation of the distance distribution using the $\sigma$ parameter of crossliking restraint
-      \item Try using triangular geometric restraints instead of the dummy beads
-      \item Analyze the simulations with synthetic data
-    \end{itemize}
-  \end{block}
 \end{frame}
 %
 \begin{frame}
@@ -429,20 +419,10 @@ using trifunctional crosslinks (18 {\AA} linker length)}
   \node[below right] at (B) {res2};
   \node[above] at (C) {res3};
 \end{tikzpicture}
-\begin{table}
-  \centering
-  \caption{Comparison of the double and triple XL datasets}
-  \begin{tabular}{|c|c|c|c|}
-      \hline
-                                   & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
-      n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
-      n($bi \cup tri) = 186$ XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
-  \end{tabular}
-\end{table}
 %
 \begin{table}
   \centering
-  \caption{Comparison with bifunctional XLs}
+  \caption{Comparison of the bi- and trifunctional XL datasets}
   \begin{tabular}{|c|c|c|c|}
       \hline
                                    & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
@@ -715,4 +695,16 @@ using trifunctional crosslinks (18 {\AA} linker length)}
     \end{tabular}
   \end{table}
   \end{frame}
+%
+\begin{frame}
+  \frametitle{Synthetic data statistics}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{test-figures/whisker_plot_model_acc.pdf}
+  \includegraphics[width=0.45\textwidth]{test-figures/whisker_plot_clust_pre.pdf}
+  \caption{Synthetic data statistics}
+  \label{fig:synthetic_data_statistics}
+  \end{figure}
+  \end{frame}
+  %
 \end{document}
