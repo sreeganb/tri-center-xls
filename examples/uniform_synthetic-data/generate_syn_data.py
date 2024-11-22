@@ -141,9 +141,9 @@ class LysineCrosslinkAnalyzer:
         
         min_distance = 0.0
         max_distance = 50.0
-        skewness = 7.6
-        loc = 8.087
-        scale = 14.797
+        skewness = 9.0
+        loc = 9.0
+        scale = 18.0
         x_values = np.linspace(min_distance, max_distance, 1000)
         y_values = 18000*skewnorm.pdf(x_values, skewness, loc=loc, scale=scale)
         plt.plot(x_values, y_values, color='red', lw=2)
@@ -241,7 +241,11 @@ else:
                 if distances:
                     mean_distance = np.mean(distances)
                     print(f"Replicate {replicate_num}, Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
+<<<<<<< HEAD
                     if 16 <= mean_distance <= 21.0:
+=======
+                    if 16 <= mean_distance <= 25.0:
+>>>>>>> cdd61d1 (committing some changes)
                         selected_triplets_df = sampled_triplets
                         print(f"Selected triplets for replicate {replicate_num} with mean distance {mean_distance:.2f} Å")
                         break
