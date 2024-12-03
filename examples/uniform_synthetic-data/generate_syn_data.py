@@ -197,7 +197,7 @@ else:
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    for replicate_num in range(1, 6):
+    for replicate_num in range(6, 9):
         selected_triplets_df = None
         for attempt in range(max_attempts):
             sampled_triplets = triplet.sample(n=n, replace=False)
@@ -241,7 +241,7 @@ else:
                 if distances:
                     mean_distance = np.mean(distances)
                     print(f"Replicate {replicate_num}, Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
-                    if 16 <= mean_distance <= 20.0:
+                    if 16 <= mean_distance <= 21.0:
                         selected_triplets_df = sampled_triplets
                         print(f"Selected triplets for replicate {replicate_num} with mean distance {mean_distance:.2f} Å")
                         break
