@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class LysineCrosslinkAnalyzer:
-    def __init__(self, input_pdb, output_pdb, distance_threshold=30.0, mean=19.2, scale=9.4, probability_scaling_factor=4000, skewness=7.0, loc=6.8, skew_scale=14.0):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=30.0, mean=19.5, scale=9.5, probability_scaling_factor=4000, skewness=7.0, loc=6.8, skew_scale=14.0):
         self.input_pdb = input_pdb
         self.output_pdb = output_pdb
         self.distance_threshold = distance_threshold
@@ -241,11 +241,7 @@ else:
                 if distances:
                     mean_distance = np.mean(distances)
                     print(f"Replicate {replicate_num}, Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
-<<<<<<< HEAD
-                    if 16 <= mean_distance <= 21.0:
-=======
-                    if 16 <= mean_distance <= 25.0:
->>>>>>> cdd61d1 (committing some changes)
+                    if 16 <= mean_distance <= 20.0:
                         selected_triplets_df = sampled_triplets
                         print(f"Selected triplets for replicate {replicate_num} with mean distance {mean_distance:.2f} Å")
                         break
