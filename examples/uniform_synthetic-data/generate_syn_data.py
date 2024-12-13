@@ -241,7 +241,7 @@ else:
                 if distances:
                     mean_distance = np.mean(distances)
                     print(f"Replicate {replicate_num}, Attempt {attempt+1}: Mean distance = {mean_distance:.2f} Å")
-                    if 16 <= mean_distance <= 21.0:
+                    if 16 <= mean_distance <= 23.0:
                         selected_triplets_df = sampled_triplets
                         print(f"Selected triplets for replicate {replicate_num} with mean distance {mean_distance:.2f} Å")
                         break
