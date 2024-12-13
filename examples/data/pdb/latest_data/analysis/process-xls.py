@@ -46,16 +46,6 @@ def process_csv(file_path):
     # Display columns
     print("Columns in the DataFrame:", df.columns.tolist())
 
-    # Rename columns directly
-    df.rename(columns={
-        'Protein A': 'Protein1',
-        'XL A': 'Residue1',
-        'Protein B': 'Protein2',
-        'XL B': 'Residue2',
-        'Protein C': 'Protein3',
-        'XL C': 'Residue3',
-    }, inplace=True)
-
     # Replace NaN values with empty strings
     df = df.fillna('')
 
@@ -231,14 +221,14 @@ def pair_triples(triple_links):
 
     # Remove duplicate rows and report the number of duplicates removed
     initial_count = len(paired_triple_links)
-    paired_triple_links.drop_duplicates(inplace=True)
+    #paired_triple_links.drop_duplicates(inplace=True)
     duplicates_removed = initial_count - len(paired_triple_links)
     print(f"Removed {duplicates_removed} duplicate rows from paired triple links.")
 
     return paired_triple_links
 
 if __name__ == '__main__':
-    file_path = 'input_data/crosslinks.csv'  # Replace with your actual CSV file path
+    file_path = 'input_data/new_data.csv'  # Replace with your actual CSV file path
     df = process_csv(file_path)
 
     # Save full data
@@ -246,7 +236,7 @@ if __name__ == '__main__':
     save_dataframes(df, 'output_data/full_data')
 
     # Define the set of proteins to filter
-    protein_set = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn2'}
+    protein_set = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6'}
 
     # Filter for base of the proteasome
     protein_columns = ['Protein1', 'Protein2', 'Protein3']

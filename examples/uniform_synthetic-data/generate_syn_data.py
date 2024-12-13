@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class LysineCrosslinkAnalyzer:
-    def __init__(self, input_pdb, output_pdb, distance_threshold=30.0, mean=19.5, scale=9.5, probability_scaling_factor=4000, skewness=7.0, loc=6.8, skew_scale=14.0):
+    def __init__(self, input_pdb, output_pdb, distance_threshold=30.0, mean=19.0, scale=9.5, probability_scaling_factor=4000, skewness=7.0, loc=6.8, skew_scale=14.0):
         self.input_pdb = input_pdb
         self.output_pdb = output_pdb
         self.distance_threshold = distance_threshold
