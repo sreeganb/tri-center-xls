@@ -30,6 +30,8 @@ class LysineCrosslinkAnalyzer:
     def normal_gaussian(self, x):
         #return norm.pdf(x, loc=self.mean, scale=self.scale)
         # Alternatively, use skewnorm if needed
+        # print the parameters used in the generation of the synthetic data
+        print(f"Skewness: {self.skewness}, Loc: {self.loc}, Scale: {self.skew_scale}")
         return skewnorm.pdf(x, self.skewness, loc=self.loc, scale=self.skew_scale)
     
     def extract_lysine_residues(self):

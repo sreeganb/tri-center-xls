@@ -236,7 +236,7 @@ if __name__ == '__main__':
     save_dataframes(df, 'output_data/full_data')
 
     # Define the set of proteins to filter
-    protein_set = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6'}
+    protein_set = {'Rpt1', 'Rpt2', 'Rpt3', 'Rpt4', 'Rpt5', 'Rpt6', 'Rpn2'}
 
     # Filter for base of the proteasome
     protein_columns = ['Protein1', 'Protein2', 'Protein3']

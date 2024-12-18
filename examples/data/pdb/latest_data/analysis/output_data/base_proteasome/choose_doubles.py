@@ -20,7 +20,7 @@ def main():
         combined_double_links[subunit_col1] == combined_double_links[subunit_col2]
     ]
     
-    n_samples = 83 - 17  # Number of rows to select
+    n_samples = 83 - 18  # Number of rows to select
     n_reps = 5  # Number of repetitions
     min_inter_subunit = int(np.ceil(0.95 * n_samples))  # Minimum inter subunit links
     max_intra_subunit = n_samples - min_inter_subunit   # Remaining intra subunit links
