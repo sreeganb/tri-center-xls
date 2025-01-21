@@ -20,3 +20,5 @@ CZ, K, 60S ribosomal protein L27
 AP, L, 40S ribosomal protein S15
 Ac, M, 40S ribosomal protein S28
 AB, N, 40S ribosomal protein S3a
+B2, U, 18S ribosomal RNA
+

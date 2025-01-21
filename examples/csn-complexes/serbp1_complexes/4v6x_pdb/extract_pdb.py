@@ -60,7 +60,8 @@ if __name__ == "__main__":
         "CZ": "K",
         "AP": "L",
         "Ac": "M",
-        "AB": "O"
+        "AB": "O",
+        "B2": "U"
     }
     
     output_pdb = "combined_chains_4v6x.pdb"
