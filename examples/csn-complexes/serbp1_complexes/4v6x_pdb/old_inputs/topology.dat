@@ -1,0 +1,30 @@
+|molecule_name|color|fasta_fn|fasta_id|pdb_fn|chain|residue_range|pdb_offset|bead_size|em_residues_per_gaussian|rigid_body|super_rigid_body|chain_of_super_rigid_bodies|
+
+|H3.0   |lime green   |nucleosome.fasta |H3      |BEADS             | |1,44     |1  |1 |  |30 |  | ||
+|H3.0   |lime green   |nucleosome.fasta |H3      |1id3.pdb          |A|45,END   |1  |1 |  |30 |  | ||
+|H3.1   |lime green   |nucleosome.fasta |H3      |BEADS             | |1,44     |1  |1 |  |30 |  | ||
+|H3.1   |lime green   |nucleosome.fasta |H3      |1id3.pdb          |E|45,END   |1  |1 |  |30 |  | ||
+
+|H4.0   |medium purple|nucleosome.fasta |H4      |BEADS             | |1,24     |1  |1 |  |30 |  | ||
+|H4.0   |medium purple|nucleosome.fasta |H4      |1id3.pdb          |B|25,END   |1  |1 |  |30 |  | ||
+|H4.1   |medium purple|nucleosome.fasta |H4      |BEADS             | |1,24     |1  |1 |  |30 |  | ||
+|H4.1   |medium purple|nucleosome.fasta |H4      |1id3.pdb          |F|25,END   |1  |1 |  |30 |  | ||
+
+|H2A.0  |gold         |nucleosome.fasta |H2A     |BEADS             | |1,18    |1  |1 |  |30 |  | ||
+|H2A.0  |gold         |nucleosome.fasta |H2A     |1id3.pdb          |C|19,118  |1  |1 |  |30 |  | ||
+|H2A.0  |gold         |nucleosome.fasta |H2A     |BEADS             | |119,END |1  |1 |  |30 |  | ||
+|H2A.1  |gold         |nucleosome.fasta |H2A     |BEADS             | |1,18    |1  |1 |  |30 |  | ||
+|H2A.1  |gold         |nucleosome.fasta |H2A     |1id3.pdb          |G|19,118  |1  |1 |  |30 |  | ||
+|H2A.1  |gold         |nucleosome.fasta |H2A     |BEADS             | |119,END |1  |1 |  |30 |  | ||
+
+|H2B.0  |orange       |nucleosome.fasta |H2B     |BEADS             | |1,39     |1  |1 |  |30 |  | ||
+|H2B.0  |orange       |nucleosome.fasta |H2B     |1id3.pdb          |D|40,END   |1  |1 |  |30 |  | ||
+|H2B.1  |orange       |nucleosome.fasta |H2B     |BEADS             | |1,39     |1  |1 |  |30 |  | ||
+|H2B.1  |orange       |nucleosome.fasta |H2B     |1id3.pdb          |H|40,END   |1  |1 |  |30 |  | ||
+
+|DNA0   |gray         |DNA.fasta        |DNAI,DNA|DNA_renumber.pdb  |I|1,146    |   |10|  |30 |  | ||
+|DNA1   |gray         |DNA.fasta        |DNAJ,DNA|DNA_renumber.pdb  |J|1,146    |   |10|  |30 |  | ||
+
+
+
+
