@@ -74,7 +74,7 @@ def main():
     ensure_directory(output_directory)
 
     # Set this variable to 1 to process double crosslinks, 0 for triple crosslinks
-    doubles = 1  
+    doubles = 0  
 
     if doubles:
         process_regular_xls('serbp1_bifunctional.csv', os.path.join(output_directory, 'paired_double_links_serbp1.csv'))
