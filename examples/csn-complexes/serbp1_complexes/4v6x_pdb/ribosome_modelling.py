@@ -9,9 +9,9 @@ import IMP.pmi.dof
 import IMP.pmi.macros
 import IMP.pmi.restraints
 import IMP.pmi.restraints.stereochemistry
-import IMP.pmi.restraints.crosslinking
+#import IMP.pmi.restraints.crosslinking
 #import IMP.pmi.restraints.pemap
-from IMP.pmi.io.crosslink import CrossLinkDataBaseKeywordsConverter
+#from IMP.pmi.io.crosslink import CrossLinkDataBaseKeywordsConverter
 #import IMP.pmi.restraints.occams
 
 import random
@@ -53,6 +53,39 @@ output.init_rmf("ini_all.rmf3", [hier_S1])
 output.write_rmf("ini_all.rmf3")
 output.close_rmf("ini_all.rmf3")
 
+
+output_objects = [] # keep a list of functions that need to be reported
+rmf_restraints = []
+crs = []
+for molname in mols_S1:
+    for mol in mols_S1[molname]:
+        copy_n = IMP.atom.Copy(mol.get_hierarchy()).get_copy_index()
+        cr = IMP.pmi.restraints.stereochemistry.ConnectivityRestraint(mol)
+        cr.set_label(mol.get_name()+'.'+str(copy_n))
+        cr.add_to_model()
+        output_objects.append(cr)
+        crs.append(cr)
+IMP.pmi.tools.shuffle_configuration(hier_S1,
+                                    max_translation=200)
+dof_S1.optimize_flexible_beads(200)
+
+print(dof_S1.get_movers())
+
+## Run replica exchange Monte Carlo sampling
+##taskid = int(sys.argv[1])
+mc1 = IMP.pmi.macros.ReplicaExchange(mdl,
+                                    root_hier=hier_S1,                           
+                                    #crosslink_restraints=rmf_restraints,          
+                                    monte_carlo_sample_objects=dof_S1.get_movers()[1:],   
+                                    replica_exchange_maximum_temperature=5.0,
+                                    global_output_directory='output',
+                                    output_objects=output_objects,
+                                    monte_carlo_steps=20,
+                                    number_of_frames=500,
+                                    number_of_best_scoring_models=1)
+
+mc1.execute_macro()
+rex1 = mc1.get_replica_exchange_object()
 #--------------------------------------------------------#
 # Represenation
 #--------------------------------------------------------#
@@ -60,73 +93,7 @@ output.close_rmf("ini_all.rmf3")
 #DNA0 = IMP.atom.Selection(hier_S1,
 #                          resolution=1,
 #                          molecule="DNA0").get_selected_particles()
-##############################
-# Electrostatic
-##############################
 
-#p_one = [IMP.atom.LYS, IMP.atom.ARG]
-#m_one = [IMP.atom.ASP, IMP.atom.GLU, IMP.atom.DADE, IMP.atom.DCYT, IMP.atom.DGUA, IMP.atom.DTHY]
-#p_five = [IMP.atom.HIS]
-#
-#min_distance = 8.0
-#max_distance = 16.0
-#
-############
-#ps = IMP.atom.Selection(hier_S1).get_selected_particles()
-#
-#for p in ps:
-#    if IMP.atom.Residue(p).get_is_protein():
-#        if IMP.atom.get_residue_type(p) in p_one:
-#            p = IMP.atom.Charged.setup_particle(mdl, p, 1.0)
-#        elif IMP.atom.get_residue_type(p) in m_one:
-#            p = IMP.atom.Charged.setup_particle(mdl, p, -1.0)
-#        elif IMP.atom.get_residue_type(p) in p_five:
-#            p = IMP.atom.Charged.setup_particle(mdl, p, 0.5)
-#        else:
-#            p = IMP.atom.Charged.setup_particle(mdl, p, 0.0)
-#    elif IMP.atom.Residue(p).get_is_dna():
-#        p = IMP.atom.Charged.setup_particle(mdl, p, -1.0)
-#        
-###############################
-## Lennard-Jones
-###############################
-#for p in ps:
-#    if IMP.atom.Residue(p).get_is_protein():
-#        d0 = IMP.atom.LennardJones.setup_particle(mdl, p, 0.09)
-#        print(IMP.atom.Residue(p), d0.get_radius())
-#    elif IMP.atom.Residue(p).get_is_dna():
-#        d0 = IMP.atom.LennardJones.setup_particle(mdl, p, 0.036)
-#        d0.set_radius(5.2)
-#        print(IMP.atom.Residue(p), d0.get_radius())
-#
-################################
-## Select tails
-################################
-#h3_tails = IMP.atom.Selection(hier_S1,
-#                             resolution=1,
-#                             residue_indexes=list(range(1,45)),
-#                             molecule="H3").get_selected_particles()
-#
-#h4_tails = IMP.atom.Selection(hier_S1,
-#                             resolution=1,
-#                             residue_indexes=range(2,25),
-#                             molecule="H4").get_selected_particles()
-#
-#h2a_tails = IMP.atom.Selection(hier_S1,
-#                               resolution=1,
-#                               residue_indexes=list(range(1,20))+list(range(120,133)),
-#                               molecule="H2A").get_selected_particles()
-#
-#h2b_tails = IMP.atom.Selection(hier_S1,
-#                               resolution=1,
-#                               residue_indexes=list(range(1,40)),
-#                               molecule="H2B").get_selected_particles()
-#
-#
-#all_tails = h3_tails + h4_tails + h2a_tails + h2b_tails
-#all_tails = h3_tails + h4_tails + h2a_tails + h2b_tails
-#
-#
 ################################
 ## Select all other
 ################################
