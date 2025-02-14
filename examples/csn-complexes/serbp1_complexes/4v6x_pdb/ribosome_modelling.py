@@ -43,7 +43,6 @@ bs_serbp1 = IMP.pmi.macros.BuildSystem(mdl,
                                       resolutions=[1])
 bs_serbp1.add_state(reader_serpb1)
 
-
 hier_S1, dof_S1 = bs_serbp1.execute_macro(max_rb_trans=4.0,
                                           max_rb_rot=1.0)
 mols_S1 = bs_serbp1.get_molecules()[0]
@@ -74,14 +73,13 @@ print(dof_S1.get_movers())
 ## Run replica exchange Monte Carlo sampling
 ##taskid = int(sys.argv[1])
 mc1 = IMP.pmi.macros.ReplicaExchange(mdl,
-                                    root_hier=hier_S1,                           
-                                    #crosslink_restraints=rmf_restraints,          
+                                    root_hier=hier_S1,        
                                     monte_carlo_sample_objects=dof_S1.get_movers()[1:],   
                                     replica_exchange_maximum_temperature=5.0,
                                     global_output_directory='output',
                                     output_objects=output_objects,
-                                    monte_carlo_steps=20,
-                                    number_of_frames=500,
+                                    monte_carlo_steps=10,
+                                    number_of_frames=50,
                                     number_of_best_scoring_models=1)
 
 mc1.execute_macro()
