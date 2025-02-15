@@ -9,6 +9,7 @@ import IMP.pmi.dof
 import IMP.pmi.macros
 import IMP.pmi.restraints
 import IMP.pmi.restraints.stereochemistry
+import IMP.pmi.restraints.basic
 #import IMP.pmi.restraints.crosslinking
 #import IMP.pmi.restraints.pemap
 #from IMP.pmi.io.crosslink import CrossLinkDataBaseKeywordsConverter
@@ -28,6 +29,7 @@ directory = os.getcwd()
 data_dir = directory+'/data'
 fasta_dir = data_dir + '/fasta'
 pdb_dir = data_dir + '/pdb'
+xl_data = directory + '/derived_data/xl/trifunctional.csv'
 
 mdl = IMP.Model()
 #--------------------------------------------------------#
@@ -64,6 +66,40 @@ for molname in mols_S1:
         cr.add_to_model()
         output_objects.append(cr)
         crs.append(cr)
+        
+#----------------------------------------------------------------------
+# A new restraint: UpperBoundDistanceRestraint from core module
+#----------------------------------------------------------------------
+# Create a database of crosslinks by reading the file
+import pandas as pd
+xl_fil ='./derived_data/xl/trifunctional.csv'
+xldata = pd.read_csv(xl_fil, header=0)
+resolution = 1.0
+
+# Loop through each row in the DataFrame
+for index, row in xldata.iterrows():
+    c1 = row['Protein1']
+    r1 = row['Residue1']
+    p1 = IMP.atom.Selection(hier_S1, state_index=0, molecule=c1, residue_index=r1, resolution=resolution).get_selected_particles()
+    if not p1:
+        print(f"Warning: No particles found for {c1} residue {r1}")
+        continue
+    print(p1[0])
+
+    c2 = row['Protein2']
+    r2 = row['Residue2']
+    p2 = IMP.atom.Selection(hier_S1, state_index=0, molecule=c2, residue_index=r2, resolution=resolution).get_selected_particles()
+    if not p2:
+        print(f"Warning: No particles found for {c2} residue {r2}")
+        continue
+    print(p2[0])
+
+    tup1 = [r1, r1, c1, 0]
+    tup2 = [r2, r2, c2, 0]
+    disres1 = IMP.pmi.restraints.basic.DistanceRestraint(hier_S1, tup1, tup2, 0.0, 23.0, resolution = 1.0, kappa = 1.0)
+    disres1.add_to_model()
+    output_objects.append(disres1)
+#----------------------------------------------------------------------
 IMP.pmi.tools.shuffle_configuration(hier_S1,
                                     max_translation=200)
 dof_S1.optimize_flexible_beads(200)
@@ -79,7 +115,7 @@ mc1 = IMP.pmi.macros.ReplicaExchange(mdl,
                                     global_output_directory='output',
                                     output_objects=output_objects,
                                     monte_carlo_steps=10,
-                                    number_of_frames=50,
+                                    number_of_frames=500,
                                     number_of_best_scoring_models=1)
 
 mc1.execute_macro()
