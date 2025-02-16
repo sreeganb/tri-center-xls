@@ -66,7 +66,10 @@ for molname in mols_S1:
         cr.add_to_model()
         output_objects.append(cr)
         crs.append(cr)
-        
+        evr = IMP.pmi.restraints.stereochemistry.ExcludedVolumeSphere(
+                    included_objects=mol, resolution=10)
+        evr.add_to_model()
+        output_objects.append(evr)
 #----------------------------------------------------------------------
 # A new restraint: UpperBoundDistanceRestraint from core module
 #----------------------------------------------------------------------
