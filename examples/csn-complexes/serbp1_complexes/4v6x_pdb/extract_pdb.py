@@ -54,14 +54,18 @@ if __name__ == "__main__":
         "AK": "E",
         "AL": "F",
         "AM": "G",
-        "Ca": "H",
+        "CN": "H",
         "Cg": "I",
         "CG": "J",
         "CZ": "K",
         "AP": "L",
         "Ac": "M",
-        "AB": "O",
-        "B2": "U"
+        "AB": "N",
+        "B2": "U",
+        "AJ": "O",
+        "Aa": "P",
+        "A5": "Q",
+        "Az": "R"
     }
     
     output_pdb = "combined_chains_4v6x.pdb"

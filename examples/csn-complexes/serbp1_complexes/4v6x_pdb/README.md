@@ -13,7 +13,7 @@ Af, D, 40S ribosomal protein S27a
 AK, E, 40S ribosomal protein S10
 AL, F, 40S ribosomal protein S11
 AM, G, 40S ribosomal protein S12
-Ca, H, 60S ribosomal protein L27a
+CN, H, 60S ribosomal protein L15
 Cg, I, 60S ribosomal protein L34
 CG, J, 60S ribosomal protein L7a
 CZ, K, 60S ribosomal protein L27
@@ -21,4 +21,6 @@ AP, L, 40S ribosomal protein S15
 Ac, M, 40S ribosomal protein S28
 AB, N, 40S ribosomal protein S3a
 B2, U, 18S ribosomal RNA
+AJ, O, 40s ribosomal protein S9
+Aa, P, 40s ribosomal protein S26
 

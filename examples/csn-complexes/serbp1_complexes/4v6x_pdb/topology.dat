@@ -1,46 +1,57 @@
 |molecule_name|color|fasta_fn|fasta_id|pdb_fn|chain|residue_range|pdb_offset|bead_size|em_residues_per_gaussian|rigid_body|super_rigid_body|chain_of_super_rigid_bodies|
 
-|RNA1   |dim gray    |RNA.fasta           |18SRNA,RNA|combined_chains_4v6x.pdb       |U|1,1869  |   |10|  |1 | | ||
+|RNA1   |dim gray    |RNA.fasta           |18SRNA,RNA|group1_4v6x.pdb       |U|1,1869  |   |10|  |1 | | ||
 
-|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |BEADS                    | |1,138   |   |1  | |2 | | || 
-|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |combined_chains_4v6x.pdb |S|139,188 |   |1  | |1 | | || 
-|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |BEADS                    | |189,280 |   |1  | |2 | | || 
-|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |combined_chains_4v6x.pdb |S|281,303 |   |1  | |1 | | || 
-|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |BEADS                    | |304,408 |   |1  | |2 | | || 
+|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |BEADS           | |1,138   |   |1  | |2 | | || 
+|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |group1_4v6x.pdb |S|139,188 |   |1  | |1 | | || 
+|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |BEADS           | |189,280 |   |1  | |2 | | || 
+|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |group1_4v6x.pdb |S|281,303 |   |1  | |1 | | || 
+|SERBP1 |medium blue       |ribosome_4v6x.fasta |SERBP1    |BEADS           | |304,408 |   |1  | |2 | | || 
 
-|RPS2   |orange            |ribosome_4v6x.fasta |RPS2      |BEADS                    | |1,52    |   |50 | |1 | | ||
-|RPS2   |orange            |ribosome_4v6x.fasta |RPS2      |combined_chains_4v6x.pdb |A|53,278  |   |50 | |1 | | ||
-|RPS2   |orange            |ribosome_4v6x.fasta |RPS2      |BEADS                    | |279,293 |   |50 | |1 | | ||
+|RPS2   |orange            |ribosome_4v6x.fasta |RPS2      |BEADS           | |1,52    |   |50 | |1 | | ||
+|RPS2   |orange            |ribosome_4v6x.fasta |RPS2      |group1_4v6x.pdb |A|53,278  |   |50 | |1 | | ||
+|RPS2   |orange            |ribosome_4v6x.fasta |RPS2      |BEADS           | |279,293 |   |50 | |1 | | ||
 
-|RPS3   |yellow            |ribosome_4v6x.fasta |RPS3      |combined_chains_4v6x.pdb |B|1,227   |   |50 | |1 | | ||
-|RPS3   |yellow            |ribosome_4v6x.fasta |RPS3      |BEADS                    | |228,243 |   |50 | |1 | | ||
+|RPS3   |yellow            |ribosome_4v6x.fasta |RPS3      |group1_4v6x.pdb |B|1,227   |   |50 | |1 | | ||
+|RPS3   |yellow            |ribosome_4v6x.fasta |RPS3      |BEADS           | |228,243 |   |50 | |1 | | ||
 
-|RPS30  |green             |ribosome_4v6x.fasta |RPS30     |combined_chains_4v6x.pdb |C|1,59    |   |10 | |1 | | ||
+|RPS30  |green             |ribosome_4v6x.fasta |RPS30     |group1_4v6x.pdb |C|1,59    |   |10 | |1 | | ||
 
-|RPS27a |brown             |ribosome_4v6x.fasta |RPS27a    |combined_chains_4v6x.pdb |D|82,152  |-76|10 | |1 | | ||
+|RPS27a |brown             |ribosome_4v6x.fasta |RPS27a    |group1_4v6x.pdb |D|82,152  |-76|10 | |1 | | ||
 
-|RPS10  |red               |ribosome_4v6x.fasta |RPS10     |combined_chains_4v6x.pdb |E|1,98    |   |50 | |1 | | ||
-|RPS10  |red               |ribosome_4v6x.fasta |RPS10     |BEADS                    | |99,165  |   |50 | |1 | | ||
+|RPS10  |red               |ribosome_4v6x.fasta |RPS10     |group1_4v6x.pdb |E|1,98    |   |50 | |1 | | ||
+|RPS10  |red               |ribosome_4v6x.fasta |RPS10     |BEADS           | |99,165  |   |50 | |1 | | ||
 
-|RPS11  |cornflower blue   |ribosome_4v6x.fasta |RPS11     |combined_chains_4v6x.pdb |F|1,158   |   |10 | |1 | | ||
+|RPS11  |cornflower blue   |ribosome_4v6x.fasta |RPS11     |group1_4v6x.pdb |F|1,158   |   |10 | |1 | | ||
 
-|RPS12  |purple            |ribosome_4v6x.fasta |RPS12     |BEADS                    | |1,8     |   |10 | |1 | | ||
-|RPS12  |purple            |ribosome_4v6x.fasta |RPS12     |combined_chains_4v6x.pdb |G|9,132   |   |10 | |1 | | ||
+|RPS12  |purple            |ribosome_4v6x.fasta |RPS12     |BEADS           | |1,8     |   |10 | |1 | | ||
+|RPS12  |purple            |ribosome_4v6x.fasta |RPS12     |group1_4v6x.pdb |G|9,132   |   |10 | |1 | | ||
 
-|RPL27a |dark cyan         |ribosome_4v6x.fasta |RPL27a    |BEADS                    | |1,1     |   |50 | |1 | | ||
-|RPL27a |dark cyan         |ribosome_4v6x.fasta |RPL27a    |combined_chains_4v6x.pdb |H|2,148   |   |50 | |1 | | ||
+|RPL15  |dark cyan         |ribosome_4v6x.fasta |RPL15     |BEADS           | |1,1     |   |50 | |1 | | ||
+|RPL15  |dark cyan         |ribosome_4v6x.fasta |RPL15     |group1_4v6x.pdb |H|2,204   |   |50 | |1 | | ||
 
-|RPL34  |dark khaki        |ribosome_4v6x.fasta |RPL34     |BEADS                    | |1,1     |   |50 | |1 | | ||
-|RPL34  |dark khaki        |ribosome_4v6x.fasta |RPL34     |combined_chains_4v6x.pdb |I|2,115   |   |50 | |1 | | ||
+|RPL34  |dark khaki        |ribosome_4v6x.fasta |RPL34     |BEADS           | |1,1     |   |50 | |1 | | ||
+|RPL34  |dark khaki        |ribosome_4v6x.fasta |RPL34     |group1_4v6x.pdb |I|2,115   |   |50 | |1 | | ||
 
-|RPL7a  |dark red          |ribosome_4v6x.fasta |RPL7a     |BEADS                    | |1,20    |   |50 | |1 | | ||
-|RPL7a  |dark red          |ribosome_4v6x.fasta |RPL7a     |combined_chains_4v6x.pdb |J|21,266  |   |50 | |1 | | ||
+|RPL7a  |dark red          |ribosome_4v6x.fasta |RPL7a     |BEADS           | |1,20    |   |50 | |1 | | ||
+|RPL7a  |dark red          |ribosome_4v6x.fasta |RPL7a     |group1_4v6x.pdb |J|21,266  |   |50 | |1 | | ||
 
-|RPL27  |gold              |ribosome_4v6x.fasta |RPL27     |BEADS                    | |1,1     |   |50 | |1 | | ||
-|RPL27  |gold              |ribosome_4v6x.fasta |RPL27     |combined_chains_4v6x.pdb |K|2,136   |   |50 | |1 | | ||
+|RPL27  |gold              |ribosome_4v6x.fasta |RPL27     |BEADS           | |1,1     |   |50 | |1 | | ||
+|RPL27  |gold              |ribosome_4v6x.fasta |RPL27     |group1_4v6x.pdb |K|2,136   |   |50 | |1 | | ||
 
-|RPS15  |aquamarine        |ribosome_4v6x.fasta |RPS15     |BEADS                    | |1,3     |   |50 | |1 | | ||
-|RPS15  |aquamarine        |ribosome_4v6x.fasta |RPS15     |combined_chains_4v6x.pdb |L|4,130   |   |50 | |1 | | ||
+|RPS15  |aquamarine        |ribosome_4v6x.fasta |RPS15     |BEADS           | |1,3     |   |50 | |1 | | ||
+|RPS15  |aquamarine        |ribosome_4v6x.fasta |RPS15     |group1_4v6x.pdb |L|4,130   |   |50 | |1 | | ||
 
-|RPS28  |coral             |ribosome_4v6x.fasta |RPS28     |BEADS                    | |1,4     |   |50 | |1 | | ||
-|RPS28  |coral             |ribosome_4v6x.fasta |RPS28     |combined_chains_4v6x.pdb |M|5,68    |   |50 | |1 | | ||
+|RPS28  |coral             |ribosome_4v6x.fasta |RPS28     |BEADS           | |1,4     |   |50 | |1 | | ||
+|RPS28  |coral             |ribosome_4v6x.fasta |RPS28     |group1_4v6x.pdb |M|5,68    |   |50 | |1 | | ||
+
+|RPS3a  |blue              |ribosome_4v6x.fasta |RPS3a     |BEADS           | |1,18    |   |50 | |1 | | ||
+|RPS3a  |blue              |ribosome_4v6x.fasta |RPS3a     |group1_4v6x.pdb |N|19,233  |   |50 | |1 | | ||
+
+|RPS9   |coral             |ribosome_4v6x.fasta |RPS9      |BEADS           | |1,6     |   |50 | |1 | | ||
+|RPS9   |coral             |ribosome_4v6x.fasta |RPS9      |group1_4v6x.pdb |O|7,188   |   |50 | |1 | | ||
+
+|RPS26  |coral             |ribosome_4v6x.fasta |RPS26     |BEADS           | |1,1     |   |50 | |1 | | ||
+|RPS26  |coral             |ribosome_4v6x.fasta |RPS26     |group1_4v6x.pdb |P|2,108   |   |50 | |1 | | ||
+
+|RNA2   |dark gray         |RNA.fasta           |28SRNA,RNA|group2_4v6x.pdb |Q|1,5070  |   |50|  |1 | | ||
