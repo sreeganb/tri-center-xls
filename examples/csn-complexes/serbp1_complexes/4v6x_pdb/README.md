@@ -23,4 +23,5 @@ AB, N, 40S ribosomal protein S3a
 B2, U, 18S ribosomal RNA
 AJ, O, 40s ribosomal protein S9
 Aa, P, 40s ribosomal protein S26
+  , Q, 28s RNA
 

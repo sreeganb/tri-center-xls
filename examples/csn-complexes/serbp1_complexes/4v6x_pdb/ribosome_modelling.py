@@ -99,7 +99,7 @@ for index, row in xldata.iterrows():
 
     tup1 = [r1, r1, c1, 0]
     tup2 = [r2, r2, c2, 0]
-    disres1 = IMP.pmi.restraints.basic.DistanceRestraint(hier_S1, tup1, tup2, 0.0, 23.0, resolution = 1.0, kappa = 1.0)
+    disres1 = IMP.pmi.restraints.basic.DistanceRestraint(hier_S1, tup1, tup2, 0.0, 21.0, resolution = 1.0, kappa = 1.0)
     disres1.add_to_model()
     output_objects.append(disres1)
 #----------------------------------------------------------------------
@@ -118,7 +118,7 @@ mc1 = IMP.pmi.macros.ReplicaExchange(mdl,
                                     global_output_directory='output',
                                     output_objects=output_objects,
                                     monte_carlo_steps=10,
-                                    number_of_frames=100,
+                                    number_of_frames=1000,
                                     number_of_best_scoring_models=1)
 
 mc1.execute_macro()
