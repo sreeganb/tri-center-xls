@@ -1,0 +1,5 @@
+,rep1,rep2,rep3,rep4,rep5
+Sampling Precision,2,2,2,2,2
+Cluster Precision,1.04,0.8,0.69,0.958,0.863
+Model Accuracy,8.44,8.46,9.44,8.81,8.4
+Cluster Population,10000,10000,9943,10000,10000

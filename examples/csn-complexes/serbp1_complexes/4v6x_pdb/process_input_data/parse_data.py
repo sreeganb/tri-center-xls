@@ -282,21 +282,18 @@ def count_atoms(structure, chain_ids):
                 atom_count += sum(1 for _ in chain.get_atoms())
     return atom_count
 
-def distribute_chains_to_files(structure, chains, max_atoms_per_file=75000, max_chains_per_file=50):
+def distribute_chains_to_files(structure, chains, max_atoms_per_file=65000, max_chains_per_file=40):
     """Distribute chains to multiple files based on atom count and chain count limits."""
-    # Lower the max_atoms_per_file to ensure we stay well under the 99,999 atom limit
     chain_groups = []
     current_group = []
     current_atom_count = 0
     current_chain_count = 0
     
-    # Sort chains by atom count (largest first) to balance files better
     chain_atom_counts = [(chain_id, count_atoms(structure, [chain_id])) for chain_id in chains]
     sorted_chains = sorted(chain_atom_counts, key=lambda x: x[1], reverse=True)
     
     logger.info(f"Total atoms in all chains: {sum(atom_count for _, atom_count in chain_atom_counts)}")
     
-    # First handle any very large chains that exceed the limit individually
     standalone_chains = []
     remaining_chains = []
     
@@ -307,16 +304,13 @@ def distribute_chains_to_files(structure, chains, max_atoms_per_file=75000, max_
         else:
             remaining_chains.append((chain_id, atom_count))
     
-    # Create individual groups for standalone large chains
     for chain_id, _ in standalone_chains:
         chain_groups.append([chain_id])
     
-    # Process remaining chains
     for chain_id, atom_count in remaining_chains:
-        # If adding this chain would exceed limits, start a new group
         if (current_atom_count + atom_count > max_atoms_per_file or 
             current_chain_count >= max_chains_per_file):
-            if current_group:  # Don't add empty groups
+            if current_group:
                 chain_groups.append(current_group)
             current_group = []
             current_atom_count = 0
@@ -326,11 +320,9 @@ def distribute_chains_to_files(structure, chains, max_atoms_per_file=75000, max_
         current_atom_count += atom_count
         current_chain_count += 1
     
-    # Add the last group if not empty
     if current_group:
         chain_groups.append(current_group)
     
-    # Log distribution info
     for i, group in enumerate(chain_groups):
         group_atom_count = sum(count_atoms(structure, [chain_id]) for chain_id in group)
         logger.info(f"Group {i+1}: {len(group)} chains, {group_atom_count} atoms")
@@ -382,14 +374,12 @@ class CombinedPDBWriter(Select):
     def accept_atom(self, atom):
         chain = atom.get_parent().get_parent()
         if self.accept_chain(chain):
-            # If adding this atom would exceed the limit, skip writing this atom.
             if self.atom_count + 1 > self.max_atoms:
                 self.skipped_atoms += 1
                 return False
             
-            # If we are nearing the limit and starting a new chain, skip the chain
             chain_id = chain.id
-            if chain_id not in self.processed_chains and self.atom_count > 0.9 * self.max_atoms:
+            if chain_id not in self.processed_chains and self.atom_count > 0.85 * self.max_atoms: #reduced to 85%
                 self.skipped_atoms += 1
                 return False
             
