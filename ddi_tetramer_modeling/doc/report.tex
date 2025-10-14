@@ -1,0 +1,139 @@
+%---------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{report}
+
+% Page geometry and layout
+\usepackage[margin=1in, headheight=14pt]{geometry}
+
+% Font and typography
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}  % Professional Times-like fonts
+\usepackage{microtype}            % Better text spacing and justification
+
+% Math and symbols
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+
+% Graphics and figures
+\usepackage{graphicx}
+\usepackage{float}                % Better figure placement
+\usepackage{subcaption}           % Subfigures
+\usepackage{tikz}                 % For diagrams
+
+% Tables
+\usepackage{booktabs}             % Professional tables
+\usepackage{array}
+\usepackage{multirow}
+
+% Units and formatting
+\usepackage{siunitx}              % Scientific units
+\usepackage{physics}              % Physics notation
+\usepackage{bm}                   % Bold math
+
+% Section formatting
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{5.5ex plus 1ex minus .2ex}{4.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{4.5ex plus 1ex minus .2ex}{3.3ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+% Lists
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*, itemsep=0pt, topsep=3pt}
+\setlist[enumerate]{leftmargin=*, itemsep=0pt, topsep=3pt}
+
+% Hyperlinks and references
+\usepackage[hypertexnames=false]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+    pdftitle={DDI Protein Complex Structure: Quantitative Crosslinking Mass Spectrometry Analysis},
+    pdfauthor={Sree Ganesh Balasubramani},
+    pdfsubject={Structural Biology},
+    pdfkeywords={protein complex, crosslinking, mass spectrometry}
+}
+
+% Code listings (if needed)
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    captionpos=b,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    backgroundcolor=\color{gray!10}
+}
+
+% Headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Title page customization
+\usepackage{titling}
+\pretitle{\begin{center}\LARGE\bfseries}
+\posttitle{\end{center}\vspace{1em}}
+\preauthor{\begin{center}\large}
+\postauthor{\end{center}}
+\predate{\begin{center}\large}
+\postdate{\end{center}}
+
+% Abstract environment
+\usepackage{abstract}
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont}
+
+% Final touches
+\usepackage{setspace}             % Line spacing
+\onehalfspacing                   % 1.5 line spacing
+
+\author{Sree Ganesh Balasubramani}
+\title{DDI Protein Complex Structure:\\Quantitative Crosslinking Mass Spectrometry Analysis}
+
+\begin{document}
+
+% Title page
+\maketitle
+
+\chapter{Methods}
+\label{chap:methods}
+
+\section{Protein Production and Labeling}
+\label{sec:labeling}
+
+Two separate batches of the protein are produced under controlled conditions:
+
+\begin{itemize}
+    \item \emph{Light batch}: Grown in normal media containing light amino 
+    acids such as lysine with $^{12}$C and $^{14}$N isotopes.
+    \item \emph{Heavy batch}: Grown in media enriched with heavy 
+    isotopes ($^{13}$C and $^{15}$N) for quantitative mass spectrometry analysis.
+\end{itemize}
+Crucially the light and the heavy proteins are chemically identical, and fold 
+the same way, but the heavy version weighs slightly more and the mass spectrometer 
+can distinguish between the two.
+
+\section{Mixing and crosslinking}
+\label{sec:mixing}
+The purified light and heavy proteins are mixed in a 1:1 ratio. This mixture now contains 
+a pool of both heavy and light subunits, that assemble into tetramers. 
+Then the crosslinker is added.
+
+\section{Possible outcomes}
+The mass spectrometer can distinguish three different types of crosslinks based on 
+their mass:
+\begin{itemize}
+\item \emph{Light-Light (L-L)}: Both subunits in the crosslink are light.
+\item \emph{Heavy-Heavy (H-H)}: Both subunits in the crosslink are heavy.
+\item \emph{Light-Heavy (L-H)}: One subunit is light and the other is heavy.
+\end{itemize}
+The \emph{L-H} crosslinks are the most informative, as they are the most 
+unambiguous for an inter-subunit crosslink. It is impossible to get a mixed pair 
+from a crosslink happening within a single protein copy. 
+\end{document}
