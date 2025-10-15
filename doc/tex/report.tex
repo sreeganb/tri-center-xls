@@ -198,7 +198,7 @@
       \hline
                                    & Samp. precision ({\AA}) &  Clust. precision & Accuracy\\ \hline
       bifunctional ($n(bi) = 164$) & 4.42   & 3.335 & 14.43 \\\hline
-      $n(bi) + n(tri) = 206$       & 5.58   & 3.666 & \\ \hline
+%      $n(bi) + n(tri) = 206$       & 5.58   & 3.666 & \\ \hline
       n($bi \cup tri) = 186$       & 10.68  & 7.388 &  16.09 \\\hline
   \end{tabular}
 \end{table}
@@ -226,130 +226,130 @@ Clustering at sampling precision $6.0$ {\AA}
     \end{figure}
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{TSTO crosslinking data distance distribution}
-  \begin{figure}
-    \centering
-    \includegraphics[scale=0.3]{test-figures/distance_histogram.png}
-    \includegraphics[scale=0.2]{test-figures/dsso_distances.png}
-  \end{figure}
-  \end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}
-\frametitle{Optimizing the crosslinker length}
-\begin{block}{}
-\begin{itemize}
-  \item use the proteins Rpt2, Rpt4, Rpt5, Rpt6 for the simulations
-  \item There are 4 trifunctional cross links between these proteins
-  \item The cross linker length is varied from 11 to 21 {\AA}
-  \item The 4 cross links are made into 12 pairs of regular crosslinks and used to get the reference distance distributions
-\end{itemize}
-\end{block}
-\begin{figure}
-\centering
-\includegraphics[width=0.41\textwidth]{test-figures/only-bi.pdf}
-\includegraphics[width=0.41\textwidth]{test-figures/only-tri.pdf}
-\caption{On the left, the distance distributions using bifunctional crosslinks and 
-on the right, the distance distributions using trifunctional crosslinks (11 {\AA} linker length)}
-\end{figure}
-%
-\begin{minipage}{0.48\textwidth}
-  \centering
-  \begin{tabular}{lcc}
-  \hline
-  Residue Pair & Mean (Å) & Std Dev (Å) \\
-  \hline
-  Pair 1 & 16.1 & 4.0 \\
-  Pair 2 & 16.9 & 3.3 \\
-  Pair 3 & 20.1 & 2.7 \\
-  \hline
-  \end{tabular}
-  \captionof{table}{Bifunctional crosslinks}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.48\textwidth}
-  \centering
-  \begin{tabular}{lcc}
-  \hline
-  Residue Pair & Mean (Å) & Std Dev (Å) \\
-  \hline
-  Pair 1 & 69.5 & 24.7 \\
-  Pair 2 & 69.3 & 25.2 \\
-  Pair 3 & 81.3 & 30.36 \\
-  \hline
-  \end{tabular}
-  \captionof{table}{Trifunctional crosslinks (11 {\AA} linker)}
-  \end{minipage}
-\end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}
-\frametitle{Optimizing the crosslinker length}
-\begin{figure}
-\centering
-\includegraphics[width=0.41\textwidth]{test-figures/tri-16.pdf}
-\includegraphics[width=0.41\textwidth]{test-figures/18-tri.pdf}
-\caption{On the left, distance distributions using trifunctional crosslinker 
-(16 {\AA} linker length) and on the right, the distance distributions 
-using trifunctional crosslinks (18 {\AA} linker length)}
-\end{figure}
-%
-\begin{minipage}{0.48\textwidth}
-  \centering
-  \begin{tabular}{lcc}
-  \hline
-  Residue Pair & Mean (Å) & Std Dev (Å) \\
-  \hline
-  Pair 1 & 21.3 & 7.0 \\
-  Pair 2 & 20.9 & 8.4 \\
-  Pair 3 & 24.7 & 12.3 \\
-  \hline
-  \end{tabular}
-  \captionof{table}{Trifunctional crosslinks (16 {\AA} linker)}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.48\textwidth}
-  \centering
-  \begin{tabular}{lcc}
-  \hline
-  Residue Pair & Mean (Å) & Std Dev (Å) \\
-  \hline
-  Pair 1 & 22.7 & 5.0 \\
-  Pair 2 & 21.7 & 4.9 \\
-  Pair 3 & 25.9 & 5.5 \\
-  \hline
-  \end{tabular}
-  \captionof{table}{Trifunctional crosslinks (18 {\AA} linker)}
-  \end{minipage}
-
-%\begin{tabular}
-%  {lcc}
+%\begin{frame}
+%  \frametitle{TSTO crosslinking data distance distribution}
+%  \begin{figure}
+%    \centering
+%    \includegraphics[scale=0.3]{test-figures/distance_histogram.png}
+%    \includegraphics[scale=0.2]{test-figures/dsso_distances.png}
+%  \end{figure}
+%  \end{frame}
+%%------------------------------------------------------------------------------
+%\begin{frame}
+%\frametitle{Optimizing the crosslinker length}
+%\begin{block}{}
+%\begin{itemize}
+%  \item use the proteins Rpt2, Rpt4, Rpt5, Rpt6 for the simulations
+%  \item There are 4 trifunctional cross links between these proteins
+%  \item The cross linker length is varied from 11 to 21 {\AA}
+%  \item The 4 cross links are made into 12 pairs of regular crosslinks and used to get the reference distance distributions
+%\end{itemize}
+%\end{block}
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.41\textwidth]{test-figures/only-bi.pdf}
+%\includegraphics[width=0.41\textwidth]{test-figures/only-tri.pdf}
+%\caption{On the left, the distance distributions using bifunctional crosslinks and 
+%on the right, the distance distributions using trifunctional crosslinks (11 {\AA} linker length)}
+%\end{figure}
+%%
+%\begin{minipage}{0.48\textwidth}
+%  \centering
+%  \begin{tabular}{lcc}
 %  \hline
 %  Residue Pair & Mean (Å) & Std Dev (Å) \\
 %  \hline
-%  Pair 1 & 25.7 & 6.0 \\
-%  Pair 2 & 24.9 & 5.8\\
-%  Pair 3 & 28.9 & 6.6 \\
+%  Pair 1 & 16.1 & 4.0 \\
+%  Pair 2 & 16.9 & 3.3 \\
+%  Pair 3 & 20.1 & 2.7 \\
 %  \hline
-%\end{tabular}
-\end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}
-\frametitle{Results for optimized crosslinker length}
-\begin{table}
-  \centering
-  \caption{Comparison of the double and triple XL datasets}
-  \begin{tabular}{|c|c|c|c|}
-      \hline
-                                   & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
-      bifunctional ($n(bi) = 164$) & 4.42  & 3.3 & 14.43 \\\hline
-      n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
-      XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
-  \end{tabular}
-\end{table}
-\begin{block}{}
-  Simulations with synthetic crosslinks with the optimized crosslinker length
-\end{block}
-\end{frame}
+%  \end{tabular}
+%  \captionof{table}{Bifunctional crosslinks}
+%  \end{minipage}
+%  \hfill
+%  \begin{minipage}{0.48\textwidth}
+%  \centering
+%  \begin{tabular}{lcc}
+%  \hline
+%  Residue Pair & Mean (Å) & Std Dev (Å) \\
+%  \hline
+%  Pair 1 & 69.5 & 24.7 \\
+%  Pair 2 & 69.3 & 25.2 \\
+%  Pair 3 & 81.3 & 30.36 \\
+%  \hline
+%  \end{tabular}
+%  \captionof{table}{Trifunctional crosslinks (11 {\AA} linker)}
+%  \end{minipage}
+%\end{frame}
+%%------------------------------------------------------------------------------
+%\begin{frame}
+%\frametitle{Optimizing the crosslinker length}
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.41\textwidth]{test-figures/tri-16.pdf}
+%\includegraphics[width=0.41\textwidth]{test-figures/18-tri.pdf}
+%\caption{On the left, distance distributions using trifunctional crosslinker 
+%(16 {\AA} linker length) and on the right, the distance distributions 
+%using trifunctional crosslinks (18 {\AA} linker length)}
+%\end{figure}
+%%
+%\begin{minipage}{0.48\textwidth}
+%  \centering
+%  \begin{tabular}{lcc}
+%  \hline
+%  Residue Pair & Mean (Å) & Std Dev (Å) \\
+%  \hline
+%  Pair 1 & 21.3 & 7.0 \\
+%  Pair 2 & 20.9 & 8.4 \\
+%  Pair 3 & 24.7 & 12.3 \\
+%  \hline
+%  \end{tabular}
+%  \captionof{table}{Trifunctional crosslinks (16 {\AA} linker)}
+%  \end{minipage}
+%  \hfill
+%  \begin{minipage}{0.48\textwidth}
+%  \centering
+%  \begin{tabular}{lcc}
+%  \hline
+%  Residue Pair & Mean (Å) & Std Dev (Å) \\
+%  \hline
+%  Pair 1 & 22.7 & 5.0 \\
+%  Pair 2 & 21.7 & 4.9 \\
+%  Pair 3 & 25.9 & 5.5 \\
+%  \hline
+%  \end{tabular}
+%  \captionof{table}{Trifunctional crosslinks (18 {\AA} linker)}
+%  \end{minipage}
+%
+%%\begin{tabular}
+%%  {lcc}
+%%  \hline
+%%  Residue Pair & Mean (Å) & Std Dev (Å) \\
+%%  \hline
+%%  Pair 1 & 25.7 & 6.0 \\
+%%  Pair 2 & 24.9 & 5.8\\
+%%  Pair 3 & 28.9 & 6.6 \\
+%%  \hline
+%%\end{tabular}
+%\end{frame}
+%%------------------------------------------------------------------------------
+%\begin{frame}
+%\frametitle{Results for optimized crosslinker length}
+%\begin{table}
+%  \centering
+%  \caption{Comparison of the double and triple XL datasets}
+%  \begin{tabular}{|c|c|c|c|}
+%      \hline
+%                                   & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
+%      bifunctional ($n(bi) = 164$) & 4.42  & 3.3 & 14.43 \\\hline
+%      n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
+%      XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
+%  \end{tabular}
+%\end{table}
+%\begin{block}{}
+%  Simulations with synthetic crosslinks with the optimized crosslinker length
+%\end{block}
+%\end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}
   \frametitle{Modeling with TSTO crosslinker}
@@ -439,7 +439,7 @@ using trifunctional crosslinks (18 {\AA} linker length)}
                                    & Samp. precision ({\AA}) & Clust. precision & Accuracy\\ \hline
       bifunctional ($n(bi) = 164$) & 4.42  & 3.3 & 14.43 \\\hline
       n($bi \cup tri) = 186$       & 10.68 & 7.3 &  16.09 \\\hline
-      XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
+%      XL length = 16 {\AA} with overlap & 8.5   & 5.2 & 15.01 \\\hline
   \end{tabular}
 \end{table}
 \end{frame}
@@ -487,42 +487,6 @@ using trifunctional crosslinks (18 {\AA} linker length)}
   \end{tabular}
 \end{table}
 
-\end{frame}
-%
-\begin{frame}[fragile=singleslide]
-\frametitle{upper bound distance restraint}
-\begin{verbatim}
-  disres = IMP.pmi.restraints.basic.DistanceRestraint(root_hier, 
-  tuple1, tuple2, min = 0.0, max=16.0, resolution=1.0, kappa=1.0)
-  \end{verbatim}
-  \begin{figure}
-    \centering
-    \includegraphics[scale=0.2]{test-figures/disres_dist.pdf}
-    \caption{Distribution of distances when upper bound distance restraint is 
-    applied to the residues that are linked by trifunctional Xl for a 2000 step MCMC trajectory.}
-  \end{figure}
-  \begin{table}
-    \centering
-    \caption{Results for the tri-XL connected residues linked via distance restraints}
-    \begin{tabular}{|c|c|c|c|c|}
-        \hline
-                                     & Samp. precision ({\AA}) & Cl. pop. & Cl. precision ({\AA}) & Accuracy ({\AA})\\ \hline
-        186 XLs & 2.26  & 29000 & 1.58 & 15.06\\ \hline
-        %186 XLs, XL $=$ 21 {\AA} & 4.377  & 24000 & 3.36 & 14.57\\ \hline
-        %186 XLs, XL $=$ 18 {\AA} & 4.38   & 16000 & 3.32 & 13.51\\ \hline
-    \end{tabular}
-  \end{table}
-\end{frame}
-%
-\begin{frame}
-\frametitle{Comparison with DSSO crosslinking data}
-  \begin{figure}
-   \centering
-   \includegraphics[width=0.4\textwidth]{figures/dsso-mapped-xls.png}
-   \includegraphics[width=0.4\textwidth]{test-figures/unique_to_tsto.png}
-   \caption{XLs identified using DSSO XL (left) and Xls that are unique to TSTO (right) mapped onto the base subcomplex structure}
-   There are $\sim 100$ more unique crosslinks identified using TSTO.
-  \end{figure}
 \end{frame}
 %
 \begin{frame}
@@ -586,22 +550,11 @@ using trifunctional crosslinks (18 {\AA} linker length)}
   \frametitle{Results}
   \begin{figure}
   \centering
-  \includegraphics[width=0.45\textwidth]{test-figures/whisker_plot_model_acc.pdf}
-  \includegraphics[width=0.45\textwidth]{test-figures/whisker_plot_clust_pre.pdf}
-  \caption{Synthetic data statistics: model accuracy ({\AA}, left) and 
-  Cluster precision ({\AA}, right)}
+  \includegraphics[width=0.45\textwidth]{test-figures/schematic.pdf}
+  %\includegraphics[width=0.45\textwidth]{test-figures/swarm_plot_model_accuracy.pdf}
+  \caption{Synthetic data statistics}
   \label{fig:synthetic_data_statistics}
   \end{figure}
   \end{frame}
   %
-  \begin{frame}
-\frametitle{New data for proteasome}
-\begin{figure}
-  \centering
-  \includegraphics[width=0.3\textwidth]{test-figures/exp-triples.png}
-  \includegraphics[width=0.4\textwidth]{test-figures/new-base-data.png}
-  \caption{Old XLs (left) and new XLs (right) mapped onto the base subcomplex}
-\end{figure}
-
-  \end{frame}
 \end{document}
