@@ -28,7 +28,7 @@ from sys import exit
 from sys import argv
 import pandas as pd
 
-#from ambiguous_xls_restraint_new import *
+from ambiguous_xls_restraint_new import *
 ###################### SYSTEM SETUP #####################
 
 #top_dir = '/wynton/home/sali/ignacia/ddi_ambiguity/modeling/mod_ddi2_ddi2_tetramer'
@@ -41,7 +41,7 @@ mdl = IMP.Model()
 #============================
 dir = os.getcwd()
 xl_dir = os.path.join(dir,'data')
-xl_fil = os.path.join(xl_dir,'ddi_trifunctional.csv')
+xl_fil = os.path.join(xl_dir,'reduced_ddi_trifunctional.csv')
 #=============================
 
 cldbkc=CrossLinkDataBaseKeywordsConverter()
@@ -165,62 +165,129 @@ def add_COM(hier, dof, selection1, selection2,  distance=30., weight=1., name = 
     dof.get_nuisances_from_restraint(com)
 
 #----------------------------------------------------------------------
-# A new restraint: UpperBoundDistanceRestraint from core module
+# Trifunctional crosslink restraints with ambiguous copy assignments
 #----------------------------------------------------------------------
-def add_distance_restraints_from_csv(file_in, hier, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='1'):
+def add_distance_restraints_from_csv(file_in, hier, min_distance=0.0, max_distance=19.0, 
+                                     resolution=1.0, kappa=1.0, weight=1.0, name='1'):
     """
-    Add distance restraints from a CSV file containing crosslink data.
+    Add trifunctional XL restraints handling copy number ambiguity.
     
-    Parameters:
-    -----------
-    file_in : str
-        Path to the CSV file containing crosslink data
-    hier : IMP hierarchy
-        The hierarchy to apply restraints to
-    min_distance : float
-        Minimum distance for the restraint (default: 0.0)
-    max_distance : float
-        Maximum distance for the restraint (default: 19.0)
-    resolution : float
-        Resolution for particle selection (default: 1.0)
-    kappa : float
-        Force constant for the restraint (default: 1.0)
-    weight : float
-        Weight for the restraint (default: 1.0)
-    name : str
-        Label for the restraint (default: '1')
+    Logic (matching boss's bifunctional XL approach):
+    - Same protein, same residue = MUST be different copies (no self-crosslink)
+    - Same protein, different residues = Could be intra OR inter-copy (ambiguous)
+    - Different proteins = All copy combinations possible
+    
+    For each trifunctional XL, creates 3 distance restraints (forming a triangle)
+    for ALL valid copy number combinations.
     """
-    # Read crosslink data from CSV
+    import itertools
+    
     xldata = pd.read_csv(file_in, header=0)
+    total_restraints = 0
     
-    # Loop through each row in the DataFrame
-    for index, row in xldata.iterrows():
-        c1 = row['Protein1']
-        r1 = row['Residue1']
-        p1 = IMP.atom.Selection(hier, state_index=0, molecule=c1, residue_index=r1, resolution=resolution).get_selected_particles()
-        if not p1:
-            print(f"Warning: No particles found for {c1} residue {r1}")
-            continue
+    for idx, row in xldata.iterrows():
+        # Extract protein names and residue numbers
+        proteins = [row['Protein1'], row['Protein2'], row['Protein3']]
+        residues = [int(''.join(filter(str.isdigit, str(row[f'Residue{i}'])))) 
+                   for i in [1, 2, 3]]
         
-        c2 = row['Protein2']
-        r2 = row['Residue2']
-        p2 = IMP.atom.Selection(hier, state_index=0, molecule=c2, residue_index=r2, resolution=resolution).get_selected_particles()
-        if not p2:
-            print(f"Warning: No particles found for {c2} residue {r2}")
-            continue
+        # Determine valid copy number combinations for this trifunctional XL
+        valid_combos = _get_valid_copy_combinations(proteins, residues)
         
-        # Create tuple format for DistanceRestraint
-        tup1 = [r1, r1, c1, 0]
-        tup2 = [r2, r2, c2, 0]
+        print(f"\nXL {idx}: {proteins[0]}:{residues[0]} - {proteins[1]}:{residues[1]} - {proteins[2]}:{residues[2]}")
+        print(f"  Valid copy combinations: {len(valid_combos)}")
         
-        # Create and add distance restraint
-        disres = IMP.pmi.restraints.basic.DistanceRestraint(hier, tup1, tup2, min_distance, max_distance, resolution=resolution, kappa=kappa)
-        disres.set_label(f'{name}.{c1}_{r1}-{c2}_{r2}')
-        disres.add_to_model()
-        disres.set_weight(weight)
-        output_objects.append(disres)
+        # Add restraints for each valid combination
+        for (copy1, copy2, copy3) in valid_combos:
+            # Get particles for this specific copy combination
+            particles = _select_particles(hier, proteins, residues, 
+                                         [copy1, copy2, copy3], resolution)
+            
+            if particles is None:  # Skip if any particle not found
+                continue
+            
+            # Create 3 pairwise distance restraints (triangle constraint)
+            pairs = [(0,1), (1,2), (0,2)]  # Indices into particles list
+            pair_names = ['1-2', '2-3', '1-3']
+            
+            for (i, j), pair_name in zip(pairs, pair_names):
+                tup_i = [residues[i], residues[i], proteins[i], [copy1, copy2, copy3][i]]
+                tup_j = [residues[j], residues[j], proteins[j], [copy1, copy2, copy3][j]]
+                
+                dr = IMP.pmi.restraints.basic.DistanceRestraint(
+                    hier, tup_i, tup_j, min_distance, max_distance, 
+                    resolution=resolution, kappa=kappa)
+                
+                label = f"{name}.{proteins[i]}.{[copy1,copy2,copy3][i]}:{residues[i]}-" \
+                       f"{proteins[j]}.{[copy1,copy2,copy3][j]}:{residues[j]}"
+                dr.set_label(label)
+                dr.add_to_model()
+                dr.set_weight(weight)
+                output_objects.append(dr)
+                total_restraints += 1
+            
+            print(f"  Added combo: {proteins[0]}.{copy1}:{residues[0]} - "
+                  f"{proteins[1]}.{copy2}:{residues[1]} - {proteins[2]}.{copy3}:{residues[2]}")
+    
+    print(f"\n=== Total: {total_restraints} distance restraints from {len(xldata)} trifunctional XLs ===\n")
+
+
+def _get_valid_copy_combinations(proteins, residues):
+    """
+    Determine all valid (copy1, copy2, copy3) combinations.
+    
+    Rules:
+    1. Same protein + same residue = different copies required
+    2. Same protein + different residues = any copy combination (ambiguous)
+    3. Different proteins = any copy combination
+    """
+    def copy_options(prot1, res1, prot2, res2):
+        """Get possible copy pairs for a protein-residue pair"""
+        if prot1 != prot2:
+            return [(0,0), (0,1), (1,0), (1,1)]  # Different proteins: all combos
+        elif res1 == res2:
+            return [(0,1), (1,0)]  # Same residue: MUST be different copies
+        else:
+            return [(0,0), (1,1), (0,1), (1,0)]  # Different residues: ambiguous
+    
+    # Get possible copy pairs for each edge of the triangle
+    combos_12 = copy_options(proteins[0], residues[0], proteins[1], residues[1])
+    combos_23 = copy_options(proteins[1], residues[1], proteins[2], residues[2])
+    combos_13 = copy_options(proteins[0], residues[0], proteins[2], residues[2])
+    
+    # Find consistent (copy1, copy2, copy3) combinations
+    # Consistency: copy numbers must match when same position appears in multiple pairs
+    valid = set()
+    for (c1_12, c2_12) in combos_12:
+        for (c2_23, c3_23) in combos_23:
+            for (c1_13, c3_13) in combos_13:
+                # Check if copy assignments are consistent across all three pairs
+                if c1_12 == c1_13 and c2_12 == c2_23 and c3_23 == c3_13:
+                    valid.add((c1_12, c2_12, c3_23))
+    
+    return sorted(valid)
+
+
+def _select_particles(hier, proteins, residues, copies, resolution):
+    """
+    Select particles for given proteins/residues/copies.
+    Returns None if any particle missing (with warning).
+    """
+    particles = []
+    for prot, res, copy in zip(proteins, residues, copies):
+        sel = IMP.atom.Selection(hier, state_index=0, molecule=prot, 
+                                residue_index=res, copy_index=copy, 
+                                resolution=resolution)
+        p = sel.get_selected_particles()
         
-    print(f"Added {len(xldata)} distance restraints from {file_in}")
+        if not p:
+            print(f"  Warning: No particles for {prot}.{copy}:{res} - skipping this combination")
+            return None
+        
+        particles.append(p[0])
+    
+    return particles
+#----------------------------------------------------------------------
 
 #----------------------------------------------------------------------
 ###############################
@@ -273,7 +340,7 @@ add_barrier(hier_S2, name = 'tetramer2')
 
 #xls_tetramer = f'{top_dir}/data/mixed_DDI1_dimer.csv'
 #add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
-
+#
 #xls_tetramer = f'{top_dir}/data/mixed_DDI2_dimer.csv'
 #add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
 
@@ -310,8 +377,8 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    replica_exchange_maximum_temperature=4.0,
                                    global_output_directory="output/",
                                    output_objects=output_objects,
-                                   monte_carlo_steps=20,
-                                   number_of_frames=10000,
+                                   monte_carlo_steps=10,
+                                   number_of_frames=100,
                                    number_of_best_scoring_models=0)
 
 rex.execute_macro()
