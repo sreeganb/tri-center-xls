@@ -8,6 +8,8 @@ __pycache__/
 *.pse
 *.pdf
 *.png
+*.json
+*.py
 
 # C extensions
 *.so
