@@ -76,7 +76,6 @@ class XLs_amb_Restraint(IMP.pmi.restraints.RestraintBase):
         self.linear.set_slope(0.0)
         self.dps2 = IMP.core.DistancePairScore(self.linear)
         
-        print('-------',  self.rs.length)
     
         # Nuisance particle parameters
         self.sigma_init = sigma_init
@@ -100,10 +99,8 @@ class XLs_amb_Restraint(IMP.pmi.restraints.RestraintBase):
         
         self.xl_list = []
         restraints = []
-        print('all_xls', len(self.all_xls))
-        print('all_xls', self.all_xls)
-    
-
+        print('Number of included XL restraints', len(self.all_xls))
+        
         for id, sys_dict in self.all_xls.items():
             c= 0
             dr = IMP.isd.CrossLinkMSAmbRestraint(self.model,
@@ -171,30 +168,28 @@ class XLs_amb_Restraint(IMP.pmi.restraints.RestraintBase):
 
             if len(g_sel)>0:
                 self.all_xls[name] = g_sel
-
-        print('------', self.all_xls)
                 
     def _select_particles(self, hier, row):
-        if 'Copy A' in row.index and 'Copy B' in row.index:
-            copy_index_A = row['Copy A']
-            copy_index_B = row['Copy B']
+        if 'Copy1' in row.index and 'Copy2' in row.index:
+            copy_index_A = row['Copy1']
+            copy_index_B = row['Copy2']
             s1 = IMP.atom.Selection(hier,
-                                    molecule = row['Prot A'],
-                                    residue_index = int(row['Residue A']),
+                                    molecule = row['Protein1'],
+                                    residue_index = int(row['Residue1']),
                                     copy_index=copy_index_A).get_selected_particles()
             s2 = IMP.atom.Selection(hier,
-                                    molecule = row['Prot B'], 
-                                    residue_index = int(row['Residue B']),
+                                    molecule = row['Protein2'], 
+                                    residue_index = int(row['Residue2']),
                                     copy_index=copy_index_B).get_selected_particles()
             
 
         else:
             s1 = IMP.atom.Selection(hier,
-                                    molecule = row['Prot A'],
-                                    residue_index = int(row['Residue A'])).get_selected_particles()
+                                    molecule = row['Protein1'],
+                                    residue_index = int(row['Residue1'])).get_selected_particles()
             s2 = IMP.atom.Selection(hier,
-                                    molecule = row['Prot B'], 
-                                    residue_index = int(row['Residue B'])).get_selected_particles()
+                                    molecule = row['Protein2'], 
+                                    residue_index = int(row['Residue2'])).get_selected_particles()
 
         return s1, s2
 

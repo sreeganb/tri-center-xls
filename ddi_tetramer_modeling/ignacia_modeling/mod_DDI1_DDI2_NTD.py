@@ -27,7 +27,7 @@ import os
 from sys import exit
 from sys import argv
 
-#from ambiguous_xls_restraint_new import *
+from ambiguous_xls_restraint_new import *
 ###################### SYSTEM SETUP #####################
 
 #top_dir = '/wynton/home/sali/ignacia/ddi_ambiguity/modeling/mod_ddi2_ddi2_tetramer'
@@ -43,15 +43,15 @@ mdl = IMP.Model()
 #cldbkc.set_unique_id_key("Iid")
 #cldbkc.set_psi_key("Score")
 
-cldbkc=CrossLinkDataBaseKeywordsConverter()
-cldbkc.set_protein1_key("Protein1")
-cldbkc.set_protein2_key("Protein2")
-cldbkc.set_residue1_key("Residue1")
-cldbkc.set_residue2_key("Residue2")
-cldbkc.set_unique_id_key("Iid")
-cldbkc.set_psi_key("Score")
-
-cldb=IMP.pmi.io.crosslink.CrossLinkDataBase(cldbkc)
+#cldbkc=CrossLinkDataBaseKeywordsConverter()
+#cldbkc.set_protein1_key("Protein1")
+#cldbkc.set_protein2_key("Protein2")
+#cldbkc.set_residue1_key("Residue1")
+#cldbkc.set_residue2_key("Residue2")
+#cldbkc.set_unique_id_key("Iid")
+#cldbkc.set_psi_key("Score")
+#
+#cldb=IMP.pmi.io.crosslink.CrossLinkDataBase(cldbkc)
 
 def create_hier_sys(top_file, name = 'sys'):
     topology = os.path.join(top_dir,top_file)
@@ -211,10 +211,10 @@ add_barrier(hier_S2, name = 'tetramer2')
 # XLs
 ##############################
 
-#xls_tetramer = f'{top_dir}/data/mixed_DDI1_dimer.csv'
-#add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
-#xls_tetramer = f'{top_dir}/data/mixed_DDI2_dimer.csv'
-#add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
+xls_tetramer = f'{top_dir}/data/ddi1_bifunctional.csv'
+add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
+xls_tetramer = f'{top_dir}/data/ddi2_bifunctional.csv'
+add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
 
 ##############################
 # Write everything
