@@ -44,15 +44,15 @@ xl_dir = os.path.join(dir,'data')
 xl_fil = os.path.join(xl_dir,'reduced_ddi_trifunctional.csv')
 #=============================
 
-cldbkc=CrossLinkDataBaseKeywordsConverter()
-cldbkc.set_protein1_key("Prot A")
-cldbkc.set_protein2_key("Prot B")
-cldbkc.set_residue1_key("Residue A")
-cldbkc.set_residue2_key("Residue B")
-cldbkc.set_unique_id_key("Iid")
-cldbkc.set_psi_key("Score")
-
-cldb=IMP.pmi.io.crosslink.CrossLinkDataBase(cldbkc)
+#cldbkc=CrossLinkDataBaseKeywordsConverter()
+#cldbkc.set_protein1_key("Prot A")
+#cldbkc.set_protein2_key("Prot B")
+#cldbkc.set_residue1_key("Residue A")
+#cldbkc.set_residue2_key("Residue B")
+#cldbkc.set_unique_id_key("Iid")
+#cldbkc.set_psi_key("Score")
+#
+#cldb=IMP.pmi.io.crosslink.CrossLinkDataBase(cldbkc)
 
 def create_hier_sys(top_file, name = 'sys'):
     topology = os.path.join(top_dir,top_file)
@@ -338,17 +338,17 @@ add_barrier(hier_S2, name = 'tetramer2')
 # XLs
 ##############################
 
-#xls_tetramer = f'{top_dir}/data/mixed_DDI1_dimer.csv'
-#add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
-#
-#xls_tetramer = f'{top_dir}/data/mixed_DDI2_dimer.csv'
-#add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
+xls_tetramer = f'{top_dir}/data/ddi1_bifunctional.csv'
+add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
+
+xls_tetramer = f'{top_dir}/data/ddi2_bifunctional.csv'
+add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
 
 ##############################
 # Distance Restraints from CSV
 ##############################
-add_distance_restraints_from_csv(xl_fil, hier_S1, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer1_distance')
-add_distance_restraints_from_csv(xl_fil, hier_S2, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer2_distance')
+add_distance_restraints_from_csv(xl_fil, hier_S1, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer1')
+add_distance_restraints_from_csv(xl_fil, hier_S2, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer2')
 
 ##############################
 # Write everything
