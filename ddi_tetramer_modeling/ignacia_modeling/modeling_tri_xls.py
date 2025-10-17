@@ -293,20 +293,22 @@ def _select_particles(hier, proteins, residues, copies, resolution):
 ###############################
 # All species 
 ###############################
-hier_S1, dof_S1, mols_S1 = create_hier_sys(f'{top_dir}/top_DDI1_NTD.dat', name = 'tetramer1')
-hier_S2, dof_S2, mols_S2 = create_hier_sys(f'{top_dir}/top_DDI2_NTD.dat', name = 'tetramer2')
+#hier_S1, dof_S1, mols_S1 = create_hier_sys(f'{top_dir}/top_DDI1_NTD.dat', name = 'tetramer1')
+#hier_S2, dof_S2, mols_S2 = create_hier_sys(f'{top_dir}/top_DDI2_NTD.dat', name = 'tetramer2')
+
+hier_sys, dof_sys, mols_sys = create_hier_sys(f'{top_dir}/topology.dat', name = 'system')
 
 ##############################
 # Combined hierarchy
 ##############################
 
-p = IMP.Particle(mdl)
-hier_all = IMP.atom.Hierarchy.setup_particle(p)
-hier_all.add_child(hier_S1)
-hier_all.add_child(hier_S2)
-hier_all.set_name('System')
+#p = IMP.Particle(mdl)
+#hier_all = IMP.atom.Hierarchy.setup_particle(p)
+#hier_all.add_child(hier_S1)
+#hier_all.add_child(hier_S2)
+#hier_all.set_name('System')
 
-states = IMP.atom.get_by_type(hier_all,IMP.atom.STATE_TYPE)
+states = IMP.atom.get_by_type(hier_sys,IMP.atom.STATE_TYPE)
 print('All states:', states)
 
 ##############################
@@ -318,61 +320,64 @@ rmf_restraints = []
 
 crs = []
 
-add_connectivity(mols_S1, name='tetramer1')
-add_connectivity(mols_S2, name='tetramer2')
-
+#add_connectivity(mols_S1, name='tetramer1')
+#add_connectivity(mols_S2, name='tetramer2')
+add_connectivity(mols_sys, name='system')
 ##############################
 # Excluded Volume
 ##############################
-add_excluded_volume(mols_S1, name='tetramer1')
-add_excluded_volume(mols_S2, name='tetramer2')
-
+#add_excluded_volume(mols_S1, name='tetramer1')
+#add_excluded_volume(mols_S2, name='tetramer2')
+add_excluded_volume(mols_sys, name='system')
 ##############################
 # External barrier
 ##############################
-
-add_barrier(hier_S1, name = 'tetramer1')
-add_barrier(hier_S2, name = 'tetramer2')
-
+#add_barrier(hier_S1, name = 'tetramer1')
+#add_barrier(hier_S2, name = 'tetramer2')
+add_barrier(hier_sys, name = 'system')
 ##############################
 # XLs
 ##############################
 
-xls_tetramer = f'{top_dir}/data/ddi1_bifunctional.csv'
-add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
+#xls_tetramer = f'{top_dir}/data/ddi1_bifunctional.csv'
+#add_amb_crosslinks(xls_tetramer, [hier_S1], dof_S1, weight = 5.0, length = 21., slope=0.01 ,name='tetramer1')
+#
+#xls_tetramer = f'{top_dir}/data/ddi2_bifunctional.csv'
+#add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
 
-xls_tetramer = f'{top_dir}/data/ddi2_bifunctional.csv'
-add_amb_crosslinks(xls_tetramer, [hier_S2], dof_S2, weight = 5.0, length = 21., slope=0.01 ,name='tetramer2')
-
+xls_complete = f'{top_dir}/data/ddi_bifunctional.csv'
+add_amb_crosslinks(xls_complete, [hier_sys], dof_sys, weight = 5.0, length = 21., slope=0.01 ,name='system')
 ##############################
 # Distance Restraints from CSV
 ##############################
-add_distance_restraints_from_csv(xl_fil, hier_S1, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer1')
-add_distance_restraints_from_csv(xl_fil, hier_S2, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer2')
-
+#add_distance_restraints_from_csv(xl_fil, hier_S1, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer1')
+#add_distance_restraints_from_csv(xl_fil, hier_S2, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='tetramer2')
+add_distance_restraints_from_csv(xl_fil, hier_sys, min_distance=0.0, max_distance=19.0, resolution=1.0, kappa=1.0, weight=1.0, name='system')
 ##############################
 # Write everything
 ##############################  
     
 output = IMP.pmi.output.Output()
-output.init_rmf("ini_all.rmf3", [hier_all])
+output.init_rmf("ini_all.rmf3", [hier_sys])
 output.write_rmf("ini_all.rmf3")
 output.close_rmf("ini_all.rmf3")
 
 ##############################
 # Shuffle
 ##############################    
-IMP.pmi.tools.shuffle_configuration(hier_S1, max_translation=100)
-IMP.pmi.tools.shuffle_configuration(hier_S2, max_translation=100)
+#IMP.pmi.tools.shuffle_configuration(hier_S1, max_translation=100)
+#IMP.pmi.tools.shuffle_configuration(hier_S2, max_translation=100)
 
-movers_all = dof_S1.get_movers() + dof_S2.get_movers()
+IMP.pmi.tools.shuffle_configuration(hier_sys, max_translation=100)
+
+movers_all = dof_sys.get_movers()
 
 ##############################
 # MC
 ##############################    
 
 rex=IMP.pmi.macros.ReplicaExchange(mdl,
-                                   root_hier=hier_all,                                        
+                                   root_hier=hier_sys,                                        
                                    monte_carlo_sample_objects=movers_all,   
                                    replica_exchange_maximum_temperature=4.0,
                                    global_output_directory="output/",
