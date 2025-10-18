@@ -383,7 +383,7 @@ rex=IMP.pmi.macros.ReplicaExchange(mdl,
                                    global_output_directory="output/",
                                    output_objects=output_objects,
                                    monte_carlo_steps=10,
-                                   number_of_frames=100,
+                                   number_of_frames=1000,
                                    number_of_best_scoring_models=0)
 
 rex.execute_macro()
