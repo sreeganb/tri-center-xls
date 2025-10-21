@@ -7,7 +7,7 @@ from chimerax.geometry import distance
 # Define the file paths (hardcoded)
 PDB_FILE = "./input_data/Q8WTU0_V1_3.pdb"
 #CROSSLINK_FILE = "pymol_data/formatted_random_lysine_doubles.csv"
-CROSSLINK_FILE = "pymol_data/paired_double_links.csv"
+CROSSLINK_FILE = "pymol_data/bifunc_pairs.csv"
 
 # Function to load PDB structure
 def load_structure(session, pdb_file):

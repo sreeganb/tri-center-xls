@@ -1,266 +1,124 @@
-#!/usr/bin/env python3.11
-
+import os, re, argparse
 import pandas as pd
-import os
 
-def ensure_directory(dir_path):
-    """Ensure that a directory exists."""
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-
-# Define the mapping from (Protein, Copy) to Chain
+# Map (Protein, Copy) -> Chain
 protein_copy_to_chain = {
-    ('DDI1', 0): 'A',
-    ('DDI1', 1): 'B',
-    ('DDI2', 0): 'C',
-    ('DDI2', 1): 'D',
+    ('DDI1', 0): 'A', ('DDI1', 1): 'B',
+    ('DDI2', 0): 'C', ('DDI2', 1): 'D',
 }
+ncopies = {'DDI1': 2, 'DDI2': 2}
+valid_proteins = {p for p, _ in protein_copy_to_chain.keys()}
 
-ncopies = {
-    'DDI1': 2,
-    'DDI2': 2
-}
+def ensure_dir(d): 
+    if d and not os.path.exists(d): os.makedirs(d)
 
-def get_valid_copy_combinations(proteins, residues):
-    """
-    Determine all valid (copy1, copy2, copy3) combinations for trifunctional XL.
-    Same logic as in your modeling script.
-    """
-    def copy_options(prot1, res1, prot2, res2):
-        """Get possible copy pairs for a protein-residue pair"""
-        if prot1 != prot2:
-            return [(0,0), (0,1), (1,0), (1,1)]  # Different proteins: all combos
-        elif res1 == res2:
-            return [(0,1), (1,0)]  # Same residue: MUST be different copies
-        else:
-            return [(0,0), (1,1), (0,1), (1,0)]  # Different residues: ambiguous
-    
-    # Get possible copy pairs for each edge of the triangle
-    combos_12 = copy_options(proteins[0], residues[0], proteins[1], residues[1])
-    combos_23 = copy_options(proteins[1], residues[1], proteins[2], residues[2])
-    combos_13 = copy_options(proteins[0], residues[0], proteins[2], residues[2])
-    
-    # Find consistent combinations
+def to_int_res(x): 
+    s = re.sub(r'\D+', '', str(x)); return int(s) if s else None
+
+def copy_pairs_bifunc(p1, r1, p2, r2):
+    # Rules: different proteins -> all copy pairs; same protein+same residue -> different copies only; same protein+diff residue -> intra and inter
+    if p1 != p2:
+        return [(i, j) for i in range(ncopies.get(p1,0)) for j in range(ncopies.get(p2,0))]
+    if r1 == r2:
+        return [(0,1), (1,0)]
+    return [(0,0), (1,1), (0,1), (1,0)]
+
+def copy_triples_trifunc(proteins, residues):
+    # Pairwise options
+    def opts(pA, rA, pB, rB):
+        if pA != pB: return [(0,0),(0,1),(1,0),(1,1)]
+        if rA == rB: return [(0,1),(1,0)]
+        return [(0,0),(1,1),(0,1),(1,0)]
+    c12, c23, c13 = opts(proteins[0],residues[0],proteins[1],residues[1]), \
+                    opts(proteins[1],residues[1],proteins[2],residues[2]), \
+                    opts(proteins[0],residues[0],proteins[2],residues[2])
     valid = set()
-    for (c1_12, c2_12) in combos_12:
-        for (c2_23, c3_23) in combos_23:
-            for (c1_13, c3_13) in combos_13:
-                if c1_12 == c1_13 and c2_12 == c2_23 and c3_23 == c3_13:
-                    valid.add((c1_12, c2_12, c3_23))
-    
+    for (a,b) in c12:
+        for (b2,c) in c23:
+            if b != b2: continue
+            for (a2,c2) in c13:
+                if a==a2 and c==c2: valid.add((a,b,c))
     return sorted(valid)
 
+def chains_for_pair(p1,c1,p2,c2):
+    ch1 = protein_copy_to_chain.get((p1,c1))
+    ch2 = protein_copy_to_chain.get((p2,c2))
+    return (ch1, ch2) if ch1 and ch2 else (None, None)
 
-def process_triple_links_for_chimerax(input_file, output_file, remove_duplicates=False):
-    """
-    Process trifunctional crosslinks with proper ambiguity handling.
-    Outputs pairwise links in ChimeraX-compatible format:
-    Chain1, Residue1, Atom1, Chain2, Residue2, Atom2
-    
-    Parameters:
-    - input_file: Path to trifunctional crosslink CSV
-    - output_file: Path to output CSV
-    - remove_duplicates: If True, remove duplicate pairwise links (NOT recommended 
-                        for trifunctional XLs as they represent different triangular constraints)
-    """
-    # Read the CSV file
-    headers = ['Protein1', 'Residue1', 'Protein2', 'Residue2', 'Protein3', 'Residue3']
-    df = pd.read_csv(input_file, header=0, names=headers)
-    
-    # Initialize list to store new rows
-    new_rows = []
-    
-    # Track statistics
-    total_combos = 0
-    links_per_xl = []
-    
-    # Process each trifunctional crosslink
-    for index, row in df.iterrows():
-        p1 = row['Protein1']
-        p2 = row['Protein2']
-        p3 = row['Protein3']
-        r1 = int(''.join(filter(str.isdigit, str(row['Residue1']))))
-        r2 = int(''.join(filter(str.isdigit, str(row['Residue2']))))
-        r3 = int(''.join(filter(str.isdigit, str(row['Residue3']))))
-        
-        proteins = [p1, p2, p3]
-        residues = [r1, r2, r3]
-        
-        # Get valid copy combinations
-        valid_combos = get_valid_copy_combinations(proteins, residues)
-        total_combos += len(valid_combos)
-        
-        print(f"\nXL {index}: {p1}:{r1} - {p2}:{r2} - {p3}:{r3}")
-        print(f"  Valid copy combinations: {len(valid_combos)}")
-        
-        xl_links = 0
-        
-        # For each valid combination, add the three pairwise links
-        for combo in valid_combos:
-            c1, c2, c3 = combo
-            
-            # Get chain IDs for each copy
-            chain1 = protein_copy_to_chain.get((p1, c1))
-            chain2 = protein_copy_to_chain.get((p2, c2))
-            chain3 = protein_copy_to_chain.get((p3, c3))
-            
-            if chain1 and chain2 and chain3:
-                print(f"    Combo ({c1},{c2},{c3}) -> Chains ({chain1},{chain2},{chain3})")
-                
-                # Add three pairwise links in ChimeraX format
-                # Format: Chain1, Residue1, Atom1, Chain2, Residue2, Atom2
-                new_rows.append([chain1, r1, 'CA', chain2, r2, 'CA'])
-                new_rows.append([chain2, r2, 'CA', chain3, r3, 'CA'])
-                new_rows.append([chain3, r3, 'CA', chain1, r1, 'CA'])
-                
-                xl_links += 3
-                
-                print(f"      {chain1}:{r1} - {chain2}:{r2}")
-                print(f"      {chain2}:{r2} - {chain3}:{r3}")
-                print(f"      {chain3}:{r3} - {chain1}:{r1}")
-        
-        links_per_xl.append(xl_links)
-        print(f"  Total pairwise links for this XL: {xl_links}")
-    
-    # Create DataFrame in ChimeraX format
-    new_df = pd.DataFrame(new_rows, 
-                         columns=['Chain1', 'Residue1', 'Atom1', 
-                                 'Chain2', 'Residue2', 'Atom2'])
-    
-    print(f"\n{'='*60}")
-    print(f"BEFORE DUPLICATE REMOVAL")
-    print(f"{'='*60}")
-    print(f"Total trifunctional XLs: {len(df)}")
-    print(f"Total copy combinations: {total_combos}")
-    print(f"Total pairwise links generated: {len(new_df)}")
-    print(f"Expected: {total_combos * 3} (3 links per combination)")
-    print(f"Links per XL: {links_per_xl}")
-    
-    if remove_duplicates:
-        # Remove duplicates (bidirectional crosslinks are the same)
-        # Sort each row to make comparisons consistent
-        new_df['sorted_key'] = new_df.apply(
-            lambda row: tuple(sorted([(row['Chain1'], row['Residue1'], row['Atom1']),
-                                      (row['Chain2'], row['Residue2'], row['Atom2'])])),
-            axis=1
-        )
-        initial_count = len(new_df)
-        new_df = new_df.drop_duplicates(subset='sorted_key').drop(columns='sorted_key')
-        removed_count = initial_count - len(new_df)
-        
-        print(f"\nAFTER DUPLICATE REMOVAL")
-        print(f"Removed {removed_count} duplicate entries")
-        print(f"Remaining unique pairwise links: {len(new_df)}")
-    else:
-        print(f"\nNOTE: Duplicates NOT removed - each trifunctional XL represents")
-        print(f"      a unique triangular constraint even if some edges overlap")
-    
-    # Save to CSV (ChimeraX script expects this format)
-    new_df.to_csv(output_file, index=False, header=True)
-    
-    print(f"\n{'='*60}")
-    print(f"OUTPUT SUMMARY")
-    print(f"{'='*60}")
-    print(f"Processed {len(df)} trifunctional crosslinks")
-    print(f"Generated {len(new_df)} pairwise links")
-    print(f"Output saved to: {output_file}")
-    print(f"\nFormat: Chain1, Residue1, Atom1, Chain2, Residue2, Atom2")
-    print(f"Preview:\n{new_df.head(10)}")
-    
-    return new_df
+def add_link(rows, ch1, r1, ch2, r2, atom='CA'):
+    rows.append([ch1, r1, atom, ch2, r2, atom])
 
+def dedupe_links(df):
+    key = df.apply(lambda r: tuple(sorted([(r.Chain1, r.Residue1, r.Atom1),
+                                           (r.Chain2, r.Residue2, r.Atom2)])), axis=1)
+    df2 = df.copy()
+    df2['k'] = key
+    df2 = df2.drop_duplicates('k').drop(columns='k')
+    return df2
 
-def create_chimerax_script(crosslink_file, pdb_file, output_script='visualize_crosslinks.cxc'):
-    """
-    Create a ChimeraX command script to visualize crosslinks.
-    
-    Parameters:
-    - crosslink_file: Path to the formatted crosslink CSV
-    - pdb_file: Path to the PDB structure file
-    - output_script: Output ChimeraX script filename
-    """
-    df = pd.read_csv(crosslink_file)
-    
-    with open(output_script, 'w') as f:
-        # Header
-        f.write("# ChimeraX script to visualize trifunctional crosslinks\n\n")
-        
-        # Load structure
-        f.write(f"open {pdb_file}\n")
-        f.write("cartoon\n")
-        f.write("color khaki cartoons\n\n")
-        
-        # Color chains
-        f.write("# Color chains\n")
-        f.write("color /A salmon cartoons\n")
-        f.write("color /B lightblue cartoons\n")
-        f.write("color /C yellow cartoons\n")
-        f.write("color /D green cartoons\n\n")
-        
-        # Show crosslinked residues
-        f.write("# Show crosslinked residues as spheres\n")
-        unique_residues = set()
-        for _, row in df.iterrows():
-            unique_residues.add((row['Chain1'], row['Residue1']))
-            unique_residues.add((row['Chain2'], row['Residue2']))
-        
-        for chain, res in sorted(unique_residues):
-            f.write(f"show /{chain}:{res}@CA atoms\n")
-            f.write(f"size /{chain}:{res}@CA atomRadius 0.5\n")
-        
-        f.write("\n# Draw crosslinks as distance pseudobonds\n")
-        
-        # Draw crosslinks
-        for idx, row in df.iterrows():
-            chain1, res1, atom1 = row['Chain1'], row['Residue1'], row['Atom1']
-            chain2, res2, atom2 = row['Chain2'], row['Residue2'], row['Atom2']
-            
-            # Calculate if it would be a violation (optional - shown in color)
-            f.write(f"distance /{chain1}:{res1}@{atom1} /{chain2}:{res2}@{atom2}")
-            f.write(f" color dark_green radius 0.6 name xl_{idx}\n")
-        
-        # Final settings
-        f.write("\n# Final view settings\n")
-        f.write("lighting soft\n")
-        f.write("graphics silhouettes true\n")
-        f.write("set bgColor white\n")
-        f.write("view\n")
-    
-    print(f"\nChimeraX script created: {output_script}")
-    print(f"To use in ChimeraX: open {output_script}")
-    print(f"Or from command line: chimerax {output_script}")
+def process_bifunc_csv(input_csv, output_csv, remove_duplicates=False):
+    if not input_csv or not os.path.exists(input_csv): return None
+    df = pd.read_csv(input_csv, usecols=[0,1,2,3])  # only first 4 columns
+    df.columns = ['Protein1','Residue1','Protein2','Residue2']
+    df = df[(df.Protein1.isin(valid_proteins)) & (df.Protein2.isin(valid_proteins))].copy()
+    df['Residue1'] = df['Residue1'].map(to_int_res)
+    df['Residue2'] = df['Residue2'].map(to_int_res)
+    df = df.dropna(subset=['Residue1','Residue2'])
+    rows = []
+    for _, row in df.iterrows():
+        p1,p2 = row.Protein1, row.Protein2
+        r1,r2 = int(row.Residue1), int(row.Residue2)
+        for c1,c2 in copy_pairs_bifunc(p1,r1,p2,r2):
+            ch1,ch2 = chains_for_pair(p1,c1,p2,c2)
+            if ch1 and ch2: add_link(rows, ch1, r1, ch2, r2)
+    out = pd.DataFrame(rows, columns=['Chain1','Residue1','Atom1','Chain2','Residue2','Atom2'])
+    if remove_duplicates: out = dedupe_links(out)
+    ensure_dir(os.path.dirname(output_csv))
+    out.to_csv(output_csv, index=False)
+    print(f"Wrote bifunctional: {output_csv} ({len(out)} links)")
+    return out
 
+def process_trifunc_csv(input_csv, output_csv, remove_duplicates=False):
+    if not input_csv or not os.path.exists(input_csv): return None
+    df = pd.read_csv(input_csv, header=0, names=['Protein1','Residue1','Protein2','Residue2','Protein3','Residue3'])
+    df = df[(df.Protein1.isin(valid_proteins)) & (df.Protein2.isin(valid_proteins)) & (df.Protein3.isin(valid_proteins))].copy()
+    for col in ['Residue1','Residue2','Residue3']: df[col] = df[col].map(to_int_res)
+    df = df.dropna(subset=['Residue1','Residue2','Residue3'])
+    rows = []
+    for _, row in df.iterrows():
+        p = [row.Protein1, row.Protein2, row.Protein3]
+        r = [int(row.Residue1), int(row.Residue2), int(row.Residue3)]
+        for c1,c2,c3 in copy_triples_trifunc(p, r):
+            ch1 = protein_copy_to_chain.get((p[0], c1))
+            ch2 = protein_copy_to_chain.get((p[1], c2))
+            ch3 = protein_copy_to_chain.get((p[2], c3))
+            if not (ch1 and ch2 and ch3): continue
+            add_link(rows, ch1, r[0], ch2, r[1])  # 1-2
+            add_link(rows, ch2, r[1], ch3, r[2])  # 2-3
+            add_link(rows, ch3, r[2], ch1, r[0])  # 3-1
+    out = pd.DataFrame(rows, columns=['Chain1','Residue1','Atom1','Chain2','Residue2','Atom2'])
+    if remove_duplicates: out = dedupe_links(out)
+    ensure_dir(os.path.dirname(output_csv))
+    out.to_csv(output_csv, index=False)
+    print(f"Wrote trifunctional: {output_csv} ({len(out)} links)")
+    return out
 
 def main():
-    # Ensure output directory exists
-    output_directory = 'pymol_data'
-    ensure_directory(output_directory)
-    
-    # Process trifunctional crosslinks with ambiguity handling
-    input_xl_file = 'input_data/reduced_ddi_trifunctional.csv'
-    chimerax_output = os.path.join(output_directory, 'paired_double_links.csv')
-    
-    # Process WITHOUT removing duplicates (each triangle is unique)
-    df_chimerax = process_triple_links_for_chimerax(input_xl_file, chimerax_output, 
-                                                     remove_duplicates=False)
-    
-    # Create ChimeraX visualization script
-    pdb_file = './input_data/Q8WTU0_V1_3.pdb'
-    script_output = os.path.join(output_directory, 'visualize_crosslinks.cxc')
-    create_chimerax_script(chimerax_output, pdb_file, script_output)
-    
-    print("\n" + "="*60)
-    print("SUMMARY")
-    print("="*60)
-    print(f"Input file: {input_xl_file}")
-    print(f"ChimeraX-compatible output: {chimerax_output}")
-    print(f"ChimeraX script: {script_output}")
-    print("\nTo visualize in ChimeraX:")
-    print(f"  Option 1 (Python): Run chimera_xls.py with visualize_crosslinks(session)")
-    print(f"  Option 2 (Script): chimerax {script_output}")
-    print("\nOutput format matches ChimeraX expectations:")
-    print("  Chain1, Residue1, Atom1, Chain2, Residue2, Atom2")
+    ap = argparse.ArgumentParser(description="Generate pairwise links from bi/tri-functional XLs (ChimeraX/PyMOL format).")
+    ap.add_argument('--bifunc', default='input_data/reduced_ddi_bifunctional.csv', help='Bifunctional CSV (usecols: Protein1,Residue1,Protein2,Residue2)')
+    ap.add_argument('--trifunc', default='input_data/reduced_ddi_trifunctional.csv', help='Trifunctional CSV (Protein1,Residue1,Protein2,Residue2,Protein3,Residue3)')
+    ap.add_argument('--outdir', default='pymol_data', help='Output directory')
+    ap.add_argument('--dedupe', action='store_true', help='Remove duplicate undirected links')
+    args = ap.parse_args()
 
+    ensure_dir(args.outdir)
+    bi_out  = os.path.join(args.outdir, 'bifunc_pairs.csv')
+    tri_out = os.path.join(args.outdir, 'trifunc_pairs.csv')
 
-if __name__ == "__main__":
+    process_bifunc_csv(args.bifunc, bi_out, remove_duplicates=args.dedupe)
+    process_trifunc_csv(args.trifunc, tri_out, remove_duplicates=args.dedupe)
+
+    print("Done.")
+
+if __name__ == '__main__':
     main()
