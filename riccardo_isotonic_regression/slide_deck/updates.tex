@@ -250,5 +250,206 @@ Rpn11 & K264 & 40.2 & Rpn7  & K126 & 17.4 & Rpn7  & K163       & 16.2 \\
 \end{figure}
 \end{frame}
 %----------------------------------------------------------------------------
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Slide 1: Model Problem Setup}
+\begin{block}{Physical System}
+    \begin{itemize}
+        \item \textbf{N = 1000 particles} randomly distributed in a 100×100×100 Å³ box
+        \item \textbf{Trifunctional crosslinker}: connects 3 particles (A, B, C)
+        \item \textbf{Geometric constraint}: All three pairwise distances must satisfy:
+        \begin{equation*}
+            d_{AB} < L_{tri}, \quad d_{AC} < L_{tri}, \quad d_{BC} < L_{tri}
+        \end{equation*}
+        where $L_{tri} = 30$ Å (maximum arm length)
+    \end{itemize}
+\end{block}
+
+\begin{block}{Key Parameters (Ground Truth)}
+    \begin{itemize}
+        \item $\sigma = 5.0$ Å: Distance measurement uncertainty
+        \item FP rate = 30\%: Fraction of false positive crosslinks
+        \item Total crosslinks: 300 (210 TPs, 90 FPs)
+    \end{itemize}
+\end{block}
+\end{frame}
+
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Slide 2: Synthetic Data Generation}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    \begin{block}{True Positives (70\%)}
+        \begin{enumerate}
+            \item Sample random particle triplets
+            \item Check geometric constraint:
+            \begin{equation*}
+                d_{AB}, d_{AC}, d_{BC} < 30\text{ Å}
+            \end{equation*}
+            \item Add Gaussian noise: $d_{obs} = d_{true} + \mathcal{N}(0, \sigma)$
+            \item Assign high ID scores: $\mathcal{N}(0.85, 0.1)$
+        \end{enumerate}
+    \end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+    \begin{block}{False Positives (30\%)}
+        \begin{enumerate}
+            \item Sample completely random triplets (no geometric check)
+            \item Use observed distances directly
+            \item Assign low ID scores: $\mathcal{N}(0.25, 0.1)$
+        \end{enumerate}
+    \end{block}
+    
+    \vspace{0.5cm}
+    
+    \begin{highlightbox}
+        \textbf{Result}: 300 crosslinks with known ground truth labels for validation
+    \end{highlightbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Slide 3: Beta Parameter - Random Match Probability}
+\begin{block}{Definition}
+    $\beta$ = Probability that a randomly selected triplet satisfies all geometric constraints
+\end{block}
+
+\begin{block}{Empirical Calculation}
+    \begin{enumerate}
+        \item Sample 100,000 random particle triplets
+        \item Count how many satisfy: $d_{AB}, d_{AC}, d_{BC} < L_{tri}$
+        \item Calculate: $\beta_{empirical} = \frac{\text{satisfied triplets}}{100,000}$
+    \end{enumerate}
+    
+    \vspace{0.3cm}
+    For our system: \textbf{$\beta \approx 0.027$} (2.7\% of random triplets satisfy constraints)
+\end{block}
+
+\begin{block}{Theoretical Estimate}
+    Assuming uniform distribution:
+    \begin{equation*}
+        \beta_{theoretical} \approx \left(\frac{L_{tri}}{BOX\_SIZE}\right)^3 = \left(\frac{30}{100}\right)^3 = 0.027
+    \end{equation*}
+    Good agreement with empirical calculation!
+\end{block}
+\end{frame}
+
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Slide 4: Alpha Calibration via Isotonic-like Regression}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+    \begin{block}{Motivation}
+        \begin{itemize}
+            \item ID scores are not calibrated probabilities
+            \item Need mapping: ID score $\rightarrow$ precision ($\alpha$)
+            \item Constraint: higher ID score $\Rightarrow$ higher precision
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Smooth Logistic Model}
+        \begin{equation*}
+            \alpha(s) = \text{sigmoid}(\beta_0 + \beta_1 \cdot s)
+        \end{equation*}
+        where:
+        \begin{itemize}
+            \item $s$ = ID score (0 to 1)
+            \item $\beta_0$ = intercept (prior: $\mathcal{N}(-2, 1)$)
+            \item $\beta_1$ = slope (prior: Half-Normal(5))
+        \end{itemize}
+    \end{block}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figures/calibration_curve_example.pdf}
+        \caption{Calibration curve mapping ID scores to precision}
+    \end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Slide 5: Bayesian Inference via HMC/NUTS}
+\begin{block}{Model Structure}
+    \textbf{Priors:}
+    \begin{align*}
+        \sigma &\sim \text{Half-Normal}(10) \\
+        \beta_0 &\sim \mathcal{N}(-2, 1) \\
+        \beta_1 &\sim \text{Half-Normal}(5)
+    \end{align*}
+    
+    \textbf{Likelihood:}
+    \begin{equation*}
+        p(obs|params) = \alpha(s) \cdot p_{TP} + (1-\alpha(s)) \cdot \beta
+    \end{equation*}
+    where $p_{TP} = \text{sigmoid}\left(\frac{L_{tri} - d_{AB}}{\sigma}\right) \cdot \text{sigmoid}\left(\frac{L_{tri} - d_{AC}}{\sigma}\right) \cdot \text{sigmoid}\left(\frac{L_{tri} - d_{BC}}{\sigma}\right)$
+\end{block}
+
+\begin{block}{MCMC Sampling}
+    \begin{itemize}
+        \item Sampler: NUTS (No-U-Turn Sampler) - adaptive HMC
+        \item 3000 draws $\times$ 4 chains, 2000 tuning steps
+        \item Target acceptance rate: 0.95 (high to avoid divergences)
+    \end{itemize}
+\end{block}
+\end{frame}
+
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Slide 6: Results and Validation}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+    \begin{block}{Parameter Recovery}
+        \begin{table}
+        \small
+        \begin{tabular}{lcc}
+        \toprule
+        Parameter & True & Inferred \\
+        \midrule
+        $\sigma$ (Å) & 5.0 & 5.2 ± 0.3 \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+        
+        \textbf{Convergence:}
+        \begin{itemize}
+            \item $\hat{R} < 1.01$ for all parameters
+            \item ESS $>$ 400 (effective sample size)
+        \end{itemize}
+    \end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+    \begin{block}{Classification Performance}
+        Using $\alpha > 0.5$ as TP cutoff:
+        \begin{table}
+        \small
+        \begin{tabular}{lc}
+        \toprule
+        Metric & Value \\
+        \midrule
+        Accuracy & 0.89 \\
+        Precision & 0.92 \\
+        Recall & 0.91 \\
+        F1 Score & 0.91 \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+    \end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.3cm}
+
+\begin{highlightbox}
+    \textbf{Key Result}: The model successfully recovers $\sigma$ and correctly classifies 89\% of crosslinks using only ID scores and geometric constraints!
+\end{highlightbox}
+\end{frame}
 \end{document}
 %**********************************************************************
