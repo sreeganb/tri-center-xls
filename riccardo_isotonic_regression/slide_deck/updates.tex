@@ -121,6 +121,12 @@ where
 \begin{equation}
 \alpha = \frac{N^{obs, T}_{XL}}{N^{obs}_{XL}} \qquad \beta = \frac{N_{XL}}{N_{LP}}
 \end{equation}
+For trifunctional crosslinks, the $\beta$ parameter is modified to be 
+\begin{equation}
+\beta = \frac{N_{XL}^{tri}}{N_{LT}}
+\end{equation}
+where the number of lysine triplets $N_{LT}$ is 
+given by $^{N_{lysines}}C_3 = \frac{N_{lysines}*(N_{lysines}-1)*(N_{lysines}-2)}{3!}$
 \end{frame}
 %----------------------------------------------------------------------------
 \begin{frame}
@@ -234,5 +240,15 @@ Rpn11 & K264 & 40.2 & Rpn7  & K126 & 17.4 & Rpn7  & K163       & 16.2 \\
 
         \end{block}
 \end{frame}
+%----------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Model problem}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/crosslinking_system.pdf}
+    \caption{Schematic of the model problem setup}
+\end{figure}
+\end{frame}
+%----------------------------------------------------------------------------
 \end{document}
 %**********************************************************************
