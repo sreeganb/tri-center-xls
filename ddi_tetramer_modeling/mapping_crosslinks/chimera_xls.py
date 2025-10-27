@@ -3,12 +3,12 @@ from chimerax.core.commands import run
 from chimerax.core.errors import UserError
 from chimerax.atomic import Residue, Atoms, AtomicStructure
 from chimerax.geometry import distance
+import statistics
 
 # Define the file paths (hardcoded)
-#PDB_FILE = "./input_data/Q8WTU0_V1_3.pdb"
-PDB_FILE = "./pdbs/A_models_cluster2_0_aligned/frame_8500.pdb"
-#CROSSLINK_FILE = "pymol_data/formatted_random_lysine_doubles.csv"
+PDB_FILE = "./pdbs/A_models_cluster2_0_aligned/frame_0.pdb"
 CROSSLINK_FILE = "pymol_data/bifunc_pairs.csv"
+OUTPUT_STATS_FILE = "analys/crosslink_statistics.txt"
 
 # Function to load PDB structure
 def load_structure(session, pdb_file):
@@ -36,9 +36,12 @@ def find_atom_by_chain_residue(model, chain, residue_num, atom_name):
     return None
 
 # Function to visualize crosslinks on the structure
-def plot_crosslinks(session, pdb_model, crosslinks):
+def plot_crosslinks(session, pdb_model, crosslinks, cutoff=30.0):
     violation_count = 0
+    satisfied_count = 0
     processed_crosslinks = set()
+    distances = []
+    missing_count = 0
     
     for crosslink in crosslinks:
         chain1, res1, atom1, chain2, res2, atom2 = crosslink
@@ -57,18 +60,105 @@ def plot_crosslinks(session, pdb_model, crosslinks):
         # If both atoms are found, create or modify a link (distance line)
         if atom1_obj and atom2_obj:
             dist = distance(atom1_obj.coord, atom2_obj.coord)
-            color = 'dark green' if dist < 30 else 'dark red'
-            if dist >= 30:
+            distances.append(dist)
+            
+            if dist < cutoff:
+                color = 'dark green'
+                satisfied_count += 1
+            else:
+                color = 'dark red'
                 violation_count += 1
+            
             try:
                 run(session, f'distance {atom1_obj.atomspec} {atom2_obj.atomspec} color {color} radius 0.6')
             except UserError:
                 run(session, f'distance style {atom1_obj.atomspec} {atom2_obj.atomspec} color {color} radius 0.6')
+        else:
+            missing_count += 1
     
-    print(f'Number of crosslink distance violations: {violation_count}')
+    # Calculate statistics
+    stats = {
+        'total_read': len(crosslinks),
+        'total_unique': len(processed_crosslinks),
+        'satisfied': satisfied_count,
+        'violated': violation_count,
+        'missing': missing_count,
+        'cutoff': cutoff,
+    }
+    
+    if distances:
+        stats['min_distance'] = min(distances)
+        stats['max_distance'] = max(distances)
+        stats['mean_distance'] = statistics.mean(distances)
+        stats['median_distance'] = statistics.median(distances)
+        stats['stdev_distance'] = statistics.stdev(distances) if len(distances) > 1 else 0.0
+    else:
+        stats['min_distance'] = None
+        stats['max_distance'] = None
+        stats['mean_distance'] = None
+        stats['median_distance'] = None
+        stats['stdev_distance'] = None
+    
+    return stats, distances
+
+def write_statistics(stats, distances, output_file):
+    """Write statistics to file."""
+    import os
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    
+    with open(output_file, 'w') as f:
+        f.write("=" * 60 + "\n")
+        f.write("CROSSLINK STATISTICS\n")
+        f.write("=" * 60 + "\n\n")
+        
+        f.write(f"PDB File: {PDB_FILE}\n")
+        f.write(f"Crosslink File: {CROSSLINK_FILE}\n")
+        f.write(f"Distance Cutoff: {stats['cutoff']:.1f} Å\n\n")
+        
+        f.write("Crosslink Counts:\n")
+        f.write(f"  Total crosslinks read:        {stats['total_read']}\n")
+        f.write(f"  Unique crosslinks processed:  {stats['total_unique']}\n")
+        f.write(f"  Satisfied (< {stats['cutoff']:.1f} Å):       {stats['satisfied']}\n")
+        f.write(f"  Violated (>= {stats['cutoff']:.1f} Å):      {stats['violated']}\n")
+        f.write(f"  Missing atoms:                {stats['missing']}\n\n")
+        
+        if stats['mean_distance'] is not None:
+            f.write("Distance Statistics (Å):\n")
+            f.write(f"  Minimum:    {stats['min_distance']:.2f}\n")
+            f.write(f"  Maximum:    {stats['max_distance']:.2f}\n")
+            f.write(f"  Mean:       {stats['mean_distance']:.2f}\n")
+            f.write(f"  Median:     {stats['median_distance']:.2f}\n")
+            f.write(f"  Std Dev:    {stats['stdev_distance']:.2f}\n\n")
+            
+            f.write(f"Satisfaction Rate: {100.0 * stats['satisfied'] / (stats['satisfied'] + stats['violated']):.1f}%\n")
+            f.write(f"Violation Rate:    {100.0 * stats['violated'] / (stats['satisfied'] + stats['violated']):.1f}%\n")
+        
+        f.write("\n" + "=" * 60 + "\n")
+
+def print_statistics(stats):
+    """Print statistics to console."""
+    print("\n" + "=" * 60)
+    print("CROSSLINK STATISTICS")
+    print("=" * 60)
+    print(f"\nDistance Cutoff: {stats['cutoff']:.1f} Å\n")
+    print(f"Total crosslinks read:        {stats['total_read']}")
+    print(f"Unique crosslinks processed:  {stats['total_unique']}")
+    print(f"Satisfied (< {stats['cutoff']:.1f} Å):       {stats['satisfied']}")
+    print(f"Violated (>= {stats['cutoff']:.1f} Å):      {stats['violated']}")
+    print(f"Missing atoms:                {stats['missing']}")
+    
+    if stats['mean_distance'] is not None:
+        print(f"\nDistance Range: {stats['min_distance']:.2f} - {stats['max_distance']:.2f} Å")
+        print(f"Mean Distance:  {stats['mean_distance']:.2f} Å")
+        print(f"Median Distance: {stats['median_distance']:.2f} Å")
+        print(f"Std Dev:        {stats['stdev_distance']:.2f} Å")
+        print(f"\nSatisfaction Rate: {100.0 * stats['satisfied'] / (stats['satisfied'] + stats['violated']):.1f}%")
+        print(f"Violation Rate:    {100.0 * stats['violated'] / (stats['satisfied'] + stats['violated']):.1f}%")
+    
+    print("=" * 60 + "\n")
 
 # Main function to run in ChimeraX
-def visualize_crosslinks(session):
+def visualize_crosslinks(session, cutoff=30.0):
     # Load the PDB structure
     load_structure(session, PDB_FILE)
     
@@ -89,8 +179,14 @@ def visualize_crosslinks(session):
     # Read the crosslink data
     crosslinks = read_crosslink_data(CROSSLINK_FILE)
     
-    # Plot crosslinks on the structure
-    plot_crosslinks(session, pdb_model, crosslinks)
+    # Plot crosslinks on the structure and collect statistics
+    stats, distances = plot_crosslinks(session, pdb_model, crosslinks, cutoff=cutoff)
+    
+    # Print and write statistics
+    print_statistics(stats)
+    write_statistics(stats, distances, OUTPUT_STATS_FILE)
+    print(f"\nStatistics written to: {OUTPUT_STATS_FILE}")
 
 # Example of usage:
 # In ChimeraX: visualize_crosslinks(session)
+# In ChimeraX with custom cutoff: visualize_crosslinks(session, cutoff=35.0)
