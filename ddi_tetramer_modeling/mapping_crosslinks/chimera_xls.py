@@ -5,7 +5,8 @@ from chimerax.atomic import Residue, Atoms, AtomicStructure
 from chimerax.geometry import distance
 
 # Define the file paths (hardcoded)
-PDB_FILE = "./input_data/Q8WTU0_V1_3.pdb"
+#PDB_FILE = "./input_data/Q8WTU0_V1_3.pdb"
+PDB_FILE = "./pdbs/A_models_cluster2_0_aligned/frame_8500.pdb"
 #CROSSLINK_FILE = "pymol_data/formatted_random_lysine_doubles.csv"
 CROSSLINK_FILE = "pymol_data/bifunc_pairs.csv"
 

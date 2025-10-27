@@ -6,7 +6,8 @@ protein_copy_to_chain = {
     ('DDI1', 0): 'A', ('DDI1', 1): 'B',
     ('DDI2', 0): 'C', ('DDI2', 1): 'D',
 }
-ncopies = {'DDI1': 2, 'DDI2': 2}
+ncopies = {'DDI1': 2, 'DDI2': 0, 'DDI3': 0}
+# the number of copies for the DDI proteins
 valid_proteins = {p for p, _ in protein_copy_to_chain.keys()}
 
 def ensure_dir(d): 
