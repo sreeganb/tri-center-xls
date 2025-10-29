@@ -101,40 +101,6 @@ def plot_crosslinks(session, pdb_model, crosslinks, cutoff=30.0):
     
     return stats, distances
 
-def write_statistics(stats, distances, output_file):
-    """Write statistics to file."""
-    import os
-    os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    
-    with open(output_file, 'w') as f:
-        f.write("=" * 60 + "\n")
-        f.write("CROSSLINK STATISTICS\n")
-        f.write("=" * 60 + "\n\n")
-        
-        f.write(f"PDB File: {PDB_FILE}\n")
-        f.write(f"Crosslink File: {CROSSLINK_FILE}\n")
-        f.write(f"Distance Cutoff: {stats['cutoff']:.1f} Å\n\n")
-        
-        f.write("Crosslink Counts:\n")
-        f.write(f"  Total crosslinks read:        {stats['total_read']}\n")
-        f.write(f"  Unique crosslinks processed:  {stats['total_unique']}\n")
-        f.write(f"  Satisfied (< {stats['cutoff']:.1f} Å):       {stats['satisfied']}\n")
-        f.write(f"  Violated (>= {stats['cutoff']:.1f} Å):      {stats['violated']}\n")
-        f.write(f"  Missing atoms:                {stats['missing']}\n\n")
-        
-        if stats['mean_distance'] is not None:
-            f.write("Distance Statistics (Å):\n")
-            f.write(f"  Minimum:    {stats['min_distance']:.2f}\n")
-            f.write(f"  Maximum:    {stats['max_distance']:.2f}\n")
-            f.write(f"  Mean:       {stats['mean_distance']:.2f}\n")
-            f.write(f"  Median:     {stats['median_distance']:.2f}\n")
-            f.write(f"  Std Dev:    {stats['stdev_distance']:.2f}\n\n")
-            
-            f.write(f"Satisfaction Rate: {100.0 * stats['satisfied'] / (stats['satisfied'] + stats['violated']):.1f}%\n")
-            f.write(f"Violation Rate:    {100.0 * stats['violated'] / (stats['satisfied'] + stats['violated']):.1f}%\n")
-        
-        f.write("\n" + "=" * 60 + "\n")
-
 def print_statistics(stats):
     """Print statistics to console."""
     print("\n" + "=" * 60)
@@ -184,8 +150,8 @@ def visualize_crosslinks(session, cutoff=30.0):
     
     # Print and write statistics
     print_statistics(stats)
-    write_statistics(stats, distances, OUTPUT_STATS_FILE)
-    print(f"\nStatistics written to: {OUTPUT_STATS_FILE}")
+    #write_statistics(stats, distances, OUTPUT_STATS_FILE)
+    #print(f"\nStatistics written to: {OUTPUT_STATS_FILE}")
 
 # Example of usage:
 # In ChimeraX: visualize_crosslinks(session)
