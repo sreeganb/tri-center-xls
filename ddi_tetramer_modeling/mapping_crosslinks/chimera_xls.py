@@ -7,7 +7,8 @@ import statistics
 
 # Define the file paths (hardcoded)
 PDB_FILE = "./pdbs/A_models_cluster2_0_aligned/frame_0.pdb"
-CROSSLINK_FILE = "pymol_data/bifunc_pairs.csv"
+#CROSSLINK_FILE = "pymol_data/bifunc_pairs.csv"
+CROSSLINK_FILE = "pymol_data/trifunc_pairs.csv"
 OUTPUT_STATS_FILE = "analys/crosslink_statistics.txt"
 
 # Function to load PDB structure
