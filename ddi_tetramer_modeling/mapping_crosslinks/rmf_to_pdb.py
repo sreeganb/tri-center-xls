@@ -181,4 +181,4 @@ def rmf_to_pdbs(rmf_in, output_dir=None, frames=None, sel_state=0):
 # Example usage
 if __name__ == "__main__":
     # Export every 100th frame with labeling
-    rmf_to_pdbs("./input_data/A_models_cluster2_0_aligned.rmf3", frames=range(0, 10000, 100))
+    rmf_to_pdbs("./input_data/A_models_cluster1_0_aligned.rmf3", frames=range(0, 10000, 100))
