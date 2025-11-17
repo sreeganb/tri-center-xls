@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Trifunctional crosslinking modeling}
+
+\begin{itemize}
+    \item In an experiment, there are trifunctional crosslinks and if one of the ends is a dead end then there are bifunctional crosslinks formed. Since these two cases occur in the same experiment for the same system, we need to model them in equal footing
+    
+    \item Consider that $N_{XL}$ number of crosslinks were formed in the experiment, then 
+    \begin{equation}
+        N_{XL} = N^{\text{tri}}_{XL} + N^{\text{bi}}_{XL}
+    \end{equation}
+    
+    \item Consider that there are $N_{L}$ number of lysines in the system, we define the $\beta$ parameter as 
+    \begin{equation}
+        \beta = \frac{N_{XL}}{N_{LP}+N_{LT}} = \frac{N^{\text{tri}}_{XL}+ N^{\text{bi}}_{XL}}{N_{LP}+N_{LT}}
+    \end{equation}
+    
+    \item This parameter incorporates noise due to the structure being what it is and chemical reactivity because not all of the lysines that could be crosslinked purely based on their proximity to each other actually can react with the crosslinker 
+    
+    \item We can plugin $N_{LP} = \frac{N_{L}(N_{L}-1)}{2}$ and $N_{LT} = \frac{N_{L}(N_{L}-1)(N_{L}-2)}{6}$
+    
+    \item Plugging this into the formula for $\beta$ we get
+    \begin{equation}
+        \beta = \frac{N^{\text{tri}}_{XL}+ N^{\text{bi}}_{XL}}{\frac{N_{L}(N_{L}-1)}{2}+\frac{N_{L}(N_{L}-1)(N_{L}-2)}{6}}
+    \end{equation}
+    
+    Simplifying this leads to 
+    \begin{equation}
+        \beta = \frac{6\left(N^{\text{tri}}_{XL}+N^{\text{bi}}_{XL}\right)}{N_{L}(N_{L}-1)(N_{L}+1)}
+    \end{equation}
+    
+    \item The $\alpha$ parameter is defined as
+    \begin{equation}
+        \alpha = \frac{N^{\text{obs,T}}_{XL}}{N^{\text{obs}}_{XL}} = \frac{N^{\text{obs,tri,T}}_{XL}+N^{\text{obs,bi,T}}_{XL}}{N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}}
+    \end{equation}
+    
+    \item To obtain bounds for the values of $\alpha$ and $\beta$
+    \begin{equation}
+        \frac{\alpha}{\beta} \leq \frac{N_L(N_L-1)(N_L+1)}{\left(N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}\right)}
+    \end{equation}
+    and the same bound is obtained for
+    \begin{equation}
+        \frac{1-\alpha}{1-\beta} \leq \frac{N_L(N_L-1)(N_L+1)}{\left(N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}\right)}
+    \end{equation}
+\end{itemize}
+
+\subsection*{Example System}
+
+Consider a system with $N_L=100$, $N^{\text{obs}}_{XL} = 100$, where $N^{\text{obs,tri}}_{XL} = 20$ and $N^{\text{obs,bi}}_{XL} = 80$ 
+\begin{itemize}
+    \item All crosslinks have the same forward model probability
+    \item All crosslinks have the same $\alpha$ and $\beta$ parameters
+\end{itemize}
+
+The total likelihood function can then be written as 
+\begin{equation}
+    P(O_n|X) = \frac{\alpha}{\beta}P(XL_n|X) + \frac{1-\alpha}{1-\beta}P(\overline{XL_n}|X)
+\end{equation}
+
+Here we can make some additional simplifications, an observed crosslink has two possibilities, a bifunctional or a trifunctional, so the first term in the forward model can be factorized as 
+\begin{equation}
+    P(XL_n|X) = P(XL^{\text{tri}}_n|XL_n)P(XL^{\text{tri}}_n|X) + P(XL^{\text{bi}}_n|XL_n)P(XL^{\text{bi}}_n|X)
+\end{equation}
+
+\end{document}
