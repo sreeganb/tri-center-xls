@@ -1,69 +1,277 @@
-\documentclass{article}
+% filepath: /home/sree/git/tri-center-xls/bayesian_trifunctional/doc/trifunctional_theory_slides.tex
+\documentclass{beamer}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{booktabs}
+
+% Theme selection
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Title page information
+\title{Trifunctional Crosslinking Modeling}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
 
 \begin{document}
 
-\section*{Trifunctional crosslinking modeling}
+% Title slide
+\begin{frame}
+\titlepage
+\end{frame}
 
+% Table of contents
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+% Section 1
+\section{Introduction}
+
+\begin{frame}{Experimental Context}
 \begin{itemize}
-    \item In an experiment, there are trifunctional crosslinks and if one of the ends is a dead end then there are bifunctional crosslinks formed. Since these two cases occur in the same experiment for the same system, we need to model them in equal footing
+    \item<1-> In crosslinking experiments, two types of crosslinks form:
+    \begin{itemize}
+        \item \textbf{Trifunctional crosslinks}: All three reactive ends connected
+        \item \textbf{Bifunctional crosslinks}: One end is a dead end (unreacted)
+    \end{itemize}
     
-    \item Consider that $N_{XL}$ number of crosslinks were formed in the experiment, then 
-    \begin{equation}
-        N_{XL} = N^{\text{tri}}_{XL} + N^{\text{bi}}_{XL}
-    \end{equation}
+    \vspace{0.5cm}
     
-    \item Consider that there are $N_{L}$ number of lysines in the system, we define the $\beta$ parameter as 
-    \begin{equation}
-        \beta = \frac{N_{XL}}{N_{LP}+N_{LT}} = \frac{N^{\text{tri}}_{XL}+ N^{\text{bi}}_{XL}}{N_{LP}+N_{LT}}
-    \end{equation}
+    \item<2-> Both types occur simultaneously in the same experiment
     
-    \item This parameter incorporates noise due to the structure being what it is and chemical reactivity because not all of the lysines that could be crosslinked purely based on their proximity to each other actually can react with the crosslinker 
-    
-    \item We can plugin $N_{LP} = \frac{N_{L}(N_{L}-1)}{2}$ and $N_{LT} = \frac{N_{L}(N_{L}-1)(N_{L}-2)}{6}$
-    
-    \item Plugging this into the formula for $\beta$ we get
-    \begin{equation}
-        \beta = \frac{N^{\text{tri}}_{XL}+ N^{\text{bi}}_{XL}}{\frac{N_{L}(N_{L}-1)}{2}+\frac{N_{L}(N_{L}-1)(N_{L}-2)}{6}}
-    \end{equation}
-    
-    Simplifying this leads to 
-    \begin{equation}
-        \beta = \frac{6\left(N^{\text{tri}}_{XL}+N^{\text{bi}}_{XL}\right)}{N_{L}(N_{L}-1)(N_{L}+1)}
-    \end{equation}
-    
-    \item The $\alpha$ parameter is defined as
-    \begin{equation}
-        \alpha = \frac{N^{\text{obs,T}}_{XL}}{N^{\text{obs}}_{XL}} = \frac{N^{\text{obs,tri,T}}_{XL}+N^{\text{obs,bi,T}}_{XL}}{N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}}
-    \end{equation}
-    
-    \item To obtain bounds for the values of $\alpha$ and $\beta$
-    \begin{equation}
-        \frac{\alpha}{\beta} \leq \frac{N_L(N_L-1)(N_L+1)}{\left(N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}\right)}
-    \end{equation}
-    and the same bound is obtained for
-    \begin{equation}
-        \frac{1-\alpha}{1-\beta} \leq \frac{N_L(N_L-1)(N_L+1)}{\left(N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}\right)}
-    \end{equation}
+    \item<3-> \textbf{Key challenge}: Model both types on equal footing
 \end{itemize}
 
-\subsection*{Example System}
+\only<3>{
+    \begin{alertblock}{Modeling Requirement}
+    Need unified framework to account for both bifunctional and trifunctional crosslinks
+    \end{alertblock}
+}
+\end{frame}
 
-Consider a system with $N_L=100$, $N^{\text{obs}}_{XL} = 100$, where $N^{\text{obs,tri}}_{XL} = 20$ and $N^{\text{obs,bi}}_{XL} = 80$ 
+% Section 2
+\section{Mathematical Framework}
+
+\begin{frame}{Total Number of Crosslinks}
+\begin{block}{Crosslink Decomposition}
+Total number of crosslinks formed in experiment:
+\begin{equation}
+    N_{XL} = N^{\text{tri}}_{XL} + N^{\text{bi}}_{XL}
+\end{equation}
+\end{block}
+
+\vspace{0.5cm}
+
 \begin{itemize}
-    \item All crosslinks have the same forward model probability
-    \item All crosslinks have the same $\alpha$ and $\beta$ parameters
+    \item $N_{XL}$: Total observed crosslinks
+    \item $N^{\text{tri}}_{XL}$: Number of trifunctional crosslinks
+    \item $N^{\text{bi}}_{XL}$: Number of bifunctional crosslinks
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The $\beta$ Parameter}
+\begin{block}{Definition}
+Given $N_L$ lysines in the system:
+\begin{equation}
+    \beta = \frac{N_{XL}}{N_{LP}+N_{LT}} = \frac{N^{\text{tri}}_{XL}+ N^{\text{bi}}_{XL}}{N_{LP}+N_{LT}}
+\end{equation}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item $N_{LP}$: Number of lysine pairs
+    \item $N_{LT}$: Number of lysine triplets
 \end{itemize}
 
-The total likelihood function can then be written as 
-\begin{equation}
-    P(O_n|X) = \frac{\alpha}{\beta}P(XL_n|X) + \frac{1-\alpha}{1-\beta}P(\overline{XL_n}|X)
-\end{equation}
+\vspace{0.3cm}
 
-Here we can make some additional simplifications, an observed crosslink has two possibilities, a bifunctional or a trifunctional, so the first term in the forward model can be factorized as 
+\begin{alertblock}{Physical Interpretation}
+$\beta$ incorporates:
+\begin{itemize}
+    \item Structural constraints
+    \item Chemical reactivity (not all proximal lysines react)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Combinatorial Expressions}
+\begin{block}{Counting Pairs and Triplets}
+\begin{align}
+    N_{LP} &= \frac{N_{L}(N_{L}-1)}{2} \\[0.3cm]
+    N_{LT} &= \frac{N_{L}(N_{L}-1)(N_{L}-2)}{6}
+\end{align}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item $N_{LP}$: Choose 2 lysines from $N_L$ (order doesn't matter)
+    \item $N_{LT}$: Choose 3 lysines from $N_L$ (order doesn't matter)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Simplified $\beta$ Formula}
+\begin{block}{Derivation}
+Substituting combinatorial expressions:
 \begin{equation}
-    P(XL_n|X) = P(XL^{\text{tri}}_n|XL_n)P(XL^{\text{tri}}_n|X) + P(XL^{\text{bi}}_n|XL_n)P(XL^{\text{bi}}_n|X)
+    \beta = \frac{N^{\text{tri}}_{XL}+ N^{\text{bi}}_{XL}}{\frac{N_{L}(N_{L}-1)}{2}+\frac{N_{L}(N_{L}-1)(N_{L}-2)}{6}}
 \end{equation}
+\end{block}
+
+\pause
+
+\begin{block}{Simplified Form}
+\begin{equation}
+    \boxed{\beta = \frac{6\left(N^{\text{tri}}_{XL}+N^{\text{bi}}_{XL}\right)}{N_{L}(N_{L}-1)(N_{L}+1)}}
+\end{equation}
+\end{block}
+
+\vspace{0.2cm}
+\small{Factor of 6 comes from common denominator manipulation}
+\end{frame}
+
+% Section 3
+\section{The $\alpha$ Parameter}
+
+\begin{frame}{Definition of $\alpha$}
+\begin{block}{Observable vs True Crosslinks}
+\begin{equation}
+    \alpha = \frac{N^{\text{obs,T}}_{XL}}{N^{\text{obs}}_{XL}} = \frac{N^{\text{obs,tri,T}}_{XL}+N^{\text{obs,bi,T}}_{XL}}{N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}}
+\end{equation}
+\end{block}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item $N^{\text{obs,T}}_{XL}$: True positive crosslinks (actually formed)
+    \item $N^{\text{obs}}_{XL}$: Total observed crosslinks
+    \item $\alpha$ represents the \textbf{true positive rate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Parameter Bounds}
+\begin{block}{Upper Bound for $\alpha/\beta$}
+\begin{equation}
+    \frac{\alpha}{\beta} \leq \frac{N_L(N_L-1)(N_L+1)}{N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}}
+\end{equation}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{block}{Upper Bound for $(1-\alpha)/(1-\beta)$}
+\begin{equation}
+    \frac{1-\alpha}{1-\beta} \leq \frac{N_L(N_L-1)(N_L+1)}{N^{\text{obs,tri}}_{XL}+N^{\text{obs,bi}}_{XL}}
+\end{equation}
+\end{block}
+
+\vspace{0.3cm}
+\small{These bounds constrain the feasible region for $\alpha$ and $\beta$ values}
+\end{frame}
+
+% Section 4
+\section{Example System}
+
+\begin{frame}{System Specification}
+\begin{exampleblock}{System Parameters}
+\begin{itemize}
+    \item $N_L = 100$ (total lysines)
+    \item $N^{\text{obs}}_{XL} = 100$ (observed crosslinks)
+    \item $N^{\text{obs,tri}}_{XL} = 20$ (observed trifunctional)
+    \item $N^{\text{obs,bi}}_{XL} = 80$ (observed bifunctional)
+\end{itemize}
+\end{exampleblock}
+
+\vspace{0.5cm}
+
+\begin{block}{Simplifying Assumptions}
+\begin{enumerate}
+    \item All crosslinks have the \textbf{same forward model probability}
+    \item All crosslinks share the \textbf{same $\alpha$ and $\beta$} parameters
+\end{enumerate}
+\end{block}
+\end{frame}
+
+% Section 5
+\section{Likelihood Function}
+
+\begin{frame}{Total Likelihood}
+\begin{block}{Likelihood for Observation $O_n$}
+\begin{equation}
+    \boxed{P(O_n|X) = \frac{\alpha}{\beta}P(XL_n|X) + \frac{1-\alpha}{1-\beta}P(\overline{XL_n}|X)}
+\end{equation}
+\end{block}
+
+\vspace{0.5cm}
+
+\begin{itemize}
+    \item $P(XL_n|X)$: Probability crosslink $n$ is satisfied by structure $X$
+    \item $P(\overline{XL_n}|X)$: Probability crosslink $n$ is NOT satisfied
+    \item First term weighted by $\alpha/\beta$ (true positives)
+    \item Second term weighted by $(1-\alpha)/(1-\beta)$ (false positives)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Factorized Forward Model}
+\begin{block}{Decomposition by Crosslink Type}
+An observed crosslink can be either bifunctional or trifunctional:
+\begin{equation}
+    \boxed{P(XL_n|X) = P(XL^{\text{tri}}_n|XL_n)P(XL^{\text{tri}}_n|X) + P(XL^{\text{bi}}_n|XL_n)P(XL^{\text{bi}}_n|X)}
+\end{equation}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{itemize}
+    \item $P(XL^{\text{tri}}_n|XL_n)$: Probability it's trifunctional given it's a crosslink
+    \item $P(XL^{\text{tri}}_n|X)$: Structural probability for trifunctional
+    \item $P(XL^{\text{bi}}_n|XL_n)$: Probability it's bifunctional given it's a crosslink
+    \item $P(XL^{\text{bi}}_n|X)$: Structural probability for bifunctional
+\end{itemize}
+\end{frame}
+
+% Section 6
+\section{Summary}
+
+\begin{frame}{Key Takeaways}
+\begin{enumerate}
+    \item<1-> \textbf{Unified framework} for bifunctional and trifunctional crosslinks
+    
+    \item<2-> Two key parameters:
+    \begin{itemize}
+        \item $\beta$: Accounts for structural and chemical reactivity constraints
+        \item $\alpha$: True positive rate of observations
+    \end{itemize}
+    
+    \item<3-> Likelihood function combines:
+    \begin{itemize}
+        \item Forward model probabilities $P(XL|X)$
+        \item Parameter weights $\alpha/\beta$ and $(1-\alpha)/(1-\beta)$
+    \end{itemize}
+    
+    \item<4-> Forward model factorizes by crosslink type
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\only<4>{
+    \begin{alertblock}{Next Steps}
+    Implement Bayesian inference to estimate $\alpha$, $\beta$, and structural ensemble $X$
+    \end{alertblock}
+}
+\end{frame}
+
+\begin{frame}[standout]
+\centering
+\Huge Thank You!
+
+\vspace{1cm}
+
+\normalsize
+Questions?
+\end{frame}
 
 \end{document}
