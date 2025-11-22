@@ -10,6 +10,12 @@ __pycache__/
 *.png
 *.json
 *.py
+*.cif
+*.pdb
+*.zip
+*.fasta
+*.cxs
+*.pkl
 
 # C extensions
 *.so
